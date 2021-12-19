@@ -1,6 +1,6 @@
 # Author
 
-## Mags007
+### Mags007
 
 <ul>
    <li><a href="mailto:kontakt@mxgnus.de">Email</a></li>
