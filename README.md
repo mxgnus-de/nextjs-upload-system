@@ -13,7 +13,7 @@
 ## 1) Clone the repository
 
 ```bash
-git clone https://github.com/Mags007/upload-system-v2.git && cd upload-system-v2
+git clone https://github.com/Mags007/nextjs-upload-system.git && cd nextjs-upload-system
 ```
 
 ## 2) Install all dependencies
