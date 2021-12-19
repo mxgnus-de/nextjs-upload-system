@@ -10,27 +10,27 @@
 
 # Setup the project
 
-## 1) Clone the repository
+### 1) Clone the repository
 
 ```bash
 git clone https://github.com/Mags007/nextjs-upload-system.git && cd nextjs-upload-system
 ```
 
-## 2) Install all dependencies
+### 2) Install all dependencies
 
 ```bash
 $ npm install
 ```
 
-## 3) Configure the files in the `config` directory
+### 3) Configure the files in the `config` directory
 
-## 4) Build the production version of the project
+### 4) Build the production version of the project
 
 ```bash
 $ npm run build
 ```
 
-## Start the production version of the project
+### Start the production version of the project
 
 ```bash
 $ npm start
