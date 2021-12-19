@@ -1,0 +1,153 @@
+@import 'variables'
+
+*
+   box-sizing: border-box
+   font-family: $main-font-family
+   font-weight: $main-font-weight
+   margin: 0
+   padding: 0
+   color: #fff
+
+   &::before
+      border-sizing: border-box
+
+   &::after
+      border-sizing: border-box
+
+body,
+html
+   overflow-x: hidden !important
+   height: 100vh
+
+body
+   background-color: $main-bg-color
+
+#__next
+   display: flex
+   flex-direction: column
+   min-height: 100%
+
+/** REMOVE DEFAULT STYLING **/
+
+li
+   list-style: none
+
+a
+   text-decoration: none
+   color: inherit
+   cursor: pointer
+
+button
+   border: none
+   background-color: transparent
+   cursor: pointer
+
+input
+   border: none
+   background-color: transparent
+   &:focus
+      outline: none
+
+select
+   border: none
+   background-color: transparent
+   &:focus
+      outline: none
+
+h1, h2, h3, h4, h5, h6
+   font-weight: 500
+   margin: 0
+   color: #fff
+
+h1
+   font-size: 48px
+
+h2
+   font-size: 36px
+
+h3
+   font-size: 28px
+
+h4
+   font-size: 18px
+
+h5
+   font-size: 16px
+
+h6
+   font-size: 14px
+
+p
+   margin-bottom: 1px
+   font-size: 14px
+
+label
+   margin: 5px
+   font-size: 1.3rem
+
+select
+   color: #000000
+   text-align: center
+   height: 30px
+   width: 200px
+   border-radius: 10px
+   background-color: #ffffff !important
+
+input[type='text'],input[type='password']
+   color: #000000
+   text-align: center
+   height: 30px
+   width: 100%
+   border-radius: 10px
+   background-color: #ffffff !important
+
+   ::placeholder
+      color: #fff
+      font-size: 1.5em
+
+/** UTILS **/
+
+.text-muted
+   color: #6c757d !important
+
+.title
+   padding-bottom: 20px
+
+.pointer
+   cursor: pointer
+
+/** BUTTONS **/
+
+.button
+   height: auto
+   width: auto
+   padding: 10px
+   border-radius: 10px
+   cursor: pointer
+   border: none
+   min-width: 3rem
+
+   &-white
+      background-color: #000
+      color: #fff
+
+   &-red
+      background-color: #a01c29
+      color: #e8e6e3
+
+   &-green
+      background-color: #1a6d2d
+      color: #e8e6e3
+      border: 1px solid #28a845
+
+   &-yellow
+      background-color: #fff000
+      color: #000000
+
+   &-grey
+      background-color: #333232
+      color: #fff
+
+   &-blue
+      background-color: #0054AE
+      color: #fff
