@@ -11,7 +11,6 @@ class ShortSQL {
    }
 
    public init(): void {
-      new ConsoleLogger('Creating database `shorter` if not exists').info(true);
       const query =
          'CREATE TABLE IF NOT EXISTS `shorter` (`name` varchar(50) NOT NULL,`url` text NOT NULL,PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';
       this.connection.query(query);
