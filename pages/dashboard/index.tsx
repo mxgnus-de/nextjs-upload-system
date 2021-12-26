@@ -10,6 +10,7 @@ import Wrapper from 'components/Wrapper/Wrapper';
 import { server } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -33,10 +34,38 @@ const Dashboard: NextPage<SiteProps> = ({ uploads, shortedURLs }) => {
    const [currentDashboard, setCurrentDashboard] = useState<'files' | 'links'>(
       'files',
    );
+   const [search, setSearch] = useState('');
    useEffect(() => {
       setUploadFiles(uploads);
       setShortedURL(shortedURLs);
+      const id = Router.query.id as string | undefined;
+      if (id) searchChange(id);
+      const site = Router.query.site as string | undefined;
+      if (site === 'files') setCurrentDashboard('files');
+      else if (site === 'links') setCurrentDashboard('links');
+      Router.replace('/dashboard', undefined, { shallow: true });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [shortedURLs, uploads]);
+
+   function searchChange(searchID: string) {
+      if (searchID) {
+         setUploadFiles(
+            uploads.filter((upload) =>
+               upload.name.toLowerCase().startsWith(searchID),
+            ),
+         );
+         setShortedURL(
+            shortedURLs.filter((upload) =>
+               upload.name.toLowerCase().startsWith(searchID),
+            ),
+         );
+      }
+      if (searchID === '') {
+         setUploadFiles(uploads);
+         setShortedURL(shortedURLs);
+      }
+      setSearch(searchID);
+   }
    return (
       <>
          <Meta
@@ -57,6 +86,16 @@ const Dashboard: NextPage<SiteProps> = ({ uploads, shortedURLs }) => {
                Dashboard - {currentDashboard}
             </h1>
             <Hyphen className='text-muted' />
+            <SearchWrapper>
+               <input
+                  type='text'
+                  value={search}
+                  placeholder='Search'
+                  onChange={(e) => {
+                     searchChange(e.target.value);
+                  }}
+               />
+            </SearchWrapper>
             <Wrapper>
                {currentDashboard === 'files' ? (
                   uploadFiles?.length ? (
@@ -232,8 +271,6 @@ function ShortedURL(shortURL: {
       </DashboardWrapper>
    );
 }
-{
-}
 
 const DashboardWrapper = styled.div`
    position: relative;
@@ -285,5 +322,22 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
       },
    };
 };
+
+const SearchWrapper = styled.div`
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin: 0.4rem 0;
+   background-color: #26282b;
+
+   input {
+      width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background-color: #26282b;
+      font-size: 1.2rem;
+   }
+`;
 
 export default Dashboard;
