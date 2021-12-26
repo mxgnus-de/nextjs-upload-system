@@ -11,7 +11,6 @@ class FileSQL {
    }
 
    public init(): void {
-      new ConsoleLogger('Creating database `files` if not exists').info(true);
       const query =
          'CREATE TABLE IF NOT EXISTS `files` (`name` varchar(50) NOT NULL,`mimetype` varchar(50) NOT NULL,`path` text NOT NULL,`originalfilename` text NOT NULL,PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';
       this.connection.query(query);
