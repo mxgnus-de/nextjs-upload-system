@@ -28,15 +28,6 @@ class Connection {
    connect() {
       try {
          this.connection.connect();
-         new ConsoleLogger(
-            'Connected to the database: ' +
-               this.database +
-               ' (' +
-               this.username +
-               ', ' +
-               this.host +
-               ')',
-         ).info();
       } catch (error) {
          new ConsoleLogger(
             'Failed to connect to the database: ' +
