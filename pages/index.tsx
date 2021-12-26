@@ -12,6 +12,8 @@ import Input from 'components/Input/Input';
 import SubmitButton from 'components/SubmitButton/SubmitButton';
 import Form from 'components/Form/Form';
 import axiosClient from 'api/axiosClient';
+import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
+import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 
 type Files = FileList | null;
 
@@ -20,6 +22,8 @@ const Home: NextPage = () => {
    const [currentFiles, setCurrentFiles] = useState<Files>();
    const fileuploadRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
+   const updateSuccessWidgit = useSuccessWidgitUpdate();
+   const updateErrorWidgit = useErrorWidgitUpdate();
 
    async function uploadFile() {
       const file = currentFiles?.item(0);
@@ -43,10 +47,19 @@ const Home: NextPage = () => {
       await axiosClient
          .post('/api/upload', formData, config)
          .then((res: AxiosResponse) => {
+            const clipboard = navigator?.clipboard;
+            if (clipboard) {
+               clipboard.writeText(res.data);
+            }
+            updateSuccessWidgit?.showSuccessWidgit(
+               'File uploaded!' + (clipboard ? ' Copied to clipboard' : ''),
+            );
             router.push(res.data);
          })
          .catch((err: AxiosError) => {
-            alert('Upload failed\n' + err.response?.statusText);
+            updateErrorWidgit?.showErrorWidgit(
+               'Upload failed\n' + err.response?.statusText,
+            );
          })
          .finally(() => {
             setUploading(false);
