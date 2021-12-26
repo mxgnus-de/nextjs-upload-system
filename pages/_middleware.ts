@@ -10,7 +10,6 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
       if (req.page.name === page) blockedPage = true;
    });
    if (req.page.name?.startsWith('/dashboard')) blockedPage = true;
-
    if (
       !validateUploadKey(uploadKey) &&
       req.page.name !== '/login' &&
