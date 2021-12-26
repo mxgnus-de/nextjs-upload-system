@@ -203,6 +203,9 @@ const Upload = (upload: {
             <Link href={'/' + upload.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
+            <Link href={'/api/upload/' + upload.name} passHref>
+               <p className='button button-blue'>Download</p>
+            </Link>
             <button
                className='button button-red'
                onClick={(e) => {
@@ -298,31 +301,6 @@ const DashboardButtons = styled.div`
 
 const DashboardOriginalName = styled.div``;
 
-export const getServerSideProps: GetServerSideProps<SiteProps> = async (
-   context,
-) => {
-   const uploads = await axiosClient.get(server + '/api/dashboard/uploads', {
-      headers: {
-         authorization: context.req.cookies['upload_key'] || '',
-      },
-   });
-   const uploadData = uploads.data;
-
-   const shortedURLs = await axiosClient.get(server + '/api/dashboard/shorts', {
-      headers: {
-         authorization: context.req.cookies['upload_key'] || '',
-      },
-   });
-   const shortedURLsData = shortedURLs.data;
-
-   return {
-      props: {
-         uploads: uploadData,
-         shortedURLs: shortedURLsData,
-      },
-   };
-};
-
 const SearchWrapper = styled.div`
    display: flex;
    justify-content: space-between;
@@ -339,5 +317,34 @@ const SearchWrapper = styled.div`
       font-size: 1.2rem;
    }
 `;
+
+export const getServerSideProps: GetServerSideProps<SiteProps> = async (
+   context,
+) => {
+   const uploads = await axiosClient
+      .get(server + '/api/dashboard/uploads', {
+         headers: {
+            authorization: context.req.cookies['upload_key'] || '',
+         },
+      })
+      .catch();
+   const uploadData = uploads.data;
+
+   const shortedURLs = await axiosClient
+      .get(server + '/api/dashboard/shorts', {
+         headers: {
+            authorization: context.req.cookies['upload_key'] || '',
+         },
+      })
+      .catch();
+   const shortedURLsData = shortedURLs.data;
+
+   return {
+      props: {
+         uploads: uploadData,
+         shortedURLs: shortedURLsData,
+      },
+   };
+};
 
 export default Dashboard;
