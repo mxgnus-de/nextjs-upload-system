@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface SiteProps {
    uploads: {
@@ -87,14 +88,20 @@ const Dashboard: NextPage<SiteProps> = ({ uploads, shortedURLs }) => {
             </h1>
             <Hyphen className='text-muted' />
             <SearchWrapper>
-               <input
-                  type='text'
-                  value={search}
-                  placeholder='Search'
-                  onChange={(e) => {
-                     searchChange(e.target.value);
-                  }}
-               />
+               <div>
+                  <input
+                     type='text'
+                     value={search}
+                     placeholder='Search'
+                     onChange={(e) => {
+                        searchChange(e.target.value);
+                     }}
+                  />
+                  <CloseIcon
+                     className='pointer'
+                     onClick={() => searchChange('')}
+                  />
+               </div>
             </SearchWrapper>
             <Wrapper>
                {currentDashboard === 'files' ? (
@@ -306,15 +313,31 @@ const SearchWrapper = styled.div`
    justify-content: space-between;
    align-items: center;
    margin: 0.4rem 0;
-   background-color: #26282b;
+   background-color: #fff;
+   border-radius: 0.5rem;
 
    input {
-      width: 100%;
-      padding: 0.5rem;
       border: none;
-      border-radius: 0.5rem;
-      background-color: #26282b;
       font-size: 1.2rem;
+   }
+
+   div {
+      padding: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      * {
+         padding: 0.3rem;
+      }
+
+      svg {
+         path {
+            color: #767676;
+         }
+         height: 2rem;
+         width: 2rem;
+      }
    }
 `;
 
