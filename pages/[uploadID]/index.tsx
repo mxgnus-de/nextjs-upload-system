@@ -67,7 +67,9 @@ const Upload: NextPage<SiteProps> = ({
             </Link>
          )}
          <Link href={`${server}/api/upload/${uploadID}`} passHref>
-            <span style={{ margin: '20px' }}>Download</span>
+            <span style={{ margin: '20px' }} className='pointer'>
+               Download
+            </span>
          </Link>
       </Container>
    );
