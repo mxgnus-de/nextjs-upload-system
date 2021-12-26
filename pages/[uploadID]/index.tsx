@@ -1,3 +1,4 @@
+import validateUploadKey from 'api/validateUploadKey';
 import Container from 'components/Container/Container';
 import Meta from 'components/Meta/Meta';
 import { server } from 'config/api';
@@ -9,9 +10,15 @@ interface SiteProps {
    uploadID: string;
    contentType: string;
    filename: string;
+   isLoggedIn: boolean;
 }
 
-const Upload: NextPage<SiteProps> = ({ uploadID, contentType, filename }) => {
+const Upload: NextPage<SiteProps> = ({
+   uploadID,
+   contentType,
+   filename,
+   isLoggedIn,
+}) => {
    return (
       <Container>
          <Meta
@@ -43,9 +50,25 @@ const Upload: NextPage<SiteProps> = ({ uploadID, contentType, filename }) => {
             <AudioElement uploadID={uploadID} />
          ) : (
             <>
-               <Link href={`${server}/api/upload/${uploadID}`}>Download</Link>
+               <h5>File preview is not supported</h5>
             </>
          )}
+         {isLoggedIn && (
+            <Link
+               href={`${server}/dashboard?id=${uploadID}&site=files`}
+               passHref
+            >
+               <button
+                  className='button button-blue'
+                  style={{ marginTop: '20px' }}
+               >
+                  View in dashboard
+               </button>
+            </Link>
+         )}
+         <Link href={`${server}/api/upload/${uploadID}`} passHref>
+            <span style={{ margin: '20px' }}>Download</span>
+         </Link>
       </Container>
    );
 };
@@ -83,6 +106,7 @@ function AudioElement({ uploadID }: { uploadID: string }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
    const { uploadID } = context.query;
    const res = await fetch(`${server}/api/upload/${uploadID}`);
+   const isLoggedIn = validateUploadKey(context.req.cookies['upload_key']);
 
    if (res.status !== 200) {
       return {
@@ -96,6 +120,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
          uploadID,
          contentType: mimetype,
          filename: res.headers.get('filename'),
+         isLoggedIn,
       },
    };
 };
