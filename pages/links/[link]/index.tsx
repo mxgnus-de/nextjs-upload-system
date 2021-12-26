@@ -1,3 +1,4 @@
+import validateUploadKey from 'api/validateUploadKey';
 import Container from 'components/Container/Container';
 import Meta from 'components/Meta/Meta';
 import { server } from 'config/api';
@@ -9,9 +10,10 @@ import { useEffect } from 'react';
 interface SiteProps {
    shortedLink: string;
    url: string;
+   isLoggedIn: boolean;
 }
 
-const Upload: NextPage<SiteProps> = ({ shortedLink, url }) => {
+const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
    const router = useRouter();
    useEffect(() => {
       if (url) {
@@ -32,6 +34,19 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url }) => {
          <p>
             <Link href={url}>{url}</Link>
          </p>
+         {isLoggedIn && (
+            <Link
+               href={`${server}/dashboard?id=${shortedLink}&site=links`}
+               passHref
+            >
+               <button
+                  className='button button-blue'
+                  style={{ marginTop: '20px' }}
+               >
+                  View in dashboard
+               </button>
+            </Link>
+         )}
       </Container>
    );
 };
@@ -40,6 +55,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    const { link } = context.query;
    const res = await fetch(`${server}/api/links/${link}`);
    const data = await res.json();
+   const isLoggedIn = validateUploadKey(context.req.cookies['upload_key']);
 
    if (res.status !== 200) {
       return {
@@ -51,6 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
          shortedLink: link,
          url: data.url,
+         isLoggedIn,
       },
    };
 };
