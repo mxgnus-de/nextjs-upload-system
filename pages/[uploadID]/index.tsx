@@ -1,4 +1,4 @@
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import Container from 'components/Container/Container';
 import Meta from 'components/Meta/Meta';
 import { server } from 'config/api';
@@ -108,7 +108,9 @@ function AudioElement({ uploadID }: { uploadID: string }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
    const { uploadID } = context.query;
    const res = await fetch(`${server}/api/upload/${uploadID}`);
-   const isLoggedIn = validateUploadKey(context.req.cookies['upload_key']);
+   const isLoggedIn = await validateUploadKey(
+      context.req.cookies['upload_key'],
+   );
 
    if (res.status !== 200) {
       return {
