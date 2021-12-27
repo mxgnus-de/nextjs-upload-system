@@ -1,7 +1,7 @@
 import formidable from 'formidable';
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fileSQL } from 'api/db/mysql';
+import { fileSQL, userSQL } from 'api/db/mysql';
 import { server } from 'config/api';
 import { paths } from 'config/upload';
 import mime from 'mime-types';
@@ -11,7 +11,7 @@ import ConsoleLogger from 'utils/consolelogger';
 import axiosClient from 'api/axiosClient';
 import Embed from 'utils/createEmbed';
 import { newUploadEmbed, sendWebhook, webhooknotification } from 'config/embed';
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
 import methodnotallowed from 'api/utils/methodnotallowed';
 import invaliduploadkey from 'api/utils/invaliduploadkey';
@@ -33,7 +33,8 @@ export default async function upload(
             cookies.get('upload_key') ||
             fields.upload_key ||
             req.body.upload_key;
-         if (!validateUploadKey(uploadKey || '')) return invaliduploadkey(res);
+         if (!(await validateUploadKey(uploadKey || '')))
+            return invaliduploadkey(res);
          const buffer = fs.readFileSync(files?.file?._writeStream?.path);
 
          fs.unlinkSync(files?.file?._writeStream?.path);
@@ -42,6 +43,7 @@ export default async function upload(
          const newFilename = generateRandomString(15);
          const mimetype = file?.mimetype;
          const originalFilename = file?.originalFilename;
+         const user = await userSQL.getUser(uploadKey);
 
          const extension =
             mime.extension(mimetype) || originalFilename.split('.').slice(-1);
@@ -62,6 +64,7 @@ export default async function upload(
                newFilename,
                originalFilename,
                mimetype,
+               user[0].username,
             );
          } else if (isVideo(mimetype)) {
             const newFilePath =
@@ -79,6 +82,7 @@ export default async function upload(
                newFilename,
                originalFilename,
                mimetype,
+               user[0].username,
             );
          } else if (isAudio(mimetype)) {
             const newFilePath =
@@ -96,6 +100,7 @@ export default async function upload(
                newFilename,
                originalFilename,
                mimetype,
+               user[0].username,
             );
          } else {
             const newFilePath =
@@ -113,6 +118,7 @@ export default async function upload(
                newFilename,
                originalFilename,
                mimetype,
+               user[0].username,
             );
          }
 
@@ -149,6 +155,7 @@ function sendNotification(
    shortname: string,
    originalFilename: string,
    mimetype: string,
+   username: string,
 ) {
    if (!sendWebhook) return;
    axiosClient.post(webhooknotification, {
@@ -162,7 +169,8 @@ function sendNotification(
                .replace('{shortname}', shortname)
                .replace('{shortURL}', server + '/' + shortname)
                .replace('{path}', path)
-               .replace('{mimetype}', mimetype),
+               .replace('{mimetype}', mimetype)
+               .replace('{username}', username),
          ).build(),
       ],
    });
@@ -175,9 +183,16 @@ function uploadFile(
    shortname: string,
    originalFilename: string,
    mimetype: string,
+   username: string,
 ): void {
    checkIfDirExists(dir);
    saveFile(newFilePath, buffer);
-   sendNotification(newFilePath, shortname, originalFilename, mimetype);
+   sendNotification(
+      newFilePath,
+      shortname,
+      originalFilename,
+      mimetype,
+      username,
+   );
    return;
 }
