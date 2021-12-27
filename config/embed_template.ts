@@ -12,6 +12,7 @@ const webhooknotification: string = '';
    {shortURL}: Short URL
    {path}: Server Path to file
    {mimetype}: Mimetype of file
+   {username}: Username of uploader
 */
 
 interface NewUploadEmbed {
