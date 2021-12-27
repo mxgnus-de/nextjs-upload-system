@@ -38,9 +38,9 @@ $ npm start
 
 ### 6) Default login
 
-# The default uploadkey is `changeme`.
+The default uploadkey is `changeme`.
 
-# If you login the first time, the uploadkey will be automatically changed.
+If you login the first time, the uploadkey will be automatically changed.
 
 # Configuration
 
