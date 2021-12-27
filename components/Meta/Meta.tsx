@@ -42,6 +42,12 @@ function Meta({
          {meta.uploadmeta?.videoRawPath && (
             <meta property='og:video' content={meta.uploadmeta?.videoRawPath} />
          )}
+         {meta.uploadmeta?.videoRawPath && (
+            <meta
+               property='og:video:url'
+               content={meta.uploadmeta?.videoRawPath}
+            />
+         )}
          {meta.uploadmeta?.videomimetype && (
             <meta
                property='og:video:type'
