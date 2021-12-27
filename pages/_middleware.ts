@@ -1,5 +1,4 @@
 import { server } from 'config/api';
-import { keys } from 'config/upload';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
