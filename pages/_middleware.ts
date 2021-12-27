@@ -1,7 +1,8 @@
-import validateUploadKey from 'api/validateUploadKey';
+import { server } from 'config/api';
+import { keys } from 'config/upload';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
-export function middleware(req: NextRequest, ev: NextFetchEvent) {
+export async function middleware(req: NextRequest, ev: NextFetchEvent) {
    const cookies = req.cookies;
    const uploadKey = cookies['upload_key'];
    const privatePages = ['/', '/shorter'];
@@ -9,12 +10,17 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
    privatePages.forEach((page) => {
       if (req.page.name === page) blockedPage = true;
    });
+   const response = await fetch(`${server}/api/auth/validateuploadkey`, {
+      method: 'GET',
+      headers: {
+         Authorization: uploadKey,
+      },
+   }).catch();
+   const json = await response.json();
+   const isValideUploadKey = json.valide;
+
    if (req.page.name?.startsWith('/dashboard')) blockedPage = true;
-   if (
-      !validateUploadKey(uploadKey) &&
-      req.page.name !== '/login' &&
-      blockedPage
-   ) {
+   if (!isValideUploadKey && req.page.name !== '/login' && blockedPage) {
       return NextResponse.redirect('/login');
    }
    NextResponse.next();
