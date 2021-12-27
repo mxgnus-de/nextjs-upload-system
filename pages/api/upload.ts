@@ -15,6 +15,7 @@ import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
 import methodnotallowed from 'api/utils/methodnotallowed';
 import invaliduploadkey from 'api/utils/invaliduploadkey';
+import path from 'path';
 export const config = {
    api: {
       bodyParser: false,
@@ -49,8 +50,10 @@ export default async function upload(
             mime.extension(mimetype) || originalFilename.split('.').slice(-1);
 
          if (isImage(mimetype)) {
-            const newFilePath =
-               paths.image + '/' + newFilename + '.' + extension;
+            const newFilePath = path.resolve(
+               paths.image,
+               newFilename + '.' + extension,
+            );
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -67,8 +70,10 @@ export default async function upload(
                user[0].username,
             );
          } else if (isVideo(mimetype)) {
-            const newFilePath =
-               paths.video + '/' + newFilename + '.' + extension;
+            const newFilePath = path.resolve(
+               paths.video,
+               newFilename + '.' + extension,
+            );
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -85,8 +90,10 @@ export default async function upload(
                user[0].username,
             );
          } else if (isAudio(mimetype)) {
-            const newFilePath =
-               paths.audio + '/' + newFilename + '.' + extension;
+            const newFilePath = path.resolve(
+               paths.audio,
+               newFilename + '.' + extension,
+            );
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -103,8 +110,10 @@ export default async function upload(
                user[0].username,
             );
          } else {
-            const newFilePath =
-               paths.data + '/' + newFilename + '.' + extension;
+            const newFilePath = path.resolve(
+               paths.data,
+               newFilename + '.' + extension,
+            );
             fileSQL.createNewFile(
                newFilename,
                mimetype,
