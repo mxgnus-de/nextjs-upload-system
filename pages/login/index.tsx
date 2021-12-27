@@ -1,5 +1,5 @@
 import axiosClient from 'api/axiosClient';
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import { AxiosError, AxiosResponse } from 'axios';
 import Container from 'components/Container/Container';
 import ErrorText from 'components/Error/ErrorText/ErrorText';
@@ -98,7 +98,7 @@ const Login: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
    const redirectTo = context.query['redirect'] || '/';
 
-   if (validateUploadKey(context.req.cookies['upload_key'])) {
+   if (await validateUploadKey(context.req.cookies['upload_key'])) {
       return {
          redirect: {
             destination: redirectTo,
