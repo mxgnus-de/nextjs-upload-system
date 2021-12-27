@@ -1,7 +1,7 @@
 import invaliduploadkey from 'api/utils/invaliduploadkey';
 import methodnotallowed from 'api/utils/methodnotallowed';
 import notfound from 'api/utils/notfound';
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { shortSQL } from 'api/db/mysql';
@@ -19,7 +19,8 @@ export default async function shorts(
    const cookies = new Cookies(req, res);
    const uploadKey = cookies.get('upload_key') || req.headers['authorization'];
 
-   if (!validateUploadKey(uploadKey as string)) return invaliduploadkey(res);
+   if (!(await validateUploadKey(uploadKey as string)))
+      return invaliduploadkey(res);
 
    if (req.method === 'GET') {
       const shortedURLs = await shortSQL.selectAllShortedURLs();
