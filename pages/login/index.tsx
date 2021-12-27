@@ -45,8 +45,14 @@ const Login: NextPage = () => {
                   expires: expiresIn,
                });
             }
+            if (res.data.updated) {
+               alert(
+                  'Your upload key has been updated.\nNew key: ' +
+                     res.data.uploadKey,
+               );
+            }
             const redirectTo = router.query['redirect'] || '/';
-            window.location.href = redirectTo as string;
+            router.push(redirectTo as string);
          })
          .catch((err: AxiosError) => {
             setError({

@@ -1,5 +1,5 @@
 import axiosClient from 'api/axiosClient';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import { server } from 'config/api';
@@ -123,7 +123,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
       if (confirm) {
          axiosClient
             .put(
-               `/api/dashboard/users?upload_key=${user.uploadkey}&action=change`,
+               `/api/dashboard/users?upload_key=${user.uploadkey}&action=changekey`,
             )
             .then((res) => {
                updateSuccessWidgit?.showSuccessWidgit(
@@ -160,6 +160,48 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
       }
    }
 
+   function changeUsername() {
+      const newUsername = window.prompt('New username:');
+      if (newUsername) {
+         axiosClient
+            .put(server + '/api/dashboard/users?action=changeusername', {
+               newusername: newUsername,
+            })
+            .catch((error: AxiosError) => {
+               updateErrorWidgit?.showErrorWidgit(
+                  error.message + ': ' + error.response?.statusText,
+               );
+            })
+            .then((res: any) => {
+               if (res.data.newusername) {
+                  user.setUsers((prev: IUser[]) => {
+                     const newusers: IUser[] = [];
+                     prev.forEach((item: IUser) => {
+                        if (item.key !== user.uploadkey) {
+                           newusers.push(item);
+                        } else {
+                           newusers.push({
+                              key: item.key,
+                              username: res.data.newusername,
+                           });
+                        }
+                     });
+                     return newusers;
+                  });
+                  updateSuccessWidgit?.showSuccessWidgit(
+                     `${user.username}'s username changed to ${res.data.newusername}`,
+                  );
+               } else {
+                  updateErrorWidgit?.showErrorWidgit(
+                     'Could not change username',
+                  );
+               }
+            });
+      } else {
+         return updateSuccessWidgit?.showSuccessWidgit('Cancelled');
+      }
+   }
+
    return (
       <DashboardWrapper>
          <DashboardName>
@@ -168,13 +210,22 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
                <span className='ml-10 color-green-light'>You</span>
             )}
          </DashboardName>
-         <button
-            className='button button-green'
-            onClick={() => copieUploadkey()}
-         >
-            Copie uploadkey
-         </button>
+
          <DashboardButtons>
+            <button
+               className='button button-green'
+               onClick={() => copieUploadkey()}
+            >
+               Copie uploadkey
+            </button>
+            <button
+               className='button button-blue'
+               onClick={(e) => {
+                  changeUsername();
+               }}
+            >
+               Change username
+            </button>
             <button
                className='button button-blue'
                onClick={(e) => {

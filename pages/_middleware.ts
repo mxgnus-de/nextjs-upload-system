@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
    if (req.page.name?.startsWith('/dashboard')) blockedPage = true;
    if (!isValideUploadKey && req.page.name !== '/login' && blockedPage) {
-      return NextResponse.redirect('/login');
+      return NextResponse.redirect('/login?redirect=' + req.page.name);
    }
    NextResponse.next();
 }

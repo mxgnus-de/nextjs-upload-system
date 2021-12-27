@@ -7,6 +7,7 @@ import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import { userSQL } from 'api/db/mysql';
+import badrequest from 'api/utils/badrequest';
 
 export const config = {
    api: {
@@ -46,7 +47,7 @@ export default async function users(req: NextApiRequest, res: NextApiResponse) {
       });
    } else if (req.method === 'PUT') {
       const { action } = req.query;
-      if (action === 'change') {
+      if (action === 'changekey') {
          const newuploadkey = generateRandomString(100);
          const { upload_key } = req.query;
          const user = await userSQL.getUser(upload_key as string);
@@ -65,6 +66,27 @@ export default async function users(req: NextApiRequest, res: NextApiResponse) {
             message: 'User updated',
             newuploadkey,
          });
+      } else if (action === 'changeusername') {
+         const { newusername } = req.body;
+         const user = await userSQL.getUser(uploadKey as string);
+         if (!uploadKey || user.length === 0) {
+            return notfound(res);
+         }
+
+         await userSQL.updateUser(
+            uploadKey as string,
+            newusername,
+            user[0].key,
+         );
+         res.statusCode = 200;
+         res.statusMessage = 'User updated';
+         return res.json({
+            status: 200,
+            message: 'User updated',
+            newusername,
+         });
+      } else {
+         return badrequest(res);
       }
    } else if (req.method === 'POST') {
       const { username } = req.body;

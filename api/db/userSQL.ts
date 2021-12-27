@@ -11,12 +11,17 @@ class userSQL {
       this.init();
    }
 
-   public init(): void {
+   public async init(): Promise<void> {
       const query =
          'CREATE TABLE IF NOT EXISTS `' +
          this.database +
          '` (`key` varchar(500) NOT NULL,`username` varchar(50) NOT NULL,PRIMARY KEY (`key`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';
       this.connection.query(query);
+      const defaultuser = await this.getUser('changeme');
+      const users = await this.getAllUsers();
+      if (defaultuser.length === 0 && users.length === 0) {
+         this.createNewUser('changeme', 'default');
+      }
       return;
    }
 
