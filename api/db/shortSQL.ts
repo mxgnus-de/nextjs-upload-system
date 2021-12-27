@@ -1,6 +1,5 @@
 import { Connection } from 'mysql';
 import sqlstring from 'sqlstring';
-import ConsoleLogger from 'utils/consolelogger';
 
 class ShortSQL {
    private connection: Connection;
