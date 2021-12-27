@@ -1,6 +1,7 @@
 import React from 'react';
 import { ErrorWidgitProvider } from 'components/Context/ErrorWidgitContext';
 import { SuccessWidgitProvider } from 'components/Context/SuccessWidgitContext';
+import { CookiesProvider } from 'react-cookie';
 
 export interface ContextProps {
    children?: any;
@@ -8,9 +9,11 @@ export interface ContextProps {
 
 function UseContext(props: ContextProps) {
    return (
-      <ErrorWidgitProvider>
-         <SuccessWidgitProvider>{props.children}</SuccessWidgitProvider>
-      </ErrorWidgitProvider>
+      <CookiesProvider>
+         <ErrorWidgitProvider>
+            <SuccessWidgitProvider>{props.children}</SuccessWidgitProvider>
+         </ErrorWidgitProvider>
+      </CookiesProvider>
    );
 }
 
