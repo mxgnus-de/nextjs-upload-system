@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { shortSQL } from 'api/db/mysql';
 import { server } from 'config/api';
-import { keys } from 'config/upload';
 import { generateRandomString } from 'utils/generateRandomString';
 import { validateURL } from 'utils/validator';
 import Cookies from 'cookies';
 import methodnotallowed from 'api/utils/methodnotallowed';
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import invaliduploadkey from 'api/utils/invaliduploadkey';
 
 export const config = {
@@ -21,7 +20,8 @@ export default async function post(req: NextApiRequest, res: NextApiResponse) {
       const cookies = new Cookies(req, res);
       const uploadKey = cookies.get('upload_key') || req.body.upload_key;
 
-      if (!validateUploadKey(uploadKey || '')) return invaliduploadkey(res);
+      if (!(await validateUploadKey(uploadKey || '')))
+         return invaliduploadkey(res);
       if (!validateURL(url)) {
          res.statusCode = 400;
          res.statusMessage = 'Bad Request | Invalid URL';
