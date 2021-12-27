@@ -1,4 +1,3 @@
-import ConsoleLogger from 'utils/consolelogger';
 import { Connection } from 'mysql';
 import sqlstring from 'sqlstring';
 
