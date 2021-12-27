@@ -50,6 +50,10 @@ function Meta({
                   content={meta.uploadmeta?.videoRawPath}
                />
                <meta property='og:type' content='video.other' />
+               <meta
+                  property='og:video:secure_url'
+                  content={meta.uploadmeta?.videoRawPath}
+               />
             </>
          )}
 
