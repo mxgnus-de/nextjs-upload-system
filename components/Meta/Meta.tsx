@@ -14,6 +14,8 @@ function Meta({
       themecolor?: string;
       uploadmeta?: {
          imageRawPath?: string;
+         videoRawPath?: string;
+         videomimetype?: string;
       };
    };
 }) {
@@ -36,6 +38,15 @@ function Meta({
          />
          {meta.uploadmeta?.imageRawPath && (
             <meta property='og:image' content={meta.uploadmeta?.imageRawPath} />
+         )}
+         {meta.uploadmeta?.imageRawPath && (
+            <meta property='og:video' content={meta.uploadmeta?.videoRawPath} />
+         )}
+         {meta.uploadmeta?.videomimetype && (
+            <meta
+               property='og:video:type'
+               content={meta.uploadmeta?.videomimetype}
+            />
          )}
 
          <meta name='twitter:card' content='summary_large_image'></meta>

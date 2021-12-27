@@ -37,7 +37,13 @@ const Upload: NextPage<SiteProps> = ({
                image: `${server}/${uploadID}`,
                url: `${server}/${uploadID}`,
                uploadmeta: {
-                  imageRawPath: `${server}/api/upload/${uploadID}`,
+                  imageRawPath: isImage(contentType)
+                     ? `${server}/api/upload/${uploadID}`
+                     : undefined,
+                  videoRawPath: isVideo(contentType)
+                     ? `${server}/api/upload/${uploadID}`
+                     : undefined,
+                  videomimetype: isVideo(contentType) ? contentType : undefined,
                },
             }}
          />
