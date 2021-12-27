@@ -50,7 +50,7 @@ export default async function upload(
 
          if (isImage(mimetype)) {
             const newFilePath =
-               paths.image + '\\' + newFilename + '.' + extension;
+               paths.image + '/' + newFilename + '.' + extension;
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -68,7 +68,7 @@ export default async function upload(
             );
          } else if (isVideo(mimetype)) {
             const newFilePath =
-               paths.video + '\\' + newFilename + '.' + extension;
+               paths.video + '/' + newFilename + '.' + extension;
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -86,7 +86,7 @@ export default async function upload(
             );
          } else if (isAudio(mimetype)) {
             const newFilePath =
-               paths.audio + '\\' + newFilename + '.' + extension;
+               paths.audio + '/' + newFilename + '.' + extension;
             fileSQL.createNewFile(
                newFilename,
                mimetype,
@@ -104,7 +104,7 @@ export default async function upload(
             );
          } else {
             const newFilePath =
-               paths.data + '\\' + newFilename + '.' + extension;
+               paths.data + '/' + newFilename + '.' + extension;
             fileSQL.createNewFile(
                newFilename,
                mimetype,
