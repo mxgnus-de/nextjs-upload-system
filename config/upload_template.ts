@@ -8,7 +8,4 @@ const paths = {
    data: path.resolve('.', 'uploads', 'data'),
 };
 
-/* Secret Upload keys */
-const keys: string[] = [''];
-
-export { paths, keys };
+export { paths };
