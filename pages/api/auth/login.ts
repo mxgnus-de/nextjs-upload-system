@@ -1,11 +1,12 @@
 import invaliduploadkey from 'api/utils/invaliduploadkey';
 import methodnotallowed from 'api/utils/methodnotallowed';
-import validateUploadKey from 'api/validateUploadKey';
+import { validateUploadKey } from 'api/uploadKey';
 import { NextApiRequest, NextApiResponse } from 'next';
-export default function login(req: NextApiRequest, res: NextApiResponse) {
+export default async function login(req: NextApiRequest, res: NextApiResponse) {
    if (req.method === 'POST') {
       const { uploadKey } = req.body;
-      if (!validateUploadKey(uploadKey || '')) return invaliduploadkey(res);
+      if (!(await validateUploadKey(uploadKey || '')))
+         return invaliduploadkey(res);
 
       res.statusCode === 200;
       res.statusMessage = 'OK';
