@@ -30,18 +30,24 @@ $ npm install
 $ npm run build
 ```
 
-### Start the production version of the project
+### 5) Start the production version of the project
 
 ```bash
 $ npm start
 ```
+
+### 6) Default login
+
+# The default uploadkey is `changeme`.
+
+# If you login the first time, the uploadkey will be automatically changed.
 
 # Configuration
 
 <ul>
    <li>All configuration files can be found in the `config` directory.</li>
    <li>Save the configuration file in the `config` without the _template suffix.</li>
-   <li>You can the favicon.ico in the `public` directory.</li>
+   <li>You can change the favicon.ico in the `public` directory.</li>
 </ul>
 
 # Informations about the project
