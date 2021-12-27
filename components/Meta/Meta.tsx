@@ -39,7 +39,7 @@ function Meta({
          {meta.uploadmeta?.imageRawPath && (
             <meta property='og:image' content={meta.uploadmeta?.imageRawPath} />
          )}
-         {meta.uploadmeta?.imageRawPath && (
+         {meta.uploadmeta?.videoRawPath && (
             <meta property='og:video' content={meta.uploadmeta?.videoRawPath} />
          )}
          {meta.uploadmeta?.videomimetype && (
