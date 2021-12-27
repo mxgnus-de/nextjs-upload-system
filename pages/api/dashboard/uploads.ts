@@ -2,8 +2,7 @@ import { fileSQL } from 'api/db/mysql';
 import invaliduploadkey from 'api/utils/invaliduploadkey';
 import methodnotallowed from 'api/utils/methodnotallowed';
 import notfound from 'api/utils/notfound';
-import validateUploadKey from 'api/validateUploadKey';
-import { keys } from 'config/upload';
+import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
@@ -21,7 +20,8 @@ export default async function uploads(
    const cookies = new Cookies(req, res);
    const uploadKey = cookies.get('upload_key') || req.headers['authorization'];
 
-   if (!validateUploadKey(uploadKey as string)) return invaliduploadkey(res);
+   if (!(await validateUploadKey(uploadKey as string)))
+      return invaliduploadkey(res);
 
    if (req.method === 'GET') {
       const uploads = await fileSQL.selectAllFiles();
