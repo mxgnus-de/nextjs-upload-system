@@ -1,10 +1,10 @@
 {
-   "name": "upload-system-v2",
+   "name": "nextjs-upload-system",
    "private": true,
    "description": "Uploads files to a server",
    "author": "Mags007",
    "repository": {
-      "url": "https://github.com/Mags007/upload-system-v2",
+      "url": "https://github.com/Mags007/nextjs-upload-system",
       "type": "git"
    },
    "scripts": {
