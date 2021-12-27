@@ -40,14 +40,19 @@ function Meta({
             <meta property='og:image' content={meta.uploadmeta?.imageRawPath} />
          )}
          {meta.uploadmeta?.videoRawPath && (
-            <meta property='og:video' content={meta.uploadmeta?.videoRawPath} />
+            <>
+               <meta
+                  property='og:video'
+                  content={meta.uploadmeta?.videoRawPath}
+               />
+               <meta
+                  property='og:video:url'
+                  content={meta.uploadmeta?.videoRawPath}
+               />
+               <meta property='og:type' content='video.other' />
+            </>
          )}
-         {meta.uploadmeta?.videoRawPath && (
-            <meta
-               property='og:video:url'
-               content={meta.uploadmeta?.videoRawPath}
-            />
-         )}
+
          {meta.uploadmeta?.videomimetype && (
             <meta
                property='og:video:type'
