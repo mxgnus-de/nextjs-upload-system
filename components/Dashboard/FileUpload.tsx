@@ -95,7 +95,10 @@ const Upload = (upload: {
             <Link href={'/' + upload.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
-            <Link href={'/api/upload/' + upload.name} passHref>
+            <Link
+               href={'/api/upload/' + upload.name + '?download=true'}
+               passHref
+            >
                <p className='button button-blue'>Download</p>
             </Link>
             <button

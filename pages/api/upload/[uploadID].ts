@@ -14,7 +14,7 @@ export default async function get(
    res: NextApiResponse<any>,
 ) {
    if (req.method === 'GET') {
-      const { uploadID } = req.query;
+      const { uploadID, download } = req.query;
 
       if (!uploadID)
          return res.status(400).json({ error: 'No uploadID provided' });
@@ -33,10 +33,13 @@ export default async function get(
          const fileBuffer = fs.readFileSync(filePath);
          res.setHeader('Content-Type', mimetype);
          res.setHeader('Filename', originalFilename);
-         res.setHeader(
-            'Content-Disposition',
-            'attachment; filename="' + originalFilename + '"',
-         );
+         if (download === 'true') {
+            res.setHeader(
+               'Content-Disposition',
+               'attachment; filename="' + originalFilename + '"',
+            );
+         }
+
          return res.status(200).send(fileBuffer);
       }
    } else {
