@@ -1,22 +1,15 @@
 import axiosClient from 'api/axiosClient';
-import { AxiosError } from 'axios';
 import Container from 'components/Container/Container';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import Hyphen from 'components/Hyphen/Hyphen';
 import Meta from 'components/Meta/Meta';
 import Navbar from 'components/Navbar/Navbar';
-import Wrapper from 'components/Wrapper/Wrapper';
 import { server } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
-import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
-import DashboardName from 'components/Dashboard/DashboardName';
-import DashboardButtons from 'components/Dashboard/DashboardButtons';
 import FileUpload from 'components/Dashboard/FileUpload';
 import ShortURL from 'components/Dashboard/ShortedURL';
 import Users from 'components/Dashboard/Users';
@@ -99,7 +92,7 @@ const Dashboard: NextPage<SiteProps> = ({
             }}
          />
          <Navbar />
-         <Container>
+         <Container style={{ margin: '50px 0' }}>
             <h1
                className='pointer'
                onClick={() => {
@@ -129,7 +122,7 @@ const Dashboard: NextPage<SiteProps> = ({
                   />
                </div>
             </SearchWrapper>
-            <Wrapper>
+            <DashboardWrapper>
                {currentDashboard === 'files' ? (
                   <FileUpload
                      setUploadFiles={setUploadFiles}
@@ -145,7 +138,7 @@ const Dashboard: NextPage<SiteProps> = ({
                ) : (
                   <h1>No dashboard</h1>
                )}
-            </Wrapper>
+            </DashboardWrapper>
          </Container>
       </>
    );

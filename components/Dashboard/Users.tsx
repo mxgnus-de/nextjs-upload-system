@@ -3,12 +3,11 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import { server } from 'config/api';
-import Link from 'next/link';
 import { User as IUser } from 'pages/dashboard';
 import { useCookies } from 'react-cookie';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
-import DashboardWrapper from './DashboardWrapper';
+import DashboardItemWrapper from './DashboardItemWrapper';
 
 function Users({ users, setUsers }: { users: IUser[]; setUsers: any }) {
    const updateSuccessWidgit = useSuccessWidgitUpdate();
@@ -203,7 +202,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
    }
 
    return (
-      <DashboardWrapper>
+      <DashboardItemWrapper>
          <DashboardName>
             {user.username}
             {cookies['upload_key'] === user.uploadkey && (
@@ -243,7 +242,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
                Delete
             </button>
          </DashboardButtons>
-      </DashboardWrapper>
+      </DashboardItemWrapper>
    );
 }
 

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { ShortURL as ShortURLs } from 'pages/dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
-import DashboardWrapper from './DashboardWrapper';
+import DashboardItemWrapper from './DashboardItemWrapper';
 
 function ShortURL({
    shortedURL,
@@ -82,7 +82,7 @@ function ShortedURL(shortURL: {
    }
 
    return (
-      <DashboardWrapper>
+      <DashboardItemWrapper>
          <DashboardName>{shortURL.name}</DashboardName>
          <div>{shortURL.url}</div>
          <DashboardButtons>
@@ -98,7 +98,7 @@ function ShortedURL(shortURL: {
                Delete
             </button>
          </DashboardButtons>
-      </DashboardWrapper>
+      </DashboardItemWrapper>
    );
 }
 

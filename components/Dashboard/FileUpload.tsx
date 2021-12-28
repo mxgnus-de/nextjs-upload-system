@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Uploads } from 'pages/dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
-import DashboardWrapper from './DashboardWrapper';
+import DashboardItemWrapper from './DashboardItemWrapper';
 
 function FileUpload({
    uploadFiles,
@@ -88,7 +88,7 @@ const Upload = (upload: {
    }
 
    return (
-      <DashboardWrapper>
+      <DashboardItemWrapper>
          <DashboardName>{upload.name}</DashboardName>
          <div>{upload.originalFilename}</div>
          <DashboardButtons>
@@ -110,7 +110,7 @@ const Upload = (upload: {
                Delete
             </button>
          </DashboardButtons>
-      </DashboardWrapper>
+      </DashboardItemWrapper>
    );
 };
 
