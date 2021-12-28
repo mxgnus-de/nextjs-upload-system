@@ -33,6 +33,10 @@ function Meta({
             content={meta.title ? meta.title : defaultMeta.title}
          />
          <meta
+            property='og:description'
+            content={meta.description ? meta.title : defaultMeta.description}
+         />
+         <meta
             name='theme-color'
             content={meta.themecolor ? meta.themecolor : defaultMeta.themecolor}
          />
