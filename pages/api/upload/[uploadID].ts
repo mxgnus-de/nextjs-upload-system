@@ -27,9 +27,19 @@ export default async function get(
          const originalFilename = file[0].originalfilename;
 
          if (!mimetype) {
-            return res.status(400).json({ error: 'Invalid file type' });
+            res.statusMessage = 'No mimetype provided';
+            return res
+               .status(400)
+               .json({ status: 400, error: 'Invalid file type' });
          }
 
+         const exist: boolean = fs.existsSync(filePath);
+         if (!exist) {
+            res.statusMessage = 'File not found';
+            return res
+               .status(404)
+               .json({ status: 404, error: 'File not found' });
+         }
          const fileBuffer = fs.readFileSync(filePath);
          res.setHeader('Content-Type', mimetype);
          res.setHeader('Filename', originalFilename);
