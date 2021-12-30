@@ -3,6 +3,7 @@
    "private": true,
    "description": "Uploads files to a server",
    "author": "Mags007",
+   "version": "2.0.0",
    "repository": {
       "url": "https://github.com/Mags007/nextjs-upload-system",
       "type": "git"
