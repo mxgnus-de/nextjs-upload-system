@@ -27,7 +27,6 @@ const Home: NextPage = () => {
 
    async function uploadFile() {
       const file = currentFiles?.item(0);
-
       if (!file) {
          fileuploadRef.current?.click();
          fileuploadRef.current?.focus();
