@@ -49,7 +49,6 @@ export default async function get(
                'attachment; filename="' + originalFilename + '"',
             );
          }
-
          return res.status(200).send(fileBuffer);
       }
    } else {
