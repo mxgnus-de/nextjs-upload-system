@@ -1,7 +1,7 @@
 import { fileSQL } from 'api/db/mysql';
-import invaliduploadkey from 'api/utils/invaliduploadkey';
-import methodnotallowed from 'api/utils/methodnotallowed';
-import notfound from 'api/utils/notfound';
+import invaliduploadkey from 'api/utils/response/invaliduploadkey';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
+import notfound from 'api/utils/response/notfound';
 import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
