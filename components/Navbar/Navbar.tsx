@@ -21,7 +21,7 @@ function Navbar() {
 }
 
 const NavbarWrapper = styled.div`
-   background-color: transparent;
+   background-color: #161616;
    width: 100%;
    height: 50px;
    display: flex;
