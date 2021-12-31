@@ -11,7 +11,7 @@
    "scripts": {
       "dev": "next dev",
       "build": "next build",
-      "start": "next start -p 10000",
+      "start": "next start",
       "lint": "next lint"
    },
    "dependencies": {
@@ -19,6 +19,7 @@
       "@emotion/styled": "^11.6.0",
       "@mui/icons-material": "^5.2.4",
       "@mui/material": "^5.2.4",
+      "@types/react-window": "^1.8.5",
       "axios": "^0.24.0",
       "babel-plugin-styled-components": "^2.0.2",
       "bcrypt": "^5.0.1",
@@ -32,6 +33,7 @@
       "react": "17.0.2",
       "react-cookie": "^4.1.1",
       "react-dom": "17.0.2",
+      "react-window": "^1.8.6",
       "sass": "^1.44.0",
       "socket.io": "^4.4.0",
       "socket.io-client": "^4.4.0",
