@@ -1,5 +1,5 @@
 import ConsoleLogger from '../../utils/consolelogger';
-import mysql, { Connection as MySQLConnection } from 'mysql';
+import mysql, { Connection as MySQLConnection, MysqlError } from 'mysql';
 
 class Connection {
    private connection: MySQLConnection;
@@ -25,7 +25,7 @@ class Connection {
       });
    }
 
-   connect() {
+   public connect() {
       try {
          this.connection.connect();
       } catch (error) {
@@ -42,8 +42,19 @@ class Connection {
       }
    }
 
-   getConnection() {
+   public getConnection() {
       return this.connection;
+   }
+
+   public events() {
+      this.connection.on('error', (error: MysqlError) => {
+         if (error.fatal) this.reconnect();
+      });
+   }
+
+   public reconnect() {
+      this.connection.destroy();
+      this.connect();
    }
 }
 
