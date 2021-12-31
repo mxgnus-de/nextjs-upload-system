@@ -13,8 +13,8 @@ import Embed from 'utils/createEmbed';
 import { newUploadEmbed, sendWebhook, webhooknotification } from 'config/embed';
 import { validateUploadKey } from 'api/uploadKey';
 import Cookies from 'cookies';
-import methodnotallowed from 'api/utils/methodnotallowed';
-import invaliduploadkey from 'api/utils/invaliduploadkey';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
+import invaliduploadkey from 'api/utils/response/invaliduploadkey';
 import path from 'path';
 export const config = {
    api: {

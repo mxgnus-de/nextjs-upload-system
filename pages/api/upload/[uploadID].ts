@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { fileSQL } from 'api/db/mysql';
-import methodnotallowed from 'api/utils/methodnotallowed';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
 
 export const config = {
    api: {

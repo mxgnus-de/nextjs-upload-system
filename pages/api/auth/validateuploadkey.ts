@@ -1,6 +1,6 @@
 import { validateUploadKey } from 'api/uploadKey';
-import invaliduploadkey from 'api/utils/invaliduploadkey';
-import methodnotallowed from 'api/utils/methodnotallowed';
+import invaliduploadkey from 'api/utils/response/invaliduploadkey';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 export default async function valideuploadkey(

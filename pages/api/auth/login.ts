@@ -1,6 +1,6 @@
 import { generateRandomString } from 'utils/generateRandomString';
-import invaliduploadkey from 'api/utils/invaliduploadkey';
-import methodnotallowed from 'api/utils/methodnotallowed';
+import invaliduploadkey from 'api/utils/response/invaliduploadkey';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
 import { validateUploadKey } from 'api/uploadKey';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { userSQL } from 'api/db/mysql';

@@ -4,9 +4,9 @@ import { server } from 'config/api';
 import { generateRandomString } from 'utils/generateRandomString';
 import { validateURL } from 'utils/validator';
 import Cookies from 'cookies';
-import methodnotallowed from 'api/utils/methodnotallowed';
+import methodnotallowed from 'api/utils/response/methodnotallowed';
 import { validateUploadKey } from 'api/uploadKey';
-import invaliduploadkey from 'api/utils/invaliduploadkey';
+import invaliduploadkey from 'api/utils/response/invaliduploadkey';
 
 export const config = {
    api: {
