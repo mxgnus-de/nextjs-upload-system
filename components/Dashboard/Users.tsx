@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import { server } from 'config/api';
-import { User as IUser } from 'pages/dashboard';
+import { User as IUser } from 'types/Dashboard';
 import { useCookies } from 'react-cookie';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';

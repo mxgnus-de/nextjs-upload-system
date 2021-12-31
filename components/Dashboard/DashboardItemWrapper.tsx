@@ -17,6 +17,11 @@ const DashboardItemWrapper = styled.div`
 
    @media (max-width: 1056px) {
       flex-direction: column;
+      padding: 0.5rem;
+
+      div {
+         margin: 0.3rem;
+      }
    }
 `;
 

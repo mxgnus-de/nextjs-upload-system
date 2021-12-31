@@ -6,7 +6,11 @@ const DashboardWrapper = styled.div`
    align-items: center;
    justify-content: center;
    text-align: center;
-   min-width: 50%;
+   min-width: 70%;
+
+   @media (max-width: 768px) {
+      min-width: 50%;
+   }
 `;
 
 export default DashboardWrapper;
