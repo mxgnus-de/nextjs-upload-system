@@ -1,24 +1,9 @@
 import defaultMeta from 'config/meta';
 import Head from 'next/head';
 import React from 'react';
+import { Meta as IMeta } from 'types/Meta';
 
-function Meta({
-   meta,
-}: {
-   meta: {
-      title: string;
-      description?: string;
-      keywords?: string;
-      image?: string;
-      url?: string;
-      themecolor?: string;
-      uploadmeta?: {
-         imageRawPath?: string;
-         videoRawPath?: string;
-         videomimetype?: string;
-      };
-   };
-}) {
+function Meta({ meta }: { meta: IMeta }) {
    return (
       <Head>
          <title>{meta.title ? meta.title : defaultMeta.title}</title>
