@@ -25,6 +25,10 @@ const Home: NextPage = () => {
    const updateSuccessWidgit = useSuccessWidgitUpdate();
    const updateErrorWidgit = useErrorWidgitUpdate();
 
+   useEffect(() => {
+      setCurrentFiles(null);
+   }, []);
+
    async function uploadFile() {
       const file = currentFiles?.item(0);
       if (!file) {
@@ -46,6 +50,7 @@ const Home: NextPage = () => {
       await axiosClient
          .post('/api/upload', formData, config)
          .then((res: AxiosResponse) => {
+            setUploading(false);
             const clipboard = navigator?.clipboard;
             if (clipboard) {
                clipboard.writeText(res.data);
@@ -56,6 +61,7 @@ const Home: NextPage = () => {
             router.push(res.data);
          })
          .catch((err: AxiosError) => {
+            setUploading(false);
             updateErrorWidgit?.showErrorWidgit(
                'Upload failed\n' + err.response?.statusText,
             );
