@@ -8,7 +8,6 @@ import { Uploads } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
-import { FixedSizeList as List } from 'react-window';
 
 function FileUpload({
    uploadFiles,
