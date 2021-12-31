@@ -4,7 +4,7 @@ import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import { server } from 'config/api';
 import Link from 'next/link';
-import { ShortURL as ShortURLs } from 'pages/dashboard';
+import { ShortURL as ShortURLs } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';

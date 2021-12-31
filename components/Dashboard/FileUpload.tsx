@@ -4,10 +4,11 @@ import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
 import { server } from 'config/api';
 import Link from 'next/link';
-import { Uploads } from 'pages/dashboard';
+import { Uploads } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
+import { FixedSizeList as List } from 'react-window';
 
 function FileUpload({
    uploadFiles,
