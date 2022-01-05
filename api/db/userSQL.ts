@@ -1,5 +1,6 @@
 import { Connection } from 'mysql';
 import sqlstring from 'sqlstring';
+import { connection } from './mysql';
 
 class userSQL {
    private connection: Connection;
@@ -35,6 +36,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
+                  connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -50,6 +52,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
+                  connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -68,6 +71,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
+                  connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -92,6 +96,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
+                  connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -112,6 +117,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
+                  connection.handleError(error);
                } else {
                   resolve(results);
                }

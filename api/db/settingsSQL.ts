@@ -1,4 +1,5 @@
 import { Connection } from 'mysql';
+import { connection } from './mysql';
 
 class SettingsSQL {
    private connection: Connection;
@@ -31,7 +32,10 @@ class SettingsSQL {
             `SELECT * FROM settings WHERE name = ?`,
             [name],
             (error: any, results: any) => {
-               if (error) return reject(error);
+               if (error) {
+                  connection.handleError(error);
+                  return reject(error);
+               }
                resolve(results);
             },
          );
@@ -43,7 +47,10 @@ class SettingsSQL {
          this.connection.query(
             `SELECT * FROM settings`,
             (error: any, results: any) => {
-               if (error) return reject(error);
+               if (error) {
+                  connection.handleError(error);
+                  return reject(error);
+               }
                resolve(results);
             },
          );
@@ -56,7 +63,10 @@ class SettingsSQL {
             `UPDATE settings SET value = ? WHERE name = ?`,
             [value, name],
             (error: any, results: any) => {
-               if (error) return reject(error);
+               if (error) {
+                  connection.handleError(error);
+                  return reject(error);
+               }
                resolve(results);
             },
          );

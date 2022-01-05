@@ -60,7 +60,10 @@ const Dashboard: NextPage<SiteProps> = ({
 
       const id = Router.query.id as string | undefined;
       if (id) searchChange(id);
-      const site = Router.query.site as string | undefined;
+      const site =
+         (Router.query.site as string | undefined) ||
+         (Router.query.page as string | undefined);
+      console.log(site);
 
       if (site === 'files')
          updateDashboardPage?.setCurrentDashboardPage('files');
@@ -68,9 +71,9 @@ const Dashboard: NextPage<SiteProps> = ({
          updateDashboardPage?.setCurrentDashboardPage('links');
       else if (site === 'users')
          updateDashboardPage?.setCurrentDashboardPage('users');
-
+      else if (site === 'settings')
+         updateDashboardPage?.setCurrentDashboardPage('settings');
       Router.replace('/dashboard', undefined, { shallow: true });
-
       if (
          settings.find((setting) => setting.name === 'notifications')?.value ===
          'true'
@@ -78,25 +81,22 @@ const Dashboard: NextPage<SiteProps> = ({
          notifications.forEach((notification: Notification) => {
             if (cookies['notification_' + notification.name] === undefined) {
                if (notification.show) {
-                  setTimeout(() => {
-                     const confirm = window.confirm(notification.message);
-                     if (confirm) {
-                        setCookies(
-                           'notification_' + notification.name,
-                           'true',
-                           {
-                              path: '/dashboard',
-                           },
-                        );
+                  const confirm = window.confirm(notification.message);
+                  if (confirm) {
+                     setCookies('notification_' + notification.name, 'true', {
+                        path: '/dashboard',
+                     });
+                     if (notification.url) {
+                        window.open(notification.url);
                      }
-                  }, 100);
+                  }
                }
             }
          });
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [shortedURLs, uploads]);
+   }, []);
 
    function searchChange(searchID: string) {
       if (searchID) {

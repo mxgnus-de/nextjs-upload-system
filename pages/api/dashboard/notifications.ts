@@ -24,6 +24,7 @@ export default async function notifications(
             message:
                'There is a newer version of the program\nSee: ' + githubrepourl,
             name: 'update',
+            url: githubrepourl,
          },
       ];
       return res.status(200).json({
