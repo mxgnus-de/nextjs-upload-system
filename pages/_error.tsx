@@ -1,19 +1,36 @@
 import styled from 'styled-components';
 import Container from 'components/Container/Container';
-export default function Page404() {
+import { NextPage } from 'next';
+
+interface SiteProps {
+   statusCode: number;
+   statusMessage: string;
+}
+
+const Page404: NextPage<SiteProps> = ({ statusCode, statusMessage }) => {
    return (
       <>
          <Container>
             <div>
-               <ErrorCode>404</ErrorCode>
+               <ErrorCode>{statusCode}</ErrorCode>
                <ErrorMessageWrapper>
-                  <ErrorMessage>This page could not be found</ErrorMessage>
+                  <ErrorMessage>{statusMessage}</ErrorMessage>
                </ErrorMessageWrapper>
             </div>
          </Container>
       </>
    );
-}
+};
+
+Page404.getInitialProps = async ({ res, err }) => {
+   const statusCode = err?.statusCode ? err.statusCode : 404;
+   const statusMessage = res
+      ? res.statusMessage
+      : err
+      ? err.message
+      : 'Uknown error';
+   return { statusCode, statusMessage };
+};
 
 const ErrorCode = styled.h1`
    display: inline-block;
@@ -41,3 +58,5 @@ const ErrorMessage = styled.h2`
    margin: 0;
    padding: 0;
 `;
+
+export default Page404;
