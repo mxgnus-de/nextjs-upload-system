@@ -68,7 +68,10 @@ class Connection {
    }
 
    public handleError(error: MysqlError) {
-      if (error.fatal) {
+      if (
+         error?.fatal ||
+         error?.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR'
+      ) {
          new ConsoleLogger(
             'Error: ' +
                error.code +
