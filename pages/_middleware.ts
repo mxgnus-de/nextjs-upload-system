@@ -14,9 +14,9 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       headers: {
          Authorization: uploadKey,
       },
-   }).catch();
-   const json = await response.json();
-   const isValideUploadKey = json.valide;
+   });
+   const json = await response?.json().catch(() => {});
+   const isValideUploadKey = json?.valide || false;
 
    if (req.page.name?.startsWith('/dashboard')) blockedPage = true;
    if (
