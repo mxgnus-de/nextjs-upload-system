@@ -243,7 +243,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch();
+      .catch(() => {});
    const uploadData = uploads.data;
 
    const shortedURLs = await axiosClient
@@ -252,7 +252,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch();
+      .catch(() => {});
    const shortedURLsData = shortedURLs.data;
 
    const users = await axiosClient
@@ -261,7 +261,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch();
+      .catch(() => {});
    const usersData = users.data;
 
    const settings = await axiosClient
@@ -270,7 +270,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch();
+      .catch(() => {});
 
    const settingsData = settings.data;
 
@@ -280,7 +280,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch();
+      .catch(() => {});
    const notificationsData: Notification[] = notifications.data.notifications;
    const notificationsFinal: Notification[] = notificationsData.filter(
       (notification) => notification.show,
