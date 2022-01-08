@@ -26,5 +26,5 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
    ) {
       return NextResponse.redirect('/login?redirect=' + req.page.name);
    }
-   NextResponse.next();
+   return NextResponse.next();
 }
