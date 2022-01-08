@@ -59,7 +59,6 @@ class Connection {
    public reconnect() {
       this.connection.destroy();
       setTimeout(() => {
-         this.connection = this.createConnection();
          this.connect();
          new ConsoleLogger(
             'Connected to the database: ' + this.database,
@@ -68,6 +67,17 @@ class Connection {
    }
 
    public handleError(error: MysqlError) {
+      new ConsoleLogger(
+         'Error in database: ' +
+            this.database +
+            ' (' +
+            this.username +
+            ', ' +
+            this.host +
+            ')\n' +
+            error,
+      ).error();
+
       if (
          error?.fatal ||
          error?.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR'
@@ -78,7 +88,7 @@ class Connection {
                '\nMessage: ' +
                error.message +
                '\nQuery: ' +
-               error.sql,
+               error?.sql,
          ).error();
          this.reconnect();
       }
