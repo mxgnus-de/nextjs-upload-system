@@ -1,12 +1,21 @@
 import UseContext from 'components/Context/UseContext';
+import GlobalStyles from 'components/styles';
 import type { AppProps } from 'next/app';
-import 'styles/globals.sass';
+import NextNprogress from 'nextjs-progressbar';
 
 function UploadSystem({ Component, pageProps }: AppProps) {
    return (
-      <UseContext>
-         <Component {...pageProps} />
-      </UseContext>
+      <>
+         <GlobalStyles />
+         <NextNprogress
+            options={{
+               showSpinner: false,
+            }}
+         />
+         <UseContext>
+            <Component {...pageProps} />
+         </UseContext>
+      </>
    );
 }
 
