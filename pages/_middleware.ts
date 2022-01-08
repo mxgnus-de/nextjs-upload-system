@@ -1,3 +1,4 @@
+import axiosClient from 'api/axiosClient';
 import { server } from 'config/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
@@ -9,18 +10,21 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
    privatePages.forEach((page) => {
       if (req.page.name === page) blockedPage = true;
    });
-   const response = await fetch(`${server}/api/auth/validateuploadkey`, {
+   const response = await axiosClient(`${server}/api/auth/validateuploadkey`, {
       method: 'GET',
       headers: {
          Authorization: uploadKey,
       },
    }).catch();
-   const json = await response.json();
-   const isValideUploadKey = json.valide;
+   const isValideUploadKey = response.data.valide;
 
    if (req.page.name?.startsWith('/dashboard')) blockedPage = true;
-   if (!isValideUploadKey && req.page.name !== '/login' && blockedPage) {
+   if (
+      !isValideUploadKey &&
+      !req.page.name?.startsWith('/login') &&
+      blockedPage
+   ) {
       return NextResponse.redirect('/login?redirect=' + req.page.name);
    }
-   NextResponse.next();
+   return NextResponse.next();
 }
