@@ -142,7 +142,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
                   .get(server + '/api/dashboard/users', {
                      withCredentials: true,
                   })
-                  .catch()
+                  .catch(() => {})
                   .then((res) => {
                      if (res.data) {
                         user.setUsers(res.data);
