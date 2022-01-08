@@ -144,7 +144,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
                   })
                   .catch(() => {})
                   .then((res) => {
-                     if (res.data) {
+                     if (res?.data) {
                         user.setUsers(res.data);
                      }
                   });
