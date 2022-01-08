@@ -8,7 +8,7 @@ async function isVersionUpToDate(): Promise<boolean> {
       .catch(() => {});
    const localpackage = JSON.parse(readFileSync(localpackageJSON, 'utf8'));
    const localversion: boolean = localpackage.version;
-   const githubversion: boolean = githubPackageJSON.data.version;
+   const githubversion: boolean = githubPackageJSON?.data.version;
    return localversion === githubversion;
 }
 
