@@ -244,7 +244,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
          },
       })
       .catch(() => {});
-   const uploadData = uploads.data;
+   const uploadData = uploads?.data;
 
    const shortedURLs = await axiosClient
       .get(server + '/api/dashboard/shorts', {
@@ -253,7 +253,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
          },
       })
       .catch(() => {});
-   const shortedURLsData = shortedURLs.data;
+   const shortedURLsData = shortedURLs?.data;
 
    const users = await axiosClient
       .get(server + '/api/dashboard/users', {
@@ -262,7 +262,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
          },
       })
       .catch(() => {});
-   const usersData = users.data;
+   const usersData = users?.data;
 
    const settings = await axiosClient
       .get(server + '/api/dashboard/settings', {
@@ -272,7 +272,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
       })
       .catch(() => {});
 
-   const settingsData = settings.data;
+   const settingsData = settings?.data;
 
    const notifications = await axiosClient
       .get('api/dashboard/notifications', {
@@ -281,7 +281,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
          },
       })
       .catch(() => {});
-   const notificationsData: Notification[] = notifications.data.notifications;
+   const notificationsData: Notification[] = notifications?.data?.notifications;
    const notificationsFinal: Notification[] = notificationsData.filter(
       (notification) => notification.show,
    );
