@@ -10,7 +10,7 @@ import Navbar from 'components/Navbar/Navbar';
 import SubmitButton from 'components/SubmitButton/SubmitButton';
 import Wrapper from 'components/Wrapper/Wrapper';
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
@@ -20,7 +20,6 @@ const Login: NextPage = () => {
    const [error, setError] = useState({ state: false, text: '' });
    const [uploadKeyCookie, setUploadKeyCookie, removeUploadKeyCookie] =
       useCookies(['upload_key']);
-   const router = useRouter();
 
    async function login() {
       setError({ state: false, text: '' });
@@ -51,8 +50,8 @@ const Login: NextPage = () => {
                      res.data.uploadKey,
                );
             }
-            const redirectTo = router.query['redirect'] || '/';
-            router.push(redirectTo as string);
+            const redirectTo = Router.query['redirect'] || '/';
+            Router.push(redirectTo as string);
          })
          .catch((err: AxiosError) => {
             setError({
