@@ -75,7 +75,9 @@ class Connection {
             ', ' +
             this.host +
             ')\n' +
-            error,
+            error.sqlMessage +
+            '\n' +
+            error.message,
       ).error();
 
       if (
