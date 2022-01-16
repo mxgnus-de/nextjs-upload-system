@@ -5,6 +5,7 @@ import { connection } from './mysql';
 class userSQL {
    private connection: Connection;
    private database: string;
+   private isInit: boolean = false;
 
    constructor(connection: Connection) {
       this.connection = connection;
@@ -13,6 +14,8 @@ class userSQL {
    }
 
    public async init(): Promise<void> {
+      if (this.isInit) return;
+      this.isInit = true;
       const query =
          'CREATE TABLE IF NOT EXISTS `' +
          this.database +
@@ -23,7 +26,6 @@ class userSQL {
       if (defaultuser.length === 0 && users.length === 0) {
          this.createNewUser('changeme', 'default');
       }
-      return;
    }
 
    public getUser(uploadKey: string): any {
