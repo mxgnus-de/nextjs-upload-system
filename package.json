@@ -2,7 +2,7 @@
    "name": "nextjs-upload-system",
    "private": true,
    "description": "Uploads files to a server",
-   "author": "Mags007",
+   "author": "mxgnus",
    "version": "2.0.2",
    "repository": {
       "url": "https://github.com/mxgnus-de/nextjs-upload-system",
@@ -19,6 +19,7 @@
       "@emotion/styled": "^11.6.0",
       "@mui/icons-material": "^5.2.4",
       "@mui/material": "^5.2.4",
+      "adm-zip": "^0.5.9",
       "axios": "^0.24.0",
       "babel-plugin-styled-components": "^2.0.2",
       "cookies": "^0.8.0",
@@ -36,6 +37,7 @@
       "winston": "^3.3.3"
    },
    "devDependencies": {
+      "@types/adm-zip": "^0.4.34",
       "@types/cookies": "^0.7.7",
       "@types/formidable": "^2.0.0",
       "@types/mime-types": "^2.1.1",
