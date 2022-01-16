@@ -37,21 +37,22 @@ const Login: NextPage = () => {
                res.data.success === true &&
                res.data.uploadKey
             ) {
-               const expiresIn = new Date();
-               expiresIn.setDate(new Date().getDate() + 5);
-               setUploadKeyCookie('upload_key', res.data.uploadKey, {
-                  path: '/',
-                  expires: expiresIn,
-               });
             }
             if (res.data.updated) {
                alert(
                   'Your upload key has been updated.\nNew key: ' +
                      res.data.uploadKey,
                );
+            } else {
+               const expiresIn = new Date();
+               expiresIn.setDate(new Date().getDate() + 5);
+               setUploadKeyCookie('upload_key', res.data.uploadKey, {
+                  path: '/',
+                  expires: expiresIn,
+               });
+               const redirectTo = Router.query['redirect'] || '/';
+               window.location.href = redirectTo as string;
             }
-            const redirectTo = Router.query['redirect'] || '/';
-            window.location.href = redirectTo as string;
          })
          .catch((err: AxiosError) => {
             setError({
