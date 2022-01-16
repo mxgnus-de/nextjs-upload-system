@@ -16,6 +16,8 @@ import Cookies from 'cookies';
 import methodnotallowed from 'api/utils/response/methodnotallowed';
 import invaliduploadkey from 'api/utils/response/invaliduploadkey';
 import path from 'path';
+import AdmZip from 'adm-zip';
+
 export const config = {
    api: {
       bodyParser: false,
@@ -68,6 +70,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               'image',
             );
          } else if (isVideo(mimetype)) {
             const newFilePath = path.resolve(
@@ -88,6 +91,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               'video',
             );
          } else if (isAudio(mimetype)) {
             const newFilePath = path.resolve(
@@ -108,6 +112,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               'audio',
             );
          } else {
             const newFilePath = path.resolve(
@@ -116,8 +121,8 @@ export default async function upload(
             );
             fileSQL.createNewFile(
                newFilename,
-               mimetype,
-               newFilePath,
+               'application/zip',
+               newFilePath + '.zip',
                originalFilename,
             );
             uploadFile(
@@ -128,6 +133,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               'data',
             );
          }
 
@@ -193,6 +199,7 @@ function uploadFile(
    originalFilename: string,
    mimetype: string,
    username: string,
+   type: 'image' | 'video' | 'audio' | 'data',
 ): void {
    checkIfDirExists(dir);
    saveFile(newFilePath, buffer);
@@ -203,5 +210,13 @@ function uploadFile(
       mimetype,
       username,
    );
+   if (type === 'data') {
+      const zip = new AdmZip();
+      zip.addLocalFile(newFilePath);
+      zip.writeZip(newFilePath + '.zip');
+      fs.unlinkSync(newFilePath);
+      newFilePath = newFilePath + '.zip';
+   }
+
    return;
 }
