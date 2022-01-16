@@ -53,6 +53,12 @@ function Meta({ meta }: { meta: IMeta }) {
             />
          )}
 
+         {meta.uploadmeta?.type && (
+            <meta property='og:type' content={meta.uploadmeta?.type} />
+         )}
+
+         {meta.robots && <meta name='robots' content={meta.robots} />}
+
          <meta name='twitter:card' content='summary_large_image'></meta>
       </Head>
    );
