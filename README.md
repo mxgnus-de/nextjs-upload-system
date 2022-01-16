@@ -1,10 +1,10 @@
 # Author
 
-### Mags007
+### mxgnus-de
 
 <ul>
    <li><a href="mailto:kontakt@mxgnus.de">Email</a></li>
-   <li><a href="https://github.com/Mags007">Github</a>
+   <li><a href="https://github.com/mxgnus-de">Github</a>
    <li><a href="https://discord.com/users/666974190561394698">Discord</a>
 </ul>
 
@@ -13,7 +13,7 @@
 ### 1) Clone the repository
 
 ```bash
-git clone https://github.com/Mags007/nextjs-upload-system.git && cd nextjs-upload-system
+git clone https://github.com/mxgnus-de/nextjs-upload-system.git && cd nextjs-upload-system
 ```
 
 ### 2) Install all dependencies
