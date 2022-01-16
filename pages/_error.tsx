@@ -7,7 +7,7 @@ interface SiteProps {
    statusMessage: string;
 }
 
-const Page404: NextPage<SiteProps> = ({ statusCode, statusMessage }) => {
+const PageError: NextPage<SiteProps> = ({ statusCode, statusMessage }) => {
    return (
       <>
          <Container>
@@ -22,7 +22,7 @@ const Page404: NextPage<SiteProps> = ({ statusCode, statusMessage }) => {
    );
 };
 
-Page404.getInitialProps = async ({ res, err }) => {
+PageError.getInitialProps = async ({ res, err }) => {
    const statusCode = err?.statusCode ? err.statusCode : 404;
    const statusMessage = res
       ? res.statusMessage
@@ -59,4 +59,4 @@ const ErrorMessage = styled.h2`
    padding: 0;
 `;
 
-export default Page404;
+export default PageError;
