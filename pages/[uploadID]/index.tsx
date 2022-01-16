@@ -44,7 +44,9 @@ const Upload: NextPage<SiteProps> = ({
                      ? `${server}/api/upload/${uploadID}`
                      : undefined,
                   videomimetype: isVideo(contentType) ? contentType : undefined,
+                  type: isVideo(contentType) ? 'video.other' : undefined,
                },
+               robots: 'noindex',
             }}
          />
          <h4 style={{ margin: '20px' }}>{filename}</h4>
