@@ -5,9 +5,11 @@ export interface Meta {
    image?: string;
    url?: string;
    themecolor?: string;
+   robots?: 'noindex';
    uploadmeta?: {
       imageRawPath?: string;
       videoRawPath?: string;
       videomimetype?: string;
+      type?: string;
    };
 }
