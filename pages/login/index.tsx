@@ -51,7 +51,7 @@ const Login: NextPage = () => {
                   expires: expiresIn,
                });
                const redirectTo = Router.query['redirect'] || '/';
-               window.location.href = redirectTo as string;
+               Router.push(redirectTo as string);
             }
          })
          .catch((err: AxiosError) => {
