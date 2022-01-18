@@ -1,5 +1,6 @@
-import { NextApiResponse } from 'next';
-export default function invaliduploadkey(response: NextApiResponse) {
+import { Response } from 'express';
+
+export default function invaliduploadkey(response: Response) {
    response.statusCode = 401;
    response.statusMessage = 'Unauthorized | Invalid upload key';
    return response.json({

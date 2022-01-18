@@ -1,5 +1,5 @@
-import axiosClient from 'api/axiosClient';
-import { githubrepopackageJSON, localpackageJSON } from 'config/github';
+import axiosClient from '../../api/axiosClient';
+import { githubrepopackageJSON, localpackageJSON } from '../../config/github';
 import { readFileSync } from 'fs';
 
 async function isVersionUpToDate(): Promise<boolean> {

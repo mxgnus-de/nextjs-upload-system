@@ -1,5 +1,5 @@
 import Connection from './connection';
-import mysqlConfig from 'config/mysql';
+import mysqlConfig from '../../config/mysql';
 
 const connection = new Connection(
    mysqlConfig.username,

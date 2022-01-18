@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.port = exports.devenv = exports.serverdomain = exports.server = void 0;
+const devenv = process.env.NODE_ENV !== 'production';
+exports.devenv = devenv;
+const server = 'http://localhost:3000';
+exports.server = server;
+const port = 3000;
+exports.port = port;
+const serverdomain = 'localhost';
+exports.serverdomain = serverdomain;

@@ -172,7 +172,7 @@ function User(user: { username: string; uploadkey: string; setUsers: any }) {
                );
             })
             .then((res: any) => {
-               if (res.data.newusername) {
+               if (res?.data?.newusername) {
                   user.setUsers((prev: IUser[]) => {
                      const newusers: IUser[] = [];
                      prev.forEach((item: IUser) => {

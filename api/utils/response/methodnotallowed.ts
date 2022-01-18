@@ -1,5 +1,6 @@
-import { NextApiResponse } from 'next';
-export default function methodnotallowed(response: NextApiResponse) {
+import { Response } from 'express';
+
+export default function methodnotallowed(response: Response) {
    response.statusCode = 405;
    response.statusMessage = 'Method Not Allowed';
    return response.json({
