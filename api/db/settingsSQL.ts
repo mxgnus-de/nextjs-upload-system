@@ -33,7 +33,7 @@ class SettingsSQL {
             [name],
             (error: any, results: any) => {
                if (error) {
-                  connection.handleError(error);
+                  return connection.handleError(error);
                   return reject(error);
                }
                resolve(results);
@@ -48,7 +48,7 @@ class SettingsSQL {
             `SELECT * FROM settings`,
             (error: any, results: any) => {
                if (error) {
-                  connection.handleError(error);
+                  return connection.handleError(error);
                   return reject(error);
                }
                resolve(results);
@@ -64,7 +64,7 @@ class SettingsSQL {
             [value, name],
             (error: any, results: any) => {
                if (error) {
-                  connection.handleError(error);
+                  return connection.handleError(error);
                   return reject(error);
                }
                resolve(results);

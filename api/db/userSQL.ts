@@ -38,7 +38,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -54,7 +54,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -73,7 +73,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -98,7 +98,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -119,7 +119,7 @@ class userSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }

@@ -24,7 +24,7 @@ class FileSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -40,7 +40,7 @@ class FileSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -64,7 +64,7 @@ class FileSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
@@ -80,7 +80,7 @@ class FileSQL {
             (error, results, fields) => {
                if (error) {
                   reject(error);
-                  connection.handleError(error);
+                  return connection.handleError(error);
                } else {
                   resolve(results);
                }
