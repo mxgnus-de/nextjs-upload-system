@@ -1,4 +1,4 @@
-const devenv = process.env.NODE_ENV === 'development';
+import { devenv } from './api';
 
 /* If true, send a webhook */
 const sendWebhook: boolean = false;
