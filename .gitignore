@@ -12,7 +12,7 @@
 .vscode
 
 # uploads
-/files
+/files/*
 
 # debug
 npm-debug.log*
