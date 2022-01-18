@@ -5,4 +5,4 @@ const port = 3000;
 
 const serverdomain = devenv ? 'localhost' : 'domain.tld';
 
-export { server, serverdomain, devenv };
+export { server, serverdomain, devenv, port };
