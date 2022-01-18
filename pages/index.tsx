@@ -49,11 +49,12 @@ const Home: NextPage = () => {
 
       await axiosClient
          .post('/api/upload', formData, config)
-         .then((res: AxiosResponse) => {
+         .then(async (res: AxiosResponse) => {
             setUploading(false);
             const clipboard = navigator?.clipboard;
             if (clipboard) {
-               clipboard.writeText(res.data);
+               console.log(res.data);
+               await clipboard.writeText(res.data).catch((err) => {});
             }
             updateSuccessWidgit?.showSuccessWidgit(
                'File uploaded!' + (clipboard ? ' Copied to clipboard' : ''),
