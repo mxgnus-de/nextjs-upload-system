@@ -1,5 +1,4 @@
 import { validateUploadKey } from 'api/uploadKey';
-import invaliduploadkey from 'api/utils/response/invaliduploadkey';
 import methodnotallowed from 'api/utils/response/methodnotallowed';
 import Cookies from 'cookies';
 import { NextApiRequest, NextApiResponse } from 'next';
