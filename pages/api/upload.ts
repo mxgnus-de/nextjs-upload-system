@@ -70,6 +70,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               extension,
                'image',
             );
          } else if (isVideo(mimetype)) {
@@ -91,6 +92,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               extension,
                'video',
             );
          } else if (isAudio(mimetype)) {
@@ -112,6 +114,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               extension,
                'audio',
             );
          } else {
@@ -133,6 +136,7 @@ export default async function upload(
                originalFilename,
                mimetype,
                user[0].username,
+               extension,
                'data',
             );
          }
@@ -198,6 +202,7 @@ function uploadFile(
    shortname: string,
    originalFilename: string,
    mimetype: string,
+   extension: string,
    username: string,
    type: 'image' | 'video' | 'audio' | 'data',
 ): void {
@@ -216,6 +221,7 @@ function uploadFile(
       zip.writeZip(newFilePath + '.zip');
       fs.unlinkSync(newFilePath);
       newFilePath = newFilePath + '.zip';
+      console.log(newFilePath);
    }
 
    return;

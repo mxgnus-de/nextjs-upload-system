@@ -2,6 +2,9 @@ import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { fileSQL } from 'api/db/mysql';
 import methodnotallowed from 'api/utils/response/methodnotallowed';
+import mime from 'mime-types';
+import { paths } from 'config/upload';
+import { server } from 'config/api';
 
 export const config = {
    api: {
@@ -14,7 +17,7 @@ export default async function get(
    res: NextApiResponse<any>,
 ) {
    if (req.method === 'GET') {
-      const { uploadID, download } = req.query;
+      const { uploadID } = req.query;
 
       if (!uploadID)
          return res.status(400).json({ error: 'No uploadID provided' });
@@ -22,9 +25,9 @@ export default async function get(
       if (!file.length) {
          return res.status(404).json({ error: 'File not found' });
       } else {
-         const mimetype = file[0].mimetype;
-         const filePath = file[0].path;
-         const originalFilename = file[0].originalfilename;
+         const mimetype: string = file[0].mimetype;
+         const filePath: string = file[0].path;
+         const originalFilename: string = file[0].originalfilename;
 
          if (!mimetype) {
             res.statusMessage = 'No mimetype provided';
@@ -40,16 +43,25 @@ export default async function get(
                .status(404)
                .json({ status: 404, error: 'File not found' });
          }
-         const fileBuffer = fs.readFileSync(filePath);
-         res.setHeader('Content-Type', mimetype);
-         res.setHeader('Filename', originalFilename);
-         if (download === 'true') {
-            res.setHeader(
-               'Content-Disposition',
-               'attachment; filename="' + originalFilename + '"',
-            );
-         }
-         return res.status(200).send(fileBuffer);
+
+         const file_url =
+            server +
+            '/uploads' +
+            filePath
+               .replace(paths.upload, '')
+               .replaceAll('\\', '/')
+               .replaceAll('//', '/');
+         const resObj = {
+            status: 200,
+            mime_type: mimetype,
+            original_filename: originalFilename,
+            file_name: uploadID,
+            file_extension: mime.extension(mimetype),
+            file_path: file_url,
+            file_path_name: file_url.split('/')[file_url.split('/').length - 1],
+         };
+
+         return res.status(200).json(resObj);
       }
    } else {
       return methodnotallowed(res);
