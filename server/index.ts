@@ -30,7 +30,6 @@ async function main() {
    server.set('port', port);
    server.use(cookies.express(['keyA', 'keyB', 'keyC']));
    server.use(middleware);
-   server.use(logRequest);
    server.use('/api', apirouter);
    server.use(express.static(paths.files));
 
@@ -43,19 +42,6 @@ async function main() {
       }
       new ConsoleLogger(`Ready on http://localhost:${port}`).info();
    });
-}
-
-function logRequest(req: Request, res: Response, next: NextFunction) {
-   if (!req.path.startsWith('/api')) return next();
-   new ConsoleLogger(
-      '[' +
-         req.method +
-         '] ' +
-         (req.headers['x-forwarded-for'] || req.socket.remoteAddress) +
-         ': ' +
-         req.path,
-   ).info(false);
-   next();
 }
 
 main();
