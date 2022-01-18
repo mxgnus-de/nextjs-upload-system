@@ -2,12 +2,13 @@ import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
-import { server } from 'config/api';
+import { server, serverdomain } from 'config/api';
 import Link from 'next/link';
 import { Uploads } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
+import { isAudio, isImage, isVideo } from 'utils/mimetypechecker';
 
 function FileUpload({
    uploadFiles,
@@ -87,6 +88,25 @@ const Upload = (upload: {
       }
    }
 
+   const downloadName = upload.path
+      .replaceAll('//', '/')
+      .replaceAll('\\', '/')
+      .split('/')[
+      upload.path.replaceAll('//', '/').replaceAll('\\', '/').split('/')
+         .length - 1
+   ];
+   const downloadURL =
+      server +
+      '/uploads/' +
+      (isImage(upload.mimetype)
+         ? 'images'
+         : isAudio(upload.mimetype)
+         ? 'audios'
+         : isVideo(upload.mimetype)
+         ? 'videos'
+         : 'data') +
+      '/' +
+      downloadName;
    return (
       <DashboardItemWrapper>
          <DashboardName>{upload.name}</DashboardName>
@@ -95,12 +115,14 @@ const Upload = (upload: {
             <Link href={'/' + upload.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
-            <Link
-               href={'/api/upload/' + upload.name + '?download=true'}
-               passHref
+            <a
+               href={downloadURL}
+               download={serverdomain + downloadName}
+               target={'_blank'}
+               rel='noreferrer'
             >
                <p className='button button-blue'>Download</p>
-            </Link>
+            </a>
             <button
                className='button button-red'
                onClick={(e) => {
