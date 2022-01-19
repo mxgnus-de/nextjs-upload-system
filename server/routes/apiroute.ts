@@ -13,7 +13,6 @@ import { server } from '../../config/api';
 import Embed from '../../utils/createEmbed';
 import AdmZip from 'adm-zip';
 import formidable from 'formidable';
-import { validateUploadKey } from '../../api/uploadKey';
 import invaliduploadkey from '../../api/utils/response/invaliduploadkey';
 import { generateRandomString } from '../../utils/generateRandomString';
 import { fileSQL, shortSQL, userSQL } from '../../api/db/mysql';
@@ -23,6 +22,7 @@ import mime from 'mime-types';
 import { validateURL } from '../../utils/validator';
 import dashboardrouter from './dashboard/dashboardroutes';
 import isValidUser from '../../server/middleware/isValidUser';
+import getuploadkey from '../../server/modules/getuploadkey';
 
 const apirouter = Router();
 
@@ -32,10 +32,8 @@ apirouter.use('/dashboard', isValidUser, dashboardrouter);
 apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
    const form = new formidable.IncomingForm();
    form.parse(req, async function (err, fields, files: any) {
-      const uploadKey =
-         req.cookies.get('upload_key') ||
-         fields.upload_key ||
-         req.body.upload_key;
+      const uploadKey: any = getuploadkey(req) || fields.upload_key;
+      if (!uploadKey) return invaliduploadkey(res);
       const buffer = fs.readFileSync(files?.file?._writeStream?.path);
 
       fs.unlinkSync(files?.file?._writeStream?.path);

@@ -21,10 +21,18 @@ function Meta({ meta }: { meta: IMeta }) {
             property='og:description'
             content={meta.description ? meta.title : defaultMeta.description}
          />
-         <meta
-            name='theme-color'
-            content={meta.themecolor ? meta.themecolor : defaultMeta.themecolor}
-         />
+         {!meta.onlyShowVideoData ? (
+            <>
+               <meta name='twitter:card' content='summary_large_image'></meta>
+               <meta
+                  name='theme-color'
+                  content={
+                     meta.themecolor ? meta.themecolor : defaultMeta.themecolor
+                  }
+               />
+            </>
+         ) : null}
+
          {meta.uploadmeta?.imageRawPath && (
             <meta property='og:image' content={meta.uploadmeta?.imageRawPath} />
          )}
@@ -58,8 +66,6 @@ function Meta({ meta }: { meta: IMeta }) {
          )}
 
          {meta.robots && <meta name='robots' content={meta.robots} />}
-
-         <meta name='twitter:card' content='summary_large_image'></meta>
       </Head>
    );
 }

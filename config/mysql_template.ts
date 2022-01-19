@@ -1,3 +1,5 @@
+import { devenv } from './api';
+
 const developmentData = {
    username: '',
    password: '',
@@ -12,6 +14,4 @@ const productionData = {
    database: '',
 };
 
-export default process.env.NODE_ENV === 'production'
-   ? productionData
-   : developmentData;
+export default devenv ? productionData : developmentData;
