@@ -21,7 +21,7 @@ function Meta({ meta }: { meta: IMeta }) {
             property='og:description'
             content={meta.description ? meta.title : defaultMeta.description}
          />
-         {meta.onlyShowVideoData ? (
+         {!meta.onlyShowVideoData ? (
             <>
                <meta name='twitter:card' content='summary_large_image'></meta>
                <meta
