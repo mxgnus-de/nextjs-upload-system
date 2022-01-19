@@ -51,7 +51,7 @@ const Upload: NextPage<SiteProps> = ({
                   videomimetype: isVideo(mimetype) ? mimetype : undefined,
                   type: isVideo(mimetype) ? 'video.other' : undefined,
                },
-               onlyShowVideoData: isVideo(mimetype) ? true : undefined,
+               /* onlyShowVideoData: isVideo(mimetype) ? true : undefined, */
                robots: 'noindex',
             }}
          />
