@@ -1,5 +1,4 @@
 export interface Meta {
-   onlyShowVideoData?: true;
    title: string;
    description?: string;
    keywords?: string;

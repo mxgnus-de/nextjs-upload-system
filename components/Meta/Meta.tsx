@@ -21,17 +21,15 @@ function Meta({ meta }: { meta: IMeta }) {
             property='og:description'
             content={meta.description ? meta.title : defaultMeta.description}
          />
-         {!meta.onlyShowVideoData ? (
-            <>
-               <meta name='twitter:card' content='summary_large_image'></meta>
-               <meta
-                  name='theme-color'
-                  content={
-                     meta.themecolor ? meta.themecolor : defaultMeta.themecolor
-                  }
-               />
-            </>
-         ) : null}
+         <>
+            <meta name='twitter:card' content='summary_large_image'></meta>
+            <meta
+               name='theme-color'
+               content={
+                  meta.themecolor ? meta.themecolor : defaultMeta.themecolor
+               }
+            />
+         </>
 
          {meta.uploadmeta?.imageRawPath && (
             <meta property='og:image' content={meta.uploadmeta?.imageRawPath} />
