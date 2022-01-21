@@ -1,5 +1,6 @@
 import ConsoleLogger from '../../utils/consolelogger';
 import mysql, { Connection as MySQLConnection, MysqlError } from 'mysql';
+import { fileSQL, settingsSQL, userSQL, shortSQL } from './mysql';
 
 class Connection {
    private connection: MySQLConnection;
@@ -58,6 +59,7 @@ class Connection {
 
    public reconnect() {
       this.connection.destroy();
+      this.connection = this.createConnection();
       setTimeout(() => {
          this.connect();
          new ConsoleLogger(
@@ -93,6 +95,10 @@ class Connection {
                error?.sql,
          ).error();
          this.reconnect();
+         fileSQL.setConnection(this.connection);
+         settingsSQL.setConnection(this.connection);
+         userSQL.setConnection(this.connection);
+         shortSQL.setConnection(this.connection);
       }
    }
 

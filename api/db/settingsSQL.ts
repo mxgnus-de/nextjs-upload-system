@@ -26,6 +26,11 @@ class SettingsSQL {
       }
    }
 
+   public setConnection(connection: Connection): void {
+      this.connection = connection;
+      return;
+   }
+
    public getSetting(name: string): Promise<any[]> {
       return new Promise((resolve, reject) => {
          this.connection.query(
