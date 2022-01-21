@@ -28,6 +28,11 @@ class userSQL {
       }
    }
 
+   public setConnection(connection: Connection): void {
+      this.connection = connection;
+      return;
+   }
+
    public getUser(uploadKey: string): any {
       return new Promise((resolve, reject) => {
          this.connection.query(
