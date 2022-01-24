@@ -4,6 +4,7 @@ import { Request, Response, Router } from 'express';
 import { generateRandomString } from '../../../utils/generateRandomString';
 import isValidUser from '../../middleware/isValidUser';
 import internalservererror from '../../../api/utils/response/internalservererror';
+import { server } from 'config/api';
 
 const hasterouter = Router();
 
@@ -30,6 +31,7 @@ hasterouter.get('/:hasteID', async (req: Request, res: Response) => {
    return res.status(200).json({
       status: 200,
       haste: haste[0],
+      url: server + '/haste/' + hasteID,
    });
 });
 
