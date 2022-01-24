@@ -18,6 +18,7 @@ hasterouter.post('/new', isValidUser, async (req: Request, res: Response) => {
    return res.status(200).json({
       status: 200,
       hasteID: newhasteID,
+      url: server + '/haste/' + hasteID,
    });
 });
 
@@ -31,7 +32,6 @@ hasterouter.get('/:hasteID', async (req: Request, res: Response) => {
    return res.status(200).json({
       status: 200,
       haste: haste[0],
-      url: server + '/haste/' + hasteID,
    });
 });
 
