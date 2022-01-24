@@ -8,7 +8,7 @@ export async function middleware(
 ) {
    const uploadKey = req.cookies.get('upload_key');
 
-   const privatePages = ['/', '/shorter'];
+   const privatePages = ['/', '/shorter', '/haste'];
    let blockedPage = false;
    privatePages.forEach((page) => {
       if (req.path === page) blockedPage = true;
