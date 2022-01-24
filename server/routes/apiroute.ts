@@ -23,11 +23,13 @@ import { validateURL } from '../../utils/validator';
 import dashboardrouter from './dashboard/dashboardroutes';
 import isValidUser from '../../server/middleware/isValidUser';
 import getuploadkey from '../../server/modules/getuploadkey';
+import hasterouter from './haste/hasteroute';
 
 const apirouter = Router();
 
 apirouter.use('/auth', authrouter);
 apirouter.use('/dashboard', isValidUser, dashboardrouter);
+apirouter.use('/haste', hasterouter);
 
 apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
    const form = new formidable.IncomingForm();

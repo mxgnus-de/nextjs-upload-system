@@ -13,6 +13,9 @@ function Navbar() {
                <Link href='/dashboard'>Dashboard</Link>
             </li>
             <li>
+               <Link href='/haste'>Haste</Link>
+            </li>
+            <li>
                <Link href='/shorter'>URL Shorter</Link>
             </li>
          </Menu>

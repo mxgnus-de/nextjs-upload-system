@@ -14,9 +14,11 @@ import FileSQL from './fileSQL';
 import ShortSQL from './shortSQL';
 import UserSQL from './userSQL';
 import SettingsSQL from './settingsSQL';
+import HasteSQL from './hasteSQL';
 
 export const fileSQL = new FileSQL(connection.getConnection());
 export const shortSQL = new ShortSQL(connection.getConnection());
 export const userSQL = new UserSQL(connection.getConnection());
 export const settingsSQL = new SettingsSQL(connection.getConnection());
+export const hasteSQL = new HasteSQL(connection.getConnection());
 export { connection };

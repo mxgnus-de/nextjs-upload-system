@@ -7,7 +7,7 @@ const GlobalStyles = styled.createGlobalStyle`
       font-weight: 400;
       margin: 0;
       padding: 0;
-      color: #fff;
+      /* color: #fff; */
    }
    *::before {
       border: border-box;
@@ -33,6 +33,16 @@ const GlobalStyles = styled.createGlobalStyle`
    }
 
    /** REMOVE DEFAULT STYLING **/
+
+   textarea {
+      background-color: transparent;
+      resize: none;
+
+      padding: 0;
+      border: none;
+      outline: none;
+   }
+
    li {
       list-style: none;
    }

@@ -1,12 +1,11 @@
 import { devenv, port } from '../config/api';
 import cookies from 'cookies';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import next from 'next';
 import ConsoleLogger from '../utils/consolelogger';
 import { middleware } from './middleware/middleware';
 import apirouter from './routes/apiroute';
 import '../api/db/mysql';
-import path from 'path';
 import { paths } from '../config/upload';
 import fs from 'fs';
 
