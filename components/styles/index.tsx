@@ -7,7 +7,7 @@ const GlobalStyles = styled.createGlobalStyle`
       font-weight: 400;
       margin: 0;
       padding: 0;
-      /* color: #fff; */
+      color: #fff;
    }
    *::before {
       border: border-box;
