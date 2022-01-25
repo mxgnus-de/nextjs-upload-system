@@ -69,18 +69,7 @@ class Connection {
    }
 
    public handleError(error: MysqlError) {
-      new ConsoleLogger(
-         'Error in database: ' +
-            this.database +
-            ' (' +
-            this.username +
-            ', ' +
-            this.host +
-            ')\n' +
-            error.sqlMessage +
-            '\n' +
-            error.message,
-      ).error();
+      console.log(error);
 
       if (
          error?.fatal ||

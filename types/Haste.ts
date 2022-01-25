@@ -3,4 +3,8 @@ interface HasteViewProps {
    hasteText: string;
 }
 
-export type { HasteViewProps };
+interface HasteCreateProps {
+   haste?: string;
+}
+
+export type { HasteViewProps, HasteCreateProps };

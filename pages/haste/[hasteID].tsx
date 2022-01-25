@@ -24,7 +24,13 @@ const HasteView: NextPage<HasteViewProps> = ({ hasteID, hasteText }) => {
             }}
          />
 
-         <Widgit hasteValue={haste} setHasteValue={setHaste} canSave={false} />
+         <Widgit
+            hasteValue={haste}
+            setHasteValue={setHaste}
+            canSave={false}
+            hasteID={hasteID}
+            canCopy={true}
+         />
 
          <CustomContainer>
             <CustomHasteContainer>
