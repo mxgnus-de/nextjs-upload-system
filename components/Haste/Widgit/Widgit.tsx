@@ -6,15 +6,20 @@ import Router from 'next/router';
 import axiosClient from '../../../api/axiosClient';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { AxiosError } from 'axios';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 function Widgit({
    hasteValue,
    setHasteValue,
    canSave,
+   canCopy,
+   hasteID,
 }: {
    hasteValue: string;
    setHasteValue?: (value: string) => void;
    canSave: boolean;
+   canCopy: boolean;
+   hasteID?: string;
 }) {
    const updateErrorWidgit = useErrorWidgitUpdate();
 
@@ -63,6 +68,20 @@ function Widgit({
                   <SaveAsIcon />
                </WidgitButton>
             ) : null}
+            {canCopy ? (
+               <WidgitButton
+                  onClick={() => {
+                     if (!hasteID)
+                        return updateErrorWidgit?.showErrorWidgit(
+                           'Error copying haste',
+                        );
+                     Router.push(`/haste?copy=${hasteID}`);
+                  }}
+               >
+                  <FileCopyIcon />
+               </WidgitButton>
+            ) : null}
+
             <WidgitButton
                onClick={() => {
                   clearHasteValue();
