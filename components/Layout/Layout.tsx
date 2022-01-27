@@ -1,4 +1,5 @@
 import Container from 'components/Container/Container';
+import DashboardNotifications from 'components/Dashboard/DashboardNotifications';
 import Meta from 'components/Meta/Meta';
 import Navbar from 'components/Navbar/Navbar';
 import Sidebar from 'components/Sidebar/Sidebar';
@@ -19,7 +20,8 @@ function Layout({
          <Navbar />
          <LayoutWrapper>
             <Meta meta={meta} />
-            <Sidebar />
+            {dashboard === true && <Sidebar />}
+            {dashboard === true && <DashboardNotifications />}
             <div style={{ width: '100%', height: '100%' }}>
                {dashboard ? (
                   <DashboardContainer>{children}</DashboardContainer>

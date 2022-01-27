@@ -2,7 +2,6 @@ import React from 'react';
 import { ErrorWidgitProvider } from 'components/Context/ErrorWidgitContext';
 import { SuccessWidgitProvider } from 'components/Context/SuccessWidgitContext';
 import { CookiesProvider } from 'react-cookie';
-import { CurrentDashboardPageProvider } from './CurrentDashboardPage';
 import { SidebarStatusProvider } from './SidebarStatusContext';
 
 export interface ContextProps {
@@ -14,11 +13,7 @@ function UseContext(props: ContextProps) {
       <CookiesProvider>
          <ErrorWidgitProvider>
             <SuccessWidgitProvider>
-               <CurrentDashboardPageProvider>
-                  <SidebarStatusProvider>
-                     {props.children}
-                  </SidebarStatusProvider>
-               </CurrentDashboardPageProvider>
+               <SidebarStatusProvider>{props.children}</SidebarStatusProvider>
             </SuccessWidgitProvider>
          </ErrorWidgitProvider>
       </CookiesProvider>

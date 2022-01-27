@@ -35,10 +35,7 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
             <Link href={url}>{url}</Link>
          </p>
          {isLoggedIn && (
-            <Link
-               href={`${server}/dashboard?id=${shortedLink}&site=links`}
-               passHref
-            >
+            <Link href={`${server}/dashboard/links?id=${shortedLink}`} passHref>
                <button
                   className='button button-blue'
                   style={{ marginTop: '20px' }}
@@ -56,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    const res = await fetch(`${server}/api/links/${link}`);
    const data = await res.json();
    const isLoggedIn = await validateUploadKey(
-      context.req.cookies['upload_key'],
+      context.req.cookies['upload_key'] || '',
    );
 
    if (res.status !== 200) {

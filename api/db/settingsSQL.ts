@@ -9,7 +9,7 @@ class SettingsSQL {
       this.init();
    }
 
-   public async init() {
+   private async init() {
       this.connection.query(
          `CREATE TABLE IF NOT EXISTS settings (
             name VARCHAR(255) NOT NULL,

@@ -5,44 +5,45 @@ import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
-import FileUpload from 'components/Dashboard/FileUpload';
 import Layout from 'components/Layout/Layout';
-import { Uploads } from 'types/Dashboard';
+import { Settings as ISettings } from 'types/Dashboard';
+import Settings from 'components/Dashboard/Settings';
+import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
 
 interface SiteProps {
-   uploads: Uploads[];
+   initalsettings: ISettings[];
 }
 
-const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
-   const [uploadFiles, setUploadFiles] = useState<typeof uploads>(uploads);
-   const [search, setSearch] = useState<string>('');
+const Dashboard: NextPage<SiteProps> = ({ initalsettings }) => {
+   const [settings, setSettings] =
+      useState<typeof initalsettings>(initalsettings);
+   const [search, setSearch] = useState('');
+   const [initsettings, setInitsettings] = useState(initalsettings);
 
    useEffect(() => {
-      setUploadFiles(uploads);
+      setSettings(initalsettings);
 
       const id = Router.query.id as string | undefined;
       if (id) searchChange(id);
 
-      Router.replace('/dashboard', undefined, { shallow: true });
+      Router.replace('/dashboard/settings', undefined, { shallow: true });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    function searchChange(searchID: string) {
       if (searchID) {
-         setUploadFiles(
-            uploads.filter(
-               (upload) =>
-                  upload.name.toLowerCase().startsWith(searchID) ||
-                  upload.name.toLowerCase().includes(searchID) ||
-                  upload.originalfilename.toLowerCase().startsWith(searchID) ||
-                  upload.originalfilename.toLowerCase().includes(searchID),
+         setSettings(
+            initsettings.filter(
+               (setting) =>
+                  setting.name.toLowerCase().startsWith(searchID) ||
+                  setting.name.toLowerCase().includes(searchID),
             ),
          );
       }
       if (searchID === '') {
-         setUploadFiles(uploads);
+         setSettings(initsettings);
       }
       setSearch(searchID);
    }
@@ -54,13 +55,11 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
             title: 'Upload • Dashboard',
          }}
       >
-         <DashboardTitle>Dashboard - Files</DashboardTitle>
+         <DashboardTitle>Dashboard - Settings</DashboardTitle>
          <Hyphen className='text-muted' />
+         <DashboardSearch searchValue={search} searchChange={searchChange} />
          <DashboardWrapper>
-            <FileUpload
-               setUploadFiles={setUploadFiles}
-               uploadFiles={uploadFiles}
-            />
+            <Settings settings={settings} setSettings={setInitsettings} />
          </DashboardWrapper>
       </Layout>
    );
@@ -69,18 +68,19 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
 export const getServerSideProps: GetServerSideProps<SiteProps> = async (
    context,
 ) => {
-   const uploads = await axiosClient
-      .get(server + '/api/dashboard/uploads', {
+   const settings = await axiosClient
+      .get(server + '/api/dashboard/settings', {
          headers: {
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
       .catch(() => {});
-   const uploadData = uploads?.data;
+
+   const settingsData = settings?.data;
 
    return {
       props: {
-         uploads: uploadData,
+         initalsettings: settingsData,
       },
    };
 };
