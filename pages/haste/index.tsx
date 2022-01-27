@@ -5,7 +5,6 @@ import HasteLineNumbers from 'components/Haste/LineNumbers/LineNumbers';
 import HasteTextArea from 'components/Haste/TextArea/TextArea';
 import Widgit from 'components/Haste/Widgit/Widgit';
 import Meta from 'components/Meta/Meta';
-import { server } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';

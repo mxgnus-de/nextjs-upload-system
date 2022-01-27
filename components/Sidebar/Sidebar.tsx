@@ -1,7 +1,3 @@
-import {
-   useCurrentDashboardPage,
-   useCurrentDashboardPageUpdate,
-} from 'components/Context/CurrentDashboardPage';
 import Hyphen from 'components/Hyphen/Hyphen';
 import {
    SidebarIconClose,
@@ -17,14 +13,19 @@ import {
    useSidebarStatus,
    useSidebarStatusUpdate,
 } from 'components/Context/SidebarStatusContext';
+import Router from 'next/router';
+import { useEffect, useState } from 'react';
 
 interface SiteProps {}
 
 function Sidebar({}: SiteProps) {
-   const currentDashboardPage = useCurrentDashboardPage();
-   const updateDashboardPage = useCurrentDashboardPageUpdate();
    const sidebarStatus = useSidebarStatus();
    const updateSidebarStatus = useSidebarStatusUpdate();
+   const [path, setPath] = useState('');
+
+   useEffect(() => {
+      setPath(Router.pathname);
+   }, []);
 
    const sidebarItems: {
       id: number;
@@ -36,25 +37,25 @@ function Sidebar({}: SiteProps) {
          id: 0,
          icon: <FileIcon />,
          name: 'Files',
-         site: 'files',
+         site: '/dashboard',
       },
       {
          id: 1,
          icon: <LinkIcon />,
          name: 'Links',
-         site: 'links',
+         site: '/dashboard/links',
       },
       {
          id: 2,
          icon: <UsersIcon />,
          name: 'Users',
-         site: 'users',
+         site: '/dashboard/users',
       },
       {
          id: 3,
          icon: <SettingsIcon />,
          name: 'Settings',
-         site: 'settings',
+         site: '/dashboard/settings',
       },
    ];
 
@@ -76,19 +77,15 @@ function Sidebar({}: SiteProps) {
                      return (
                         <div
                            key={sidebarItem.id}
-                           onClick={() =>
-                              updateDashboardPage?.setCurrentDashboardPage(
-                                 sidebarItem.site,
-                              )
-                           }
+                           onClick={() => Router.push(sidebarItem.site)}
                         >
                            <SidebarItem
                               path={sidebarItem.site}
-                              currentPage={currentDashboardPage}
+                              currentPage={path}
                            >
                               <SidebarItemWrapper
                                  path={sidebarItem.site}
-                                 currentPage={currentDashboardPage}
+                                 currentPage={path}
                               >
                                  {sidebarItem.icon}
                                  <SideBarItemLink closed={false}>
@@ -111,15 +108,11 @@ function Sidebar({}: SiteProps) {
                         <div key={sidebarItem.id}>
                            <SideBarItemLink
                               closed={true}
-                              onClick={() =>
-                                 updateDashboardPage?.setCurrentDashboardPage(
-                                    sidebarItem.site,
-                                 )
-                              }
+                              onClick={() => Router.push(sidebarItem.site)}
                            >
                               <SidebarItemClose
                                  path={sidebarItem.site}
-                                 currentPage={currentDashboardPage}
+                                 currentPage={path}
                               >
                                  {sidebarItem.icon}
                               </SidebarItemClose>

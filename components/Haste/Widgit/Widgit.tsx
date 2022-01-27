@@ -7,6 +7,7 @@ import axiosClient from '../../../api/axiosClient';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
 import { AxiosError } from 'axios';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { server } from 'config/api';
 
 function Widgit({
    hasteValue,
@@ -28,6 +29,8 @@ function Widgit({
    }
 
    async function uploadHaste() {
+      if (!hasteValue)
+         return updateErrorWidgit?.showErrorWidgit('No haste to upload');
       let error = false;
       const response = await axiosClient
          .post(
@@ -47,6 +50,11 @@ function Widgit({
       if (error || !response?.data) return;
       if (!response.data.hasteID) {
          return updateErrorWidgit?.showErrorWidgit('Error uploading haste');
+      }
+      if ('clipboard' in navigator) {
+         navigator.clipboard
+            .writeText(`${server}/haste/${response.data.hasteID}`)
+            .catch((err) => {});
       }
       Router.push(`/haste/${response.data.hasteID}`);
    }

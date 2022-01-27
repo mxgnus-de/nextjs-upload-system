@@ -5,44 +5,45 @@ import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
-import FileUpload from 'components/Dashboard/FileUpload';
+import ShortURL from 'components/Dashboard/ShortedURL';
 import Layout from 'components/Layout/Layout';
-import { Uploads } from 'types/Dashboard';
+import { ShortURL as IShortURL } from 'types/Dashboard';
+import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
 
 interface SiteProps {
-   uploads: Uploads[];
+   shortedURLs: IShortURL[];
 }
 
-const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
-   const [uploadFiles, setUploadFiles] = useState<typeof uploads>(uploads);
-   const [search, setSearch] = useState<string>('');
+const Dashboard: NextPage<SiteProps> = ({ shortedURLs }) => {
+   const [shortedURL, setShortedURL] =
+      useState<typeof shortedURLs>(shortedURLs);
+   const [search, setSearch] = useState('');
 
    useEffect(() => {
-      setUploadFiles(uploads);
+      setShortedURL(shortedURLs);
 
       const id = Router.query.id as string | undefined;
       if (id) searchChange(id);
-
-      Router.replace('/dashboard', undefined, { shallow: true });
+      Router.replace('/dashboard/links', undefined, { shallow: true });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    function searchChange(searchID: string) {
       if (searchID) {
-         setUploadFiles(
-            uploads.filter(
-               (upload) =>
-                  upload.name.toLowerCase().startsWith(searchID) ||
-                  upload.name.toLowerCase().includes(searchID) ||
-                  upload.originalfilename.toLowerCase().startsWith(searchID) ||
-                  upload.originalfilename.toLowerCase().includes(searchID),
+         setShortedURL(
+            shortedURLs.filter(
+               (link) =>
+                  link.name.toLowerCase().startsWith(searchID) ||
+                  link.name.toLowerCase().includes(searchID) ||
+                  link.url.toLowerCase().startsWith(searchID) ||
+                  link.url.toLowerCase().includes(searchID),
             ),
          );
       }
       if (searchID === '') {
-         setUploadFiles(uploads);
+         setShortedURL(shortedURLs);
       }
       setSearch(searchID);
    }
@@ -54,13 +55,11 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
             title: 'Upload • Dashboard',
          }}
       >
-         <DashboardTitle>Dashboard - Files</DashboardTitle>
+         <DashboardTitle>Dashboard - Links</DashboardTitle>
          <Hyphen className='text-muted' />
+         <DashboardSearch searchValue={search} searchChange={searchChange} />
          <DashboardWrapper>
-            <FileUpload
-               setUploadFiles={setUploadFiles}
-               uploadFiles={uploadFiles}
-            />
+            <ShortURL setShortedURL={setShortedURL} shortedURL={shortedURL} />
          </DashboardWrapper>
       </Layout>
    );
@@ -69,18 +68,18 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
 export const getServerSideProps: GetServerSideProps<SiteProps> = async (
    context,
 ) => {
-   const uploads = await axiosClient
-      .get(server + '/api/dashboard/uploads', {
+   const shortedURLs = await axiosClient
+      .get(server + '/api/dashboard/shorts', {
          headers: {
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
       .catch(() => {});
-   const uploadData = uploads?.data;
+   const shortedURLsData = shortedURLs?.data;
 
    return {
       props: {
-         uploads: uploadData,
+         shortedURLs: shortedURLsData,
       },
    };
 };

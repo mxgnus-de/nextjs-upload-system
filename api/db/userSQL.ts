@@ -13,7 +13,7 @@ class userSQL {
       this.init();
    }
 
-   public async init(): Promise<void> {
+   private async init(): Promise<void> {
       if (this.isInit) return;
       this.isInit = true;
       const query =
@@ -24,7 +24,7 @@ class userSQL {
       const defaultuser = await this.getUser('changeme');
       const users = await this.getAllUsers();
       if (defaultuser.length === 0 && users.length === 0) {
-         this.createNewUser('changeme', 'default');
+         this.createNewUser('changeme', 'default').catch((error) => {});
       }
    }
 

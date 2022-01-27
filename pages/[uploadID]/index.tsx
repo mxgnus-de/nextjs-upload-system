@@ -68,10 +68,7 @@ const Upload: NextPage<SiteProps> = ({
             </>
          )}
          {isLoggedIn && (
-            <Link
-               href={`${server}/dashboard?id=${uploadID}&site=files`}
-               passHref
-            >
+            <Link href={`${server}/dashboard?id=${uploadID}`} passHref>
                <button
                   className='button button-blue'
                   style={{ marginTop: '20px' }}
@@ -134,7 +131,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       });
 
    const isLoggedIn = await validateUploadKey(
-      context.req.cookies['upload_key'],
+      context.req.cookies['upload_key'] || '',
    );
 
    if (error || !res || res.status !== 200 || !res.data) {

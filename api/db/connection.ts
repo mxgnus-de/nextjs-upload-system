@@ -1,6 +1,6 @@
 import ConsoleLogger from '../../utils/consolelogger';
 import mysql, { Connection as MySQLConnection, MysqlError } from 'mysql';
-import { fileSQL, settingsSQL, userSQL, shortSQL } from './mysql';
+import { fileSQL, settingsSQL, userSQL, shortSQL, hasteSQL } from './mysql';
 
 class Connection {
    private connection: MySQLConnection;
@@ -88,6 +88,7 @@ class Connection {
          settingsSQL.setConnection(this.connection);
          userSQL.setConnection(this.connection);
          shortSQL.setConnection(this.connection);
+         hasteSQL.setConnection(this.connection);
       }
    }
 
