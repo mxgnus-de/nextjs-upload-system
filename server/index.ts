@@ -1,4 +1,4 @@
-import { devenv, port } from '../config/api';
+import { devenv, port, serverdomain } from '../config/api';
 import cookies from 'cookies';
 import express, { Request, Response } from 'express';
 import next from 'next';
@@ -15,6 +15,8 @@ const app = next({
       reactStrictMode: true,
       poweredByHeader: false,
    },
+   hostname: serverdomain,
+   port,
 });
 const handle = app.getRequestHandler();
 

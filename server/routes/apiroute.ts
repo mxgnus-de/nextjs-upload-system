@@ -15,7 +15,7 @@ import AdmZip from 'adm-zip';
 import formidable from 'formidable';
 import invaliduploadkey from '../../api/utils/response/invaliduploadkey';
 import { generateRandomString } from '../../utils/generateRandomString';
-import { fileSQL, shortSQL, userSQL } from '../../api/db/mysql';
+import { fileSQL, settingsSQL, shortSQL, userSQL } from '../../api/db/mysql';
 import { isAudio, isImage, isVideo } from '../../utils/mimetypechecker';
 import path from 'path';
 import mime from 'mime-types';
@@ -24,6 +24,7 @@ import dashboardrouter from './dashboard/dashboardroutes';
 import isValidUser from '../../server/middleware/isValidUser';
 import getuploadkey from '../../server/modules/getuploadkey';
 import hasterouter from './haste/hasteroute';
+import { Settings } from '../../types/Dashboard';
 
 const apirouter = Router();
 
@@ -305,6 +306,18 @@ apirouter.get('/links/:link', async (req: Request, res: Response) => {
          url,
       });
    }
+});
+
+apirouter.get('/settings', async (req: Request, res: Response) => {
+   const settings = await settingsSQL.getAllSettings();
+   const finalSettings: Settings[] = [];
+   settings.forEach((setting) => {
+      finalSettings.push({
+         name: setting.name,
+         value: setting.value,
+      });
+   });
+   return res.status(200).json(settings);
 });
 
 export default apirouter;

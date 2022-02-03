@@ -58,7 +58,7 @@ function Setting(settings: SettingProps) {
                updateSuccessWidgit?.showSuccessWidgit(
                   capitalizeFirstLetter(settings.name) + ' setting toggled',
                );
-               settings.setSettings(response?.data);
+               settings.setSettings(response.data);
             });
       } else {
          updateSuccessWidgit?.showSuccessWidgit('Setting not toggled');

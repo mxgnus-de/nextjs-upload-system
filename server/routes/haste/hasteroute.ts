@@ -1,14 +1,27 @@
-import { hasteSQL } from '../../../api/db/mysql';
+import { hasteSQL, settingsSQL } from '../../../api/db/mysql';
 import badrequest from '../../../api/utils/response/badrequest';
 import { Request, Response, Router } from 'express';
 import { generateRandomString } from '../../../utils/generateRandomString';
-import isValidUser from '../../middleware/isValidUser';
 import internalservererror from '../../../api/utils/response/internalservererror';
 import { server } from '../../../config/api';
+import getuploadkey from '../../../server/modules/getuploadkey';
+import { validateUploadKey } from '../../../api/uploadKey';
+import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
 
 const hasterouter = Router();
 
-hasterouter.post('/new', isValidUser, async (req: Request, res: Response) => {
+hasterouter.post('/new', async (req: Request, res: Response) => {
+   const uploadKey = getuploadkey(req);
+
+   const hasteSetting = await settingsSQL.getSetting('publicHaste');
+   const publicHaste = hasteSetting[0].value === 'true';
+
+   if (!publicHaste) {
+      if (!(await validateUploadKey(uploadKey as string))) {
+         return invaliduploadkey(res);
+      }
+   }
+
    let error = false;
    const { haste } = req.body;
    if (!haste) return badrequest(res);
