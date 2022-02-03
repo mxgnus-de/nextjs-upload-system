@@ -59,7 +59,7 @@ const Dashboard: NextPage<SiteProps> = ({ initalsettings }) => {
          <Hyphen className='text-muted' />
          <DashboardSearch searchValue={search} searchChange={searchChange} />
          <DashboardWrapper>
-            <Settings settings={settings} setSettings={setInitsettings} />
+            <Settings settings={settings} setSettings={setSettings} />
          </DashboardWrapper>
       </Layout>
    );

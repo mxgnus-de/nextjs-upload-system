@@ -12,8 +12,10 @@ class HasteSQL {
 
    private init(): void {
       const query =
-         'CREATE TABLE IF NOT EXISTS `haste` (`id` varchar(255) NOT NULL, `haste` text NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;';
+         'CREATE TABLE IF NOT EXISTS `haste` (`id` varchar(255) NOT NULL, `haste` text NOT NULL, PRIMARY KEY (`id`))';
+      const query2 = 'SET NAMES "utf8mb4";';
       this.connection.query(query);
+      this.connection.query(query2);
       return;
    }
 

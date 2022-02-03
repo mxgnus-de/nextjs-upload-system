@@ -14,7 +14,6 @@ function DashboardNotifications() {
          })
          .catch(() => {})
          .then((settingsresponse) => {
-            console.log(settingsresponse);
             if (!settingsresponse?.data) return;
             const settings = settingsresponse.data;
             if (
@@ -28,7 +27,6 @@ function DashboardNotifications() {
                   })
                   .catch(() => {})
                   .then((notificationsresponse) => {
-                     console.log(notificationsresponse);
                      if (!notificationsresponse?.data?.notifications) return;
                      const notifications =
                         notificationsresponse.data.notifications;

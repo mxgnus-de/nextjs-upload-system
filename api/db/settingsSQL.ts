@@ -18,10 +18,17 @@ class SettingsSQL {
          )`,
       );
       const notifications = await this.getSetting('notifications');
+      const publicHaste = await this.getSetting('publicHaste');
       if (notifications.length === 0) {
          this.connection.query(
             `INSERT INTO settings (name, value) VALUES (?, ?)`,
             ['notifications', 'true'],
+         );
+      }
+      if (publicHaste.length === 0) {
+         this.connection.query(
+            `INSERT INTO settings (name, value) VALUES (?, ?)`,
+            ['publicHaste', 'false'],
          );
       }
    }

@@ -8,7 +8,8 @@
       "type": "git"
    },
    "scripts": {
-      "dev": "ts-node --project tsconfig.server.json server/index.ts",
+      "build:dev": "tsc --project tsconfig.server.json --watch",
+      "start:dev": "nodemon dist/server/index.js",
       "start": "node dist/server/index.js",
       "start:production": "pm2 start ecosystem.config.js",
       "build": "npm run build:next && npm run build:server",
@@ -58,7 +59,6 @@
       "eslint": "8.4.1",
       "eslint-config-next": "^12.0.8",
       "nodemon": "^2.0.15",
-      "ts-node": "^10.4.0",
       "typescript": "4.5.2",
       "typescript-styled-plugin": "^0.18.2"
    }
