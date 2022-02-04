@@ -1,4 +1,3 @@
-import { settingsSQL } from 'api/db/mysql';
 import { server } from 'config/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
@@ -32,8 +31,20 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
    const publicHaste = settingsJson.find(
       (setting) => setting.name === 'publicHaste',
    );
+   const publicShorter = settingsJson.find(
+      (setting) => setting.name === 'publicShorter',
+   );
+   const publicUpload = settingsJson.find(
+      (setting) => setting.name === 'publicUpload',
+   );
    if (publicHaste?.value === 'true' && req.nextUrl.pathname === '/haste') {
-      return NextResponse.next();
+      blockedPage = false;
+   }
+   if (publicShorter?.value === 'true' && req.nextUrl.pathname === '/shorter') {
+      blockedPage = false;
+   }
+   if (publicUpload?.value === 'true' && req.nextUrl.pathname === '/') {
+      blockedPage = false;
    }
 
    if (

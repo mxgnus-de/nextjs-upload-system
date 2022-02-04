@@ -142,7 +142,6 @@ export function HasteProvider(props: HasteProviderProps) {
       const char = e.key.toLowerCase();
       const isShortCut = e.ctrlKey;
       const isShift = e.shiftKey;
-      console.log(char, isShortCut, isShift);
       if (isShortCut && char === 's' && settings.canSave) {
          e.preventDefault();
          uploadHaste();
