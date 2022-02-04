@@ -46,10 +46,11 @@ hasterouter.get('/:hasteID', async (req: Request, res: Response) => {
    if (!hasteID) return badrequest(res);
    const haste = await hasteSQL.getHaste(hasteID).catch((err) => {
       error = true;
-      return badrequest(res);
+      badrequest(res);
+      return;
    });
    if (error) return;
-   if (!haste || haste.length === 0) return badrequest(res);
+   if (!haste || haste?.length === 0) return badrequest(res);
    return res.status(200).json({
       status: 200,
       haste: haste[0],
