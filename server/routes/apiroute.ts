@@ -218,7 +218,6 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
          zip.writeZip(newFilePath + '.zip');
          fs.unlinkSync(newFilePath);
          newFilePath = newFilePath + '.zip';
-         console.log(newFilePath);
       }
 
       return;

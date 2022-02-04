@@ -8,6 +8,7 @@ import apirouter from './routes/apiroute';
 import '../api/db/mysql';
 import { paths } from '../config/upload';
 import fs from 'fs';
+import mainroute from './routes/mainroute';
 
 const app = next({
    dev: devenv,
@@ -32,6 +33,7 @@ async function main() {
    server.use(cookies.express(['keyA', 'keyB', 'keyC']));
    server.use(middleware);
    server.use('/api', apirouter);
+   server.use('/', mainroute)
    server.use(express.static(paths.files));
 
    server.all('*', (req: Request, res: Response) => handle(req, res));

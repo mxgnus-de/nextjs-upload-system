@@ -1,10 +1,17 @@
 import styled from 'styled-components';
 import Container from 'components/Container/Container';
 import { NextPage } from 'next';
+import Meta from 'components/Meta/Meta';
 
 const PageError404: NextPage = () => {
    return (
       <>
+         <Meta
+            meta={{
+               title: 'Error • 404',
+               description: 'Page not found',
+            }}
+         />
          <Container>
             <div>
                <ErrorCode>404</ErrorCode>

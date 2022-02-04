@@ -1,4 +1,5 @@
 import axiosClient from 'api/axiosClient';
+import { useHaste, useHasteUpdate } from 'components/Context/HasteContext';
 import HasteContainer from 'components/Haste/Container/Container';
 import CustomContainer from 'components/Haste/CustomContainer/CustomContainer';
 import HasteLineNumbers from 'components/Haste/LineNumbers/LineNumbers';
@@ -7,14 +8,26 @@ import Widgit from 'components/Haste/Widgit/Widgit';
 import Meta from 'components/Meta/Meta';
 import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { HasteCreateProps } from 'types/Haste';
 
 const Haste: NextPage<HasteCreateProps> = ({ haste: hasteInit }) => {
-   const [haste, setHaste] = useState(hasteInit || '');
-   useEffect(() => {
+   const updateHaste = useHasteUpdate();
+   const haste = useHaste();
+   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+   useLayoutEffect(() => {
       Router.replace('/haste', '/haste', { shallow: true });
+      if (hasteInit) updateHaste?.setHaste(hasteInit);
+      textAreaRef.current?.focus();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
+
+   useEffect(() => {
+      updateHaste?.setTextAreaRef(textAreaRef);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [textAreaRef]);
+
    return (
       <>
          <Meta
@@ -23,22 +36,23 @@ const Haste: NextPage<HasteCreateProps> = ({ haste: hasteInit }) => {
             }}
          />
 
-         <Widgit
-            hasteValue={haste}
-            setHasteValue={setHaste}
-            canSave={true}
-            canCopy={false}
-         />
+         <Widgit canSave={true} canCopy={false} />
 
-         <CustomContainer>
+         <CustomContainer
+            onKeyDown={(e) => {
+               updateHaste?.handleKeyDownEvent(e);
+            }}
+         >
             <HasteContainer>
                <HasteLineNumbers>
                   <p>&gt;</p>
                </HasteLineNumbers>
                <HasteTextArea
+                  onKeyDown={(e) => updateHaste?.handleTextAreaKeyDownEvent(e)}
                   autoFocus={true}
                   value={haste}
-                  onChange={(e) => setHaste(e.target.value)}
+                  onChange={(e) => updateHaste?.setHaste(e.target.value)}
+                  ref={textAreaRef}
                />
             </HasteContainer>
          </CustomContainer>
@@ -54,9 +68,7 @@ export const getServerSideProps: GetServerSideProps<HasteCreateProps> = async ({
    if (copy) {
       await axiosClient
          .get('/api/haste/' + copy)
-         .catch((err) => {
-            haste = '';
-         })
+         .catch((err) => {})
          .then((res) => {
             haste = res?.data?.haste?.haste || '';
          });

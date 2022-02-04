@@ -2,63 +2,32 @@ import styled from 'styled-components';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Link from 'next/link';
-import Router from 'next/router';
-import axiosClient from '../../../api/axiosClient';
 import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { AxiosError } from 'axios';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { server } from 'config/api';
+import ArticleIcon from '@mui/icons-material/Article';
+import { useHasteUpdate } from 'components/Context/HasteContext';
+import { useEffect } from 'react';
 
 function Widgit({
-   hasteValue,
-   setHasteValue,
    canSave,
    canCopy,
    hasteID,
 }: {
-   hasteValue: string;
-   setHasteValue?: (value: string) => void;
    canSave: boolean;
    canCopy: boolean;
    hasteID?: string;
 }) {
    const updateErrorWidgit = useErrorWidgitUpdate();
+   const updateHaste = useHasteUpdate();
 
-   function clearHasteValue() {
-      setHasteValue?.('');
-   }
-
-   async function uploadHaste() {
-      if (!hasteValue)
-         return updateErrorWidgit?.showErrorWidgit('No haste to upload');
-      let error = false;
-      const response = await axiosClient
-         .post(
-            '/api/haste/new',
-            {
-               haste: hasteValue,
-            },
-            {
-               withCredentials: true,
-            },
-         )
-         .catch((err: AxiosError) => {
-            updateErrorWidgit?.showErrorWidgit('Error uploading haste');
-            error = true;
-            return;
-         });
-      if (error || !response?.data) return;
-      if (!response.data.hasteID) {
-         return updateErrorWidgit?.showErrorWidgit('Error uploading haste');
-      }
-      if ('clipboard' in navigator) {
-         navigator.clipboard
-            .writeText(`${server}/haste/${response.data.hasteID}`)
-            .catch((err) => {});
-      }
-      Router.push(`/haste/${response.data.hasteID}`);
-   }
-
+   useEffect(() => {
+      updateHaste?.setSettings({
+         canSave,
+         canCopy,
+         hasteID: hasteID || null,
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
    return (
       <WidgitWrapper>
          <WidgitHeader>
@@ -70,7 +39,7 @@ function Widgit({
             {canSave ? (
                <WidgitButton
                   onClick={() => {
-                     uploadHaste();
+                     updateHaste?.uploadHaste();
                   }}
                >
                   <SaveAsIcon />
@@ -79,11 +48,7 @@ function Widgit({
             {canCopy ? (
                <WidgitButton
                   onClick={() => {
-                     if (!hasteID)
-                        return updateErrorWidgit?.showErrorWidgit(
-                           'Error copying haste',
-                        );
-                     Router.push(`/haste?copy=${hasteID}`);
+                     updateHaste?.copyHaste(hasteID || '');
                   }}
                >
                   <FileCopyIcon />
@@ -92,12 +57,20 @@ function Widgit({
 
             <WidgitButton
                onClick={() => {
-                  clearHasteValue();
-                  Router.push('/haste');
+                  updateHaste?.createNewHaste();
                }}
             >
                <NoteAddIcon />
             </WidgitButton>
+            {hasteID ? (
+               <WidgitButton
+                  onClick={() => {
+                     updateHaste?.showRowHaste(hasteID || '');
+                  }}
+               >
+                  <ArticleIcon />
+               </WidgitButton>
+            ) : null}
          </WidgitBody>
       </WidgitWrapper>
    );

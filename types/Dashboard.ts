@@ -20,3 +20,9 @@ export interface Settings {
    name: string;
    value: 'true' | 'false';
 }
+
+export interface Haste {
+   id: string;
+   haste: string;
+   language: string | null;
+}

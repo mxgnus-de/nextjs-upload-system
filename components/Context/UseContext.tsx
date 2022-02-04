@@ -3,6 +3,7 @@ import { ErrorWidgitProvider } from 'components/Context/ErrorWidgitContext';
 import { SuccessWidgitProvider } from 'components/Context/SuccessWidgitContext';
 import { CookiesProvider } from 'react-cookie';
 import { SidebarStatusProvider } from './SidebarStatusContext';
+import { HasteProvider } from './HasteContext';
 
 export interface ContextProps {
    children?: any;
@@ -13,7 +14,9 @@ function UseContext(props: ContextProps) {
       <CookiesProvider>
          <ErrorWidgitProvider>
             <SuccessWidgitProvider>
-               <SidebarStatusProvider>{props.children}</SidebarStatusProvider>
+               <SidebarStatusProvider>
+                  <HasteProvider>{props.children}</HasteProvider>
+               </SidebarStatusProvider>
             </SuccessWidgitProvider>
          </ErrorWidgitProvider>
       </CookiesProvider>

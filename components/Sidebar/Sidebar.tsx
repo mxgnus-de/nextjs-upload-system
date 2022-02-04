@@ -13,6 +13,7 @@ import {
    useSidebarStatus,
    useSidebarStatusUpdate,
 } from 'components/Context/SidebarStatusContext';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -47,12 +48,18 @@ function Sidebar({}: SiteProps) {
       },
       {
          id: 2,
+         icon: <TextSnippetIcon />,
+         name: 'Haste',
+         site: '/dashboard/haste',
+      },
+      {
+         id: 3,
          icon: <UsersIcon />,
          name: 'Users',
          site: '/dashboard/users',
       },
       {
-         id: 3,
+         id: 4,
          icon: <SettingsIcon />,
          name: 'Settings',
          site: '/dashboard/settings',
