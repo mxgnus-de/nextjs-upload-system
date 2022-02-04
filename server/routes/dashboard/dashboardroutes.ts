@@ -2,7 +2,13 @@ import { isVersionUpToDate } from '../../../api/utils/github';
 import { githubrepourl } from '../../../config/github';
 import { Router, Response, Request } from 'express';
 import Notification from '../../../types/Notification';
-import { fileSQL, settingsSQL, shortSQL, userSQL } from '../../../api/db/mysql';
+import {
+   fileSQL,
+   hasteSQL,
+   settingsSQL,
+   shortSQL,
+   userSQL,
+} from '../../../api/db/mysql';
 import { Settings } from '../../../types/Dashboard';
 import badrequest from '../../../api/utils/response/badrequest';
 import notfound from '../../../api/utils/response/notfound';
@@ -189,6 +195,28 @@ dashboardrouter.post('/users', async (req: Request, res: Response) => {
       message: 'User created',
       uploadkey: newuploadkey,
       username,
+   });
+});
+
+dashboardrouter.get('/haste', async (req: Request, res: Response) => {
+   const hastes = await hasteSQL.getAllHaste();
+   return res.status(200).json(hastes);
+});
+
+dashboardrouter.delete('/haste', async (req: Request, res: Response) => {
+   const { id } = req.query;
+   const haste = await hasteSQL.getHaste(id as string);
+   if (!id || haste.length === 0) {
+      return notfound(res);
+   }
+   await hasteSQL.deleteHaste(id as string);
+   const hastes = await hasteSQL.getAllHaste();
+   res.statusCode = 200;
+   res.statusMessage = 'Haste deleted';
+   return res.json({
+      status: 200,
+      message: 'Haste deleted',
+      hastes,
    });
 });
 

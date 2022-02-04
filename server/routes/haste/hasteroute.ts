@@ -7,12 +7,12 @@ import { server } from '../../../config/api';
 import getuploadkey from '../../../server/modules/getuploadkey';
 import { validateUploadKey } from '../../../api/uploadKey';
 import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
+import flourite from 'flourite';
 
 const hasterouter = Router();
 
 hasterouter.post('/new', async (req: Request, res: Response) => {
    const uploadKey = getuploadkey(req);
-
    const hasteSetting = await settingsSQL.getSetting('publicHaste');
    const publicHaste = hasteSetting[0].value === 'true';
 
@@ -26,7 +26,9 @@ hasterouter.post('/new', async (req: Request, res: Response) => {
    const { haste } = req.body;
    if (!haste) return badrequest(res);
    const newhasteID = generateRandomString(15);
-   await hasteSQL.createHaste(newhasteID, haste).catch((err) => {
+   let language: null | string = flourite(haste).language.toLowerCase();
+   if (language === 'unknown') language = null;
+   await hasteSQL.createHaste(newhasteID, haste, language).catch((err) => {
       error = true;
       return internalservererror(res);
    });

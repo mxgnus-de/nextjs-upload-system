@@ -13,7 +13,7 @@
 ### 1) Clone the repository
 
 ```bash
-git clone https://github.com/mxgnus-de/nextjs-upload-system.git && cd nextjs-upload-system
+ $ git clone https://github.com/mxgnus-de/nextjs-upload-system.git && cd nextjs-upload-system
 ```
 
 ### 2) Install all dependencies
@@ -33,7 +33,7 @@ $ npm run build
 ### 5) Start the production version of the project
 
 ```bash
-$ npm start
+$ npm start:production
 ```
 
 ### 6) Default login

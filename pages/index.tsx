@@ -53,7 +53,6 @@ const Home: NextPage = () => {
             setUploading(false);
             const clipboard = navigator?.clipboard;
             if (clipboard) {
-               console.log(res.data);
                await clipboard.writeText(res.data).catch((err) => {});
             }
             updateSuccessWidgit?.showSuccessWidgit(
