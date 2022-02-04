@@ -2,7 +2,7 @@
    "name": "nextjs-upload-system",
    "description": "Uploads files to a server",
    "author": "mxgnus",
-   "version": "2.0.2",
+   "version": "2.1.0",
    "repository": {
       "url": "https://github.com/mxgnus-de/nextjs-upload-system",
       "type": "git"

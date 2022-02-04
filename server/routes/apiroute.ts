@@ -25,6 +25,7 @@ import isValidUser from '../../server/middleware/isValidUser';
 import getuploadkey from '../../server/modules/getuploadkey';
 import hasterouter from './haste/hasteroute';
 import { Settings } from '../../types/Dashboard';
+import { validateUploadKey } from '../../api/uploadKey';
 
 const apirouter = Router();
 
@@ -32,20 +33,26 @@ apirouter.use('/auth', authrouter);
 apirouter.use('/dashboard', isValidUser, dashboardrouter);
 apirouter.use('/haste', hasterouter);
 
-apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
+apirouter.post('/upload', (req: Request, res: Response) => {
    const form = new formidable.IncomingForm();
    form.parse(req, async function (err, fields, files: any) {
       const uploadKey: any = getuploadkey(req) || fields.upload_key;
-      if (!uploadKey) return invaliduploadkey(res);
-      const buffer = fs.readFileSync(files?.file?._writeStream?.path);
+      const uploadSetting = await settingsSQL.getSetting('publicUpload');
+      const publicUpload = uploadSetting[0].value === 'true';
 
+      if (!publicUpload) {
+         if (!(await validateUploadKey(uploadKey as string))) {
+            return invaliduploadkey(res);
+         }
+      }
+      const buffer = fs.readFileSync(files?.file?._writeStream?.path);
       fs.unlinkSync(files?.file?._writeStream?.path);
 
       const file = files?.file;
       const newFilename = generateRandomString(15);
       const mimetype = file?.mimetype;
       const originalFilename = file?.originalFilename;
-      const user = await userSQL.getUser(uploadKey);
+      const username = uploadKey ? await userSQL.getUser(uploadKey) : 'Unknown';
 
       const extension =
          mime.extension(mimetype) || originalFilename.split('.').slice(-1);
@@ -68,7 +75,7 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
             newFilename,
             originalFilename,
             mimetype,
-            user[0].username,
+            username,
             extension,
             'image',
          );
@@ -90,7 +97,7 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
             newFilename,
             originalFilename,
             mimetype,
-            user[0].username,
+            username,
             extension,
             'video',
          );
@@ -112,7 +119,7 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
             newFilename,
             originalFilename,
             mimetype,
-            user[0].username,
+            username,
             extension,
             'audio',
          );
@@ -134,7 +141,7 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
             newFilename,
             originalFilename,
             mimetype,
-            user[0].username,
+            username,
             extension,
             'data',
          );
@@ -224,8 +231,18 @@ apirouter.post('/upload', isValidUser, (req: Request, res: Response) => {
    }
 });
 
-apirouter.post('/shorter', isValidUser, async (req: Request, res: Response) => {
+apirouter.post('/shorter', async (req: Request, res: Response) => {
    const { url } = req.body;
+
+   const uploadKey: any = getuploadkey(req);
+   const shorterSetting = await settingsSQL.getSetting('publicShorter');
+   const publicShorter = shorterSetting[0].value === 'true';
+
+   if (!publicShorter) {
+      if (!(await validateUploadKey(uploadKey as string))) {
+         return invaliduploadkey(res);
+      }
+   }
 
    if (!validateURL(url)) {
       res.statusCode = 400;
