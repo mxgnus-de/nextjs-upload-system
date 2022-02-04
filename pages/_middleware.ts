@@ -43,16 +43,16 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
          (setting) => setting.name === 'publicUpload',
       );
       if (publicHaste?.value === 'true' && req.nextUrl.pathname === '/haste') {
-         blockedPage = false;
+         return NextResponse.next();
       }
       if (
          publicShorter?.value === 'true' &&
          req.nextUrl.pathname === '/shorter'
       ) {
-         blockedPage = false;
+         return NextResponse.next();
       }
       if (publicUpload?.value === 'true' && req.nextUrl.pathname === '/') {
-         blockedPage = false;
+         return NextResponse.next();
       }
    }
 
