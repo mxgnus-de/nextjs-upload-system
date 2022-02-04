@@ -2,6 +2,12 @@ import { server } from 'config/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
+   if (
+      req.nextUrl.pathname === '/login' ||
+      req.nextUrl.pathname === '/api/auth/login'
+   ) {
+      return NextResponse.next();
+   }
    const cookies = req.cookies;
    const uploadKey = cookies['upload_key'];
    const privatePages = ['/', '/shorter', '/haste'];
@@ -58,7 +64,8 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
    if (
       !isValideUploadKey &&
-      !req.nextUrl.pathname?.startsWith('/login') &&
+      req.nextUrl.pathname !== '/login' &&
+      req.nextUrl.pathname !== '/api/auth/login' &&
       blockedPage
    ) {
       return NextResponse.redirect('/login?redirect=' + req.nextUrl.pathname);
