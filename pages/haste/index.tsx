@@ -16,9 +16,9 @@ const Haste: NextPage<HasteCreateProps> = ({ haste: hasteInit }) => {
    const haste = useHaste();
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-   useLayoutEffect(() => {
-      Router.replace('/haste', '/haste', { shallow: true });
+   useEffect(() => {
       if (hasteInit) updateHaste?.setHaste(hasteInit);
+      Router.replace('/haste', '/haste', { shallow: true });
       textAreaRef.current?.focus();
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);

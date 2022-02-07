@@ -331,6 +331,7 @@ apirouter.get('/settings', async (req: Request, res: Response) => {
       finalSettings.push({
          name: setting.name,
          value: setting.value,
+         type: setting.type,
       });
    });
    return res.status(200).json(settings);
