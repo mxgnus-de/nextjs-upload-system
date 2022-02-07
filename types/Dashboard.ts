@@ -18,7 +18,8 @@ export interface User {
 
 export interface Settings {
    name: string;
-   value: 'true' | 'false';
+   value: string;
+   type: 'boolean' | 'string' | 'number';
 }
 
 export interface Haste {

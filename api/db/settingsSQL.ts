@@ -14,6 +14,7 @@ class SettingsSQL {
          `CREATE TABLE IF NOT EXISTS settings (
             name VARCHAR(255) NOT NULL,
             value VARCHAR(255) NOT NULL,
+            type VARCHAR(255) NOT NULL DEFAULT 'boolean',
             PRIMARY KEY (name)
          )`,
       );
@@ -21,6 +22,8 @@ class SettingsSQL {
       const publicHaste = await this.getSetting('publicHaste');
       const publicShorter = await this.getSetting('publicShorter');
       const publicUpload = await this.getSetting('publicUpload');
+      const maxHasteLength = await this.getSetting('maxHasteLength');
+      const maxHighlightLength = await this.getSetting('maxHighlightLength');
       if (notifications.length === 0) {
          this.connection.query(
             `INSERT INTO settings (name, value) VALUES (?, ?)`,
@@ -43,6 +46,18 @@ class SettingsSQL {
          this.connection.query(
             `INSERT INTO settings (name, value) VALUES (?, ?)`,
             ['publicUpload', 'false'],
+         );
+      }
+      if (maxHasteLength.length === 0) {
+         this.connection.query(
+            `INSERT INTO settings (name, value, type) VALUES (?, ?, ?)`,
+            ['maxHasteLength', '40000', 'number'],
+         );
+      }
+      if (maxHighlightLength.length === 0) {
+         this.connection.query(
+            `INSERT INTO settings (name, value, type) VALUES (?, ?, ?)`,
+            ['maxHighlightLength', '12500', 'number'],
          );
       }
    }

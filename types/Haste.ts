@@ -2,6 +2,7 @@ interface HasteViewProps {
    hasteID: string;
    hasteText: string;
    language: HasteLanguage | null;
+   maxHighlightLength: number;
 }
 
 interface HasteLanguage {

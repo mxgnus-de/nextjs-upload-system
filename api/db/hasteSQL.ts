@@ -25,7 +25,11 @@ class HasteSQL {
       return;
    }
 
-   public createHaste(name: string, haste: string, language: string | null) {
+   public createHaste(
+      name: string,
+      haste: string,
+      language: string | null,
+   ): Promise<any> {
       return new Promise((resolve, reject) => {
          this.connection.query(
             sqlstring.format(

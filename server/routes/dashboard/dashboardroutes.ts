@@ -40,6 +40,7 @@ dashboardrouter.get('/settings', async (req, res) => {
       finalSettings.push({
          name: setting.name,
          value: setting.value,
+         type: setting.type,
       });
    });
    return res.status(200).json(settings);
@@ -54,10 +55,23 @@ dashboardrouter.put('/settings', async (req, res) => {
    const settingSQL = await settingsSQL.getSetting(name || '');
 
    if (settingSQL.length === 0) return badrequest(res);
-   const currentValue = settingSQL[0].value === 'true';
+
+   const currentValue = settingSQL[0].value;
 
    if (action === 'toggle') {
-      await settingsSQL.updateSetting(name, currentValue ? 'false' : 'true');
+      await settingsSQL.updateSetting(
+         name,
+         currentValue === 'true' ? 'false' : 'true',
+      );
+   } else if (action === 'set') {
+      const { value } = req.body;
+      if (!value) return badrequest(res, 'No value provided');
+      if (typeof value !== settingSQL[0].type) {
+         return badrequest(res, 'Value type is not correct');
+      }
+      await settingsSQL.updateSetting(name, value.toString());
+   } else {
+      return badrequest(res, 'Invalid action');
    }
 
    const newSettings: Settings[] = [];
@@ -66,6 +80,7 @@ dashboardrouter.put('/settings', async (req, res) => {
       newSettings.push({
          name: setting.name,
          value: setting.value,
+         type: setting.type,
       });
    });
 

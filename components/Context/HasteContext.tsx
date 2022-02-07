@@ -83,6 +83,7 @@ export function HasteProvider(props: HasteProviderProps) {
          return null;
       }
       let error = false;
+      let errorMsg = undefined;
       const response = await axiosClient
          .post(
             '/api/haste/new',
@@ -94,10 +95,16 @@ export function HasteProvider(props: HasteProviderProps) {
             },
          )
          .catch((err: AxiosError) => {
+            if (err.response?.data?.message || err.response?.data?.error) {
+               errorMsg =
+                  err.response?.data?.message || err.response?.data?.error;
+            }
             error = true;
          });
       if (error || !response?.data || !response.data.hasteID) {
-         updateErrorWidgit?.showErrorWidgit('Error uploading haste');
+         updateErrorWidgit?.showErrorWidgit(
+            errorMsg || 'Error uploading haste',
+         );
          return null;
       }
       const hasteID = response.data.hasteID;
@@ -170,6 +177,56 @@ export function HasteProvider(props: HasteProviderProps) {
          setHaste(newHaste);
          const newHasteCursorPosition = newHaste.length - splitHaste.length;
          setChangeCursorPosition(newHasteCursorPosition);
+         return;
+      } else if (char === '(') {
+         e.preventDefault();
+         const { selectionStart } = e.target;
+         const splitHaste = haste.substring(selectionStart);
+         const splitHaste2 = haste.substring(0, selectionStart);
+         const newHaste = `${splitHaste2}()${splitHaste}`;
+         setHaste(newHaste);
+         const newHasteCursorPosition = newHaste.length - splitHaste.length;
+         setChangeCursorPosition(newHasteCursorPosition - 1);
+         return;
+      } else if (char === '{') {
+         e.preventDefault();
+         const { selectionStart } = e.target;
+         const splitHaste = haste.substring(selectionStart);
+         const splitHaste2 = haste.substring(0, selectionStart);
+         const newHaste = `${splitHaste2}{}${splitHaste}`;
+         setHaste(newHaste);
+         const newHasteCursorPosition = newHaste.length - splitHaste.length;
+         setChangeCursorPosition(newHasteCursorPosition - 1);
+         return;
+      } else if (char === '"') {
+         e.preventDefault();
+         const { selectionStart } = e.target;
+         const splitHaste = haste.substring(selectionStart);
+         const splitHaste2 = haste.substring(0, selectionStart);
+         const newHaste = `${splitHaste2}""${splitHaste}`;
+         setHaste(newHaste);
+         const newHasteCursorPosition = newHaste.length - splitHaste.length;
+         setChangeCursorPosition(newHasteCursorPosition - 1);
+         return;
+      } else if (char === "'") {
+         e.preventDefault();
+         const { selectionStart } = e.target;
+         const splitHaste = haste.substring(selectionStart);
+         const splitHaste2 = haste.substring(0, selectionStart);
+         const newHaste = `${splitHaste2}''${splitHaste}`;
+         setHaste(newHaste);
+         const newHasteCursorPosition = newHaste.length - splitHaste.length;
+         setChangeCursorPosition(newHasteCursorPosition - 1);
+         return;
+      } else if (char === '[') {
+         e.preventDefault();
+         const { selectionStart } = e.target;
+         const splitHaste = haste.substring(selectionStart);
+         const splitHaste2 = haste.substring(0, selectionStart);
+         const newHaste = `${splitHaste2}[]${splitHaste}`;
+         setHaste(newHaste);
+         const newHasteCursorPosition = newHaste.length - splitHaste.length;
+         setChangeCursorPosition(newHasteCursorPosition - 1);
          return;
       }
    }

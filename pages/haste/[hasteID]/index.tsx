@@ -14,11 +14,15 @@ import getLanguageFromExtension from 'utils/haste/getLanguageFromExtension';
 import getExtensionFromLanguageName from 'utils/haste/getExtensionFromLanguageName';
 import Router from 'next/router';
 import { useHasteUpdate } from 'components/Context/HasteContext';
+import HasteLineNumbers from 'components/Haste/LineNumbers/LineNumbers';
+import HasteTextArea from 'components/Haste/TextArea/TextArea';
+import { Axios } from 'axios';
 
 const HasteView: NextPage<HasteViewProps> = ({
    hasteID,
    hasteText,
    language: hasteLanguage,
+   maxHighlightLength,
 }) => {
    const [haste, setHaste] = useState('');
    const [language, setLanguage] = useState<string | undefined>(undefined);
@@ -40,6 +44,8 @@ const HasteView: NextPage<HasteViewProps> = ({
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
+   const highlighter = haste.length < maxHighlightLength;
+
    return (
       <>
          <Meta
@@ -56,22 +62,39 @@ const HasteView: NextPage<HasteViewProps> = ({
             onKeyDown={(e) => updateHaste?.handleKeyDownEvent(e)}
          >
             <CustomHasteContainer>
-               <SyntaxHighlighter
-                  language={language}
-                  style={vs2015}
-                  showLineNumbers
-                  customStyle={{
-                     width: '100%',
-                     height: '100%',
-                     fontSize: '14px',
-                  }}
-                  wrapLines={true}
-                  lineNumberStyle={{
-                     color: '#7d7d7d',
-                  }}
-               >
-                  {haste}
-               </SyntaxHighlighter>
+               {highlighter ? (
+                  <SyntaxHighlighter
+                     language={language}
+                     style={vs2015}
+                     showLineNumbers
+                     customStyle={{
+                        width: '100%',
+                        height: '100%',
+                        fontSize: '14px',
+                     }}
+                     wrapLines={true}
+                     lineNumberStyle={{
+                        color: '#7d7d7d',
+                     }}
+                  >
+                     {haste}
+                  </SyntaxHighlighter>
+               ) : (
+                  <CustomContainer>
+                     <HasteContainer>
+                        <HasteLineNumbers>
+                           {haste.split('\n').map((line, index) => (
+                              <p key={index}>{index + 1}</p>
+                           ))}
+                        </HasteLineNumbers>
+                        <HasteTextArea
+                           autoFocus={true}
+                           value={haste}
+                           disabled
+                        />
+                     </HasteContainer>
+                  </CustomContainer>
+               )}
             </CustomHasteContainer>
          </CustomContainer>
       </>
@@ -104,6 +127,10 @@ export const getServerSideProps: GetServerSideProps<HasteViewProps> = async ({
       };
    }
    const haste = response.data.haste;
+   const settings = await axiosClient.get('/api/settings').catch(() => {});
+   const maxHighlightLength =
+      settings?.data?.find((s: any) => s.name === 'maxHighlightLength')
+         ?.value || 12500;
    let language = null;
 
    if (haste.language) {
@@ -131,6 +158,7 @@ export const getServerSideProps: GetServerSideProps<HasteViewProps> = async ({
          hasteID: haste.id,
          hasteText: haste.haste,
          language,
+         maxHighlightLength,
       },
    };
 };

@@ -28,6 +28,7 @@ function Settings({
                   name={setting.name}
                   value={setting.value}
                   setSettings={setSettings}
+                  type={setting.type}
                />
             );
          })}
@@ -64,18 +65,65 @@ function Setting(settings: SettingProps) {
          updateSuccessWidgit?.showSuccessWidgit('Setting not toggled');
       }
    }
+
+   async function setSetting() {
+      let newValue: any = window.prompt(
+         'Enter new value for ' +
+            settings.name +
+            ' setting.\n\nType: ' +
+            settings.type,
+      );
+      if (!newValue)
+         return updateSuccessWidgit?.showSuccessWidgit('Set setting cancelled');
+
+      if (settings.type === 'string') {
+         if (typeof newValue !== 'string')
+            return updateErrorWidgit?.showErrorWidgit('Invalid type');
+      } else if (settings.type === 'number') {
+         const num = parseInt(newValue);
+         if (isNaN(num) || !num)
+            return updateErrorWidgit?.showErrorWidgit('Invalid type');
+
+         newValue = num;
+      }
+
+      axiosClient
+         .put(
+            server + '/api/dashboard/settings?action=set&name=' + settings.name,
+            {
+               value: newValue,
+            },
+         )
+         .catch((err) => updateErrorWidgit?.showErrorWidgit(err.message))
+         .then((response) => {
+            if (response?.status !== 200)
+               return updateErrorWidgit?.showErrorWidgit('An error occured');
+            updateSuccessWidgit?.showSuccessWidgit(
+               capitalizeFirstLetter(settings.name) + ' setting set',
+            );
+            settings.setSettings(response.data);
+         });
+   }
+
    return (
       <DashboardItemWrapper>
          <DashboardName>{capitalizeFirstLetter(settings.name)}</DashboardName>
-         <div>{settings.value === 'true' ? 'Enabled' : 'Disabled'}</div>
+         <div>
+            {settings.type === 'boolean'
+               ? settings.value === 'true'
+                  ? 'Enabled'
+                  : 'Disabled'
+               : settings.value}
+         </div>
          <DashboardButtons>
             <button
                className='button button-blue'
                onClick={(e) => {
-                  toggleSetting();
+                  if (settings.type === 'boolean') toggleSetting();
+                  else setSetting();
                }}
             >
-               Toggle
+               {settings.type === 'boolean' ? 'Toggle' : 'Change'}
             </button>
          </DashboardButtons>
       </DashboardItemWrapper>

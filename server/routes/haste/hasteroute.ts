@@ -8,7 +8,6 @@ import getuploadkey from '../../../server/modules/getuploadkey';
 import { validateUploadKey } from '../../../api/uploadKey';
 import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
 import flourite from 'flourite';
-
 const hasterouter = Router();
 
 hasterouter.post('/new', async (req: Request, res: Response) => {
@@ -25,6 +24,15 @@ hasterouter.post('/new', async (req: Request, res: Response) => {
    let error = false;
    const { haste } = req.body;
    if (!haste) return badrequest(res);
+
+   const maxHasteLength = await settingsSQL.getSetting('maxHasteLength');
+   if (haste.length > Number(maxHasteLength[0].value)) {
+      return res.status(400).json({
+         status: 400,
+         error: 'Haste is too long',
+         message: 'Haste is too long',
+      });
+   }
    const newhasteID = generateRandomString(15);
    let language: null | string = flourite(haste).language.toLowerCase();
    if (language === 'unknown') language = null;
