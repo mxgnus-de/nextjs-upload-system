@@ -1,29 +1,13 @@
-export interface Uploads {
-   name: string;
-   filename: string;
-   originalfilename: string;
-   path: string;
-   mimetype: string;
+import { File, Haste, Shorter } from '@prisma/client';
+
+export interface FileOwner extends File {
+   ownerName: string | null;
 }
 
-export interface ShortURL {
-   name: string;
-   url: string;
+export interface ShorterOwner extends Shorter {
+   ownerName: string | null;
 }
 
-export interface User {
-   key: string;
-   username: string;
-}
-
-export interface Settings {
-   name: string;
-   value: string;
-   type: 'boolean' | 'string' | 'number';
-}
-
-export interface Haste {
-   id: string;
-   haste: string;
-   language: string | null;
+export interface HasteOwner extends Haste {
+   ownerName: string | null;
 }
