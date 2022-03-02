@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import Link from 'next/link';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ArticleIcon from '@mui/icons-material/Article';
 import { useHasteUpdate } from 'components/Context/HasteContext';
 import { useEffect } from 'react';
 
-function Widgit({
+function Widget({
    canSave,
    canCopy,
    hasteID,
@@ -17,7 +17,7 @@ function Widgit({
    canCopy: boolean;
    hasteID?: string;
 }) {
-   const updateErrorWidgit = useErrorWidgitUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
    const updateHaste = useHasteUpdate();
 
    useEffect(() => {
@@ -29,54 +29,54 @@ function Widgit({
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
    return (
-      <WidgitWrapper>
-         <WidgitHeader>
+      <WidgetWrapper>
+         <WidgetHeader>
             <Link href='/haste' passHref>
-               <WidgitHeaderTitle>Haste</WidgitHeaderTitle>
+               <WidgetHeaderTitle>Haste</WidgetHeaderTitle>
             </Link>
-         </WidgitHeader>
-         <WidgitBody>
+         </WidgetHeader>
+         <WidgetBody>
             {canSave ? (
-               <WidgitButton
+               <WidgetButton
                   onClick={() => {
                      updateHaste?.uploadHaste();
                   }}
                >
                   <SaveAsIcon />
-               </WidgitButton>
+               </WidgetButton>
             ) : null}
             {canCopy ? (
-               <WidgitButton
+               <WidgetButton
                   onClick={() => {
                      updateHaste?.copyHaste(hasteID || '');
                   }}
                >
                   <FileCopyIcon />
-               </WidgitButton>
+               </WidgetButton>
             ) : null}
 
-            <WidgitButton
+            <WidgetButton
                onClick={() => {
                   updateHaste?.createNewHaste();
                }}
             >
                <NoteAddIcon />
-            </WidgitButton>
+            </WidgetButton>
             {hasteID ? (
-               <WidgitButton
+               <WidgetButton
                   onClick={() => {
                      updateHaste?.showRowHaste(hasteID || '');
                   }}
                >
                   <ArticleIcon />
-               </WidgitButton>
+               </WidgetButton>
             ) : null}
-         </WidgitBody>
-      </WidgitWrapper>
+         </WidgetBody>
+      </WidgetWrapper>
    );
 }
 
-const WidgitWrapper = styled.div`
+const WidgetWrapper = styled.div`
    position: fixed;
    top: 0;
    right: 0;
@@ -89,14 +89,14 @@ const WidgitWrapper = styled.div`
    min-width: 150px;
 `;
 
-const WidgitHeader = styled.div`
+const WidgetHeader = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
    text-align: center;
 `;
 
-const WidgitHeaderTitle = styled.div`
+const WidgetHeaderTitle = styled.div`
    color: #fff;
    font-size: 1.5rem;
    font-weight: bold;
@@ -104,14 +104,14 @@ const WidgitHeaderTitle = styled.div`
    cursor: pointer;
 `;
 
-const WidgitBody = styled.div`
+const WidgetBody = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
    gap: 0.5rem;
 `;
 
-const WidgitButton = styled.div`
+const WidgetButton = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
@@ -132,4 +132,4 @@ const WidgitButton = styled.div`
    }
 `;
 
-export default Widgit;
+export default Widget;

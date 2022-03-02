@@ -4,7 +4,7 @@ import HasteContainer from 'components/Haste/Container/Container';
 import CustomContainer from 'components/Haste/CustomContainer/CustomContainer';
 import HasteLineNumbers from 'components/Haste/LineNumbers/LineNumbers';
 import HasteTextArea from 'components/Haste/TextArea/TextArea';
-import Widgit from 'components/Haste/Widgit/Widgit';
+import Widget from 'components/Haste/Widget/Widget';
 import Meta from 'components/Meta/Meta';
 import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
@@ -36,7 +36,7 @@ const Haste: NextPage<HasteCreateProps> = ({ haste: hasteInit }) => {
             }}
          />
 
-         <Widgit canSave={true} canCopy={false} />
+         <Widget canSave={true} canCopy={false} />
 
          <CustomContainer
             onKeyDown={(e) => {

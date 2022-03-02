@@ -33,6 +33,7 @@ function Sidebar({}: SiteProps) {
       name: string;
       icon: JSX.Element;
       site: DashboardPages;
+      forbidden?: boolean;
    }[] = [
       {
          id: 0,
@@ -77,6 +78,7 @@ function Sidebar({}: SiteProps) {
          {sidebarStatus === true ? (
             <SidebarOpenWrapper>
                {sidebarItems
+                  .filter((item) => !item.forbidden)
                   .sort((sidebarItemA, sideBarItemB) => {
                      return sidebarItemA.id - sideBarItemB.id;
                   })

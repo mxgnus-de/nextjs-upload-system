@@ -1,7 +1,16 @@
-import { userSQL } from './db/mysql';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function validateUploadKey(key: string): Promise<boolean> {
-   const user = await userSQL.getUser(key || '');
+   if (!key) return false;
+   const user = await prisma.user.findUnique({
+      where: {
+         key,
+      },
+   });
 
-   return user[0] !== undefined && user[0]?.key === key;
+   if (!user) return false;
+
+   return user && user.key === key;
 }

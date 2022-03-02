@@ -7,12 +7,13 @@ import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import ShortURL from 'components/Dashboard/ShortedURL';
 import Layout from 'components/Layout/Layout';
-import { ShortURL as IShortURL } from 'types/Dashboard';
 import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
+import { Shorter } from '@prisma/client';
+import { ShorterOwner } from 'types/Dashboard';
 
 interface SiteProps {
-   shortedURLs: IShortURL[];
+   shortedURLs: ShorterOwner[];
 }
 
 const Dashboard: NextPage<SiteProps> = ({ shortedURLs }) => {

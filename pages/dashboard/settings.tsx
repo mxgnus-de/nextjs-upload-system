@@ -6,13 +6,13 @@ import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import Layout from 'components/Layout/Layout';
-import { Settings as ISettings } from 'types/Dashboard';
 import Settings from 'components/Dashboard/Settings';
 import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
+import { Setting } from '@prisma/client';
 
 interface SiteProps {
-   initalsettings: ISettings[];
+   initalsettings: Setting[];
 }
 
 const Dashboard: NextPage<SiteProps> = ({ initalsettings }) => {

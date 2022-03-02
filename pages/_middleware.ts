@@ -16,12 +16,16 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       if (req.nextUrl.pathname === page) blockedPage = true;
    });
 
+   const rdm =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
    const response = await fetch(`${server}/api/auth/validateuploadkey`, {
       method: 'GET',
       headers: {
          Authorization: uploadKey,
       },
    });
+
    const json = await response?.json().catch(() => {});
    const isValideUploadKey = json?.valide || false;
 
@@ -68,7 +72,9 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       req.nextUrl.pathname !== '/api/auth/login' &&
       blockedPage
    ) {
-      return NextResponse.redirect('/login?redirect=' + req.nextUrl.pathname);
+      return NextResponse.redirect(
+         new URL('/login?redirect=' + req.nextUrl.pathname, req.url),
+      );
    }
    return NextResponse.next();
 }

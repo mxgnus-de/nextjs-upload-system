@@ -7,15 +7,17 @@ import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import FileUpload from 'components/Dashboard/FileUpload';
 import Layout from 'components/Layout/Layout';
-import { Uploads } from 'types/Dashboard';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
+import { File } from '@prisma/client';
+import { FileOwner } from 'types/Dashboard';
+import DashboardSearch from 'components/Dashboard/DashboardSearch';
 
 interface SiteProps {
-   uploads: Uploads[];
+   uploads: FileOwner[];
 }
 
 const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
-   const [uploadFiles, setUploadFiles] = useState<typeof uploads>(uploads);
+   const [uploadFiles, setUploadFiles] = useState<FileOwner[]>(uploads);
    const [search, setSearch] = useState<string>('');
 
    useEffect(() => {
@@ -56,6 +58,7 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
       >
          <DashboardTitle>Dashboard - Files</DashboardTitle>
          <Hyphen className='text-muted' />
+         <DashboardSearch searchValue={search} searchChange={searchChange} />
          <DashboardWrapper>
             <FileUpload
                setUploadFiles={setUploadFiles}

@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Meta from 'components/Meta/Meta';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
 import Container from 'components/Container/Container';
 import Navbar from 'components/Navbar/Navbar';
@@ -12,18 +12,20 @@ import Input from 'components/Input/Input';
 import SubmitButton from 'components/SubmitButton/SubmitButton';
 import Form from 'components/Form/Form';
 import axiosClient from 'api/axiosClient';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
+import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
+import LinearProgress from '@mui/material/LinearProgress';
 
 type Files = FileList | null;
 
 const Home: NextPage = () => {
    const [uploading, setUploading] = useState(false);
    const [currentFiles, setCurrentFiles] = useState<Files>();
+   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
    const fileuploadRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
-   const updateSuccessWidgit = useSuccessWidgitUpdate();
-   const updateErrorWidgit = useErrorWidgitUpdate();
+   const updateSuccessWidget = useSuccessWidgetUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
 
    useEffect(() => {
       setCurrentFiles(null);
@@ -39,12 +41,12 @@ const Home: NextPage = () => {
       setUploading(true);
       const formData = new FormData();
       formData.append('file', file);
-      getBase64(file, (result: any) => {
-         formData.append('base64', result);
-      });
 
-      const config = {
+      const config: AxiosRequestConfig<FormData> = {
          headers: { 'content-type': 'multipart/form-data' },
+         onUploadProgress: (e) => {
+            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+         },
       };
 
       await axiosClient
@@ -55,35 +57,29 @@ const Home: NextPage = () => {
             if (clipboard) {
                await clipboard.writeText(res.data).catch((err) => {});
             }
-            updateSuccessWidgit?.showSuccessWidgit(
+            updateSuccessWidget?.showSuccessWidget(
                'File uploaded!' + (clipboard ? ' Copied to clipboard' : ''),
             );
             router.push(res.data);
          })
          .catch((err: AxiosError) => {
             setUploading(false);
-            updateErrorWidgit?.showErrorWidgit(
-               'Upload failed\n' + err.response?.statusText,
+            updateErrorWidget?.showErrorWidget(
+               'Upload failed.\n' +
+                  (err.response?.data?.message || err.response?.statusText),
             );
          })
          .finally(() => {
             setUploading(false);
+            setUploadProgress(null);
          });
-   }
-
-   function getBase64(file: any, cb: any) {
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = function () {
-         cb(reader.result);
-      };
-      reader.onerror = function (error) {
-         console.log('Error: ', error);
-      };
    }
 
    return (
       <>
+         {uploadProgress && (
+            <LinearProgress value={uploadProgress} variant='determinate' />
+         )}
          <Meta
             meta={{
                title: 'Upload • Home',

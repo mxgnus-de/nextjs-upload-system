@@ -1,14 +1,14 @@
+import { Setting as ISetting } from '@prisma/client';
 import axiosClient from 'api/axiosClient';
-import capitalizeFirstLetter from 'api/utils/capitalizeFirstLetter';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
+import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
+import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import { server } from 'config/api';
-import { Settings as ISettings } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import DashboardName from './DashboardName';
 
-interface SettingProps extends ISettings {
+interface SettingProps extends ISetting {
    setSettings: any;
 }
 
@@ -16,7 +16,7 @@ function Settings({
    settings,
    setSettings,
 }: {
-   settings: ISettings[];
+   settings: ISetting[];
    setSettings: any;
 }) {
    return (
@@ -29,6 +29,7 @@ function Settings({
                   value={setting.value}
                   setSettings={setSettings}
                   type={setting.type}
+                  info={setting.info}
                />
             );
          })}
@@ -37,8 +38,8 @@ function Settings({
 }
 
 function Setting(settings: SettingProps) {
-   const updateSuccessWidgit = useSuccessWidgitUpdate();
-   const updateErrorWidgit = useErrorWidgitUpdate();
+   const updateSuccessWidget = useSuccessWidgetUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
 
    async function toggleSetting() {
       const confirm = window.confirm(
@@ -52,17 +53,21 @@ function Setting(settings: SettingProps) {
                   '/api/dashboard/settings?action=toggle&name=' +
                   settings.name,
             )
-            .catch((err) => updateErrorWidgit?.showErrorWidgit(err.message))
+            .catch((err) => {
+               updateErrorWidget?.showErrorWidget('An error occured');
+            })
             .then((response) => {
                if (response?.status !== 200)
-                  return updateErrorWidgit?.showErrorWidgit('An error occured');
-               updateSuccessWidgit?.showSuccessWidgit(
+                  return updateErrorWidget?.showErrorWidget(
+                     'An error occured!',
+                  );
+               updateSuccessWidget?.showSuccessWidget(
                   capitalizeFirstLetter(settings.name) + ' setting toggled',
                );
                settings.setSettings(response.data);
             });
       } else {
-         updateSuccessWidgit?.showSuccessWidgit('Setting not toggled');
+         updateSuccessWidget?.showSuccessWidget('Setting not toggled');
       }
    }
 
@@ -74,15 +79,15 @@ function Setting(settings: SettingProps) {
             settings.type,
       );
       if (!newValue)
-         return updateSuccessWidgit?.showSuccessWidgit('Set setting cancelled');
+         return updateSuccessWidget?.showSuccessWidget('Set setting cancelled');
 
       if (settings.type === 'string') {
          if (typeof newValue !== 'string')
-            return updateErrorWidgit?.showErrorWidgit('Invalid type');
+            return updateErrorWidget?.showErrorWidget('Invalid type');
       } else if (settings.type === 'number') {
          const num = parseInt(newValue);
          if (isNaN(num) || !num)
-            return updateErrorWidgit?.showErrorWidgit('Invalid type');
+            return updateErrorWidget?.showErrorWidget('Invalid type');
 
          newValue = num;
       }
@@ -94,11 +99,11 @@ function Setting(settings: SettingProps) {
                value: newValue,
             },
          )
-         .catch((err) => updateErrorWidgit?.showErrorWidgit(err.message))
+         .catch((err) => updateErrorWidget?.showErrorWidget(err.message))
          .then((response) => {
             if (response?.status !== 200)
-               return updateErrorWidgit?.showErrorWidgit('An error occured');
-            updateSuccessWidgit?.showSuccessWidgit(
+               return updateErrorWidget?.showErrorWidget('An error occured');
+            updateSuccessWidget?.showSuccessWidget(
                capitalizeFirstLetter(settings.name) + ' setting set',
             );
             settings.setSettings(response.data);

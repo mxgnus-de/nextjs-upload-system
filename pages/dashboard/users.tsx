@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import Users from 'components/Dashboard/Users';
 import Layout from 'components/Layout/Layout';
-import { User } from 'types/Dashboard';
 import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
+import { User } from '@prisma/client';
 
 interface SiteProps {
    initalusers: User[];
@@ -65,13 +65,23 @@ const Dashboard: NextPage<SiteProps> = ({ initalusers }) => {
 export const getServerSideProps: GetServerSideProps<SiteProps> = async (
    context,
 ) => {
+   let err = false;
    const users = await axiosClient
       .get(server + '/api/dashboard/users', {
          headers: {
             authorization: context.req.cookies['upload_key'] || '',
          },
       })
-      .catch(() => {});
+      .catch(() => {
+         err = true;
+      });
+   if (err)
+      return {
+         redirect: {
+            destination: '/dashboard',
+            permanent: false,
+         },
+      };
    const usersData = users?.data;
 
    return {

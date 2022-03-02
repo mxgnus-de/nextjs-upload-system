@@ -1,17 +1,24 @@
 import axiosClient from 'api/axiosClient';
-import { AxiosError, AxiosResponse } from 'axios';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
-import { server } from 'config/api';
-import { Haste as IHaste } from 'types/Dashboard';
-import { useCookies } from 'react-cookie';
+import { AxiosError } from 'axios';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
+import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import Router from 'next/router';
-import capitalizeFirstLetter from 'api/utils/capitalizeFirstLetter';
+import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
+import { HasteOwner } from 'types/Dashboard';
+import DashboardInfo from './DashboardInfo';
+import Link from 'next/link';
+import { server } from 'config/api';
 
-function Users({ hastes, setHastes }: { hastes: IHaste[]; setHastes: any }) {
+function Users({
+   hastes,
+   setHastes,
+}: {
+   hastes: HasteOwner[];
+   setHastes: any;
+}) {
    function createHaste() {
       Router.push('/haste');
    }
@@ -21,12 +28,12 @@ function Users({ hastes, setHastes }: { hastes: IHaste[]; setHastes: any }) {
          {hastes?.length ? (
             hastes.map((haste, index) => {
                return (
-                  <User
+                  <Haste
                      key={index}
-                     setHastes={setHastes}
-                     id={haste.id}
-                     language={haste.language}
-                     haste={haste.haste}
+                     haste={{
+                        ...haste,
+                        setHastes,
+                     }}
                   />
                );
             })
@@ -47,15 +54,13 @@ function Users({ hastes, setHastes }: { hastes: IHaste[]; setHastes: any }) {
    );
 }
 
-function User(haste: {
-   id: string;
-   language: string | null;
-   haste: string;
+interface HasteProps extends HasteOwner {
    setHastes: any;
-}) {
-   const updateSuccessWidgit = useSuccessWidgitUpdate();
-   const updateErrorWidgit = useErrorWidgitUpdate();
-   const [cookies, setCookies, removeCookies] = useCookies(['upload_key']);
+}
+
+function Haste({ haste }: { haste: HasteProps }) {
+   const updateSuccessWidget = useSuccessWidgetUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
 
    function deleteHaste(id: string) {
       const confirm = window.confirm(`Are you sure you want to delete ${id}?`);
@@ -64,28 +69,36 @@ function User(haste: {
          axiosClient
             .delete(`/api/dashboard/haste?id=${id}`)
             .then(async (res) => {
-               updateSuccessWidgit?.showSuccessWidgit(`${id} deleted`);
-               console.log(res);
-               if (res.data.hastes) {
-                  haste.setHastes(res.data.hastes);
-               }
+               updateSuccessWidget?.showSuccessWidget(`${id} deleted`);
+               haste.setHastes((prev: HasteOwner[]) =>
+                  prev.filter((h) => h.id !== id),
+               );
             })
             .catch((error: AxiosError) => {
-               updateErrorWidgit?.showErrorWidgit(
+               updateErrorWidget?.showErrorWidget(
                   error.message + ': ' + error.response?.statusText,
                );
             });
       } else {
-         return updateSuccessWidgit?.showSuccessWidgit('Cancelled');
+         return updateSuccessWidget?.showSuccessWidget('Cancelled');
       }
    }
 
    return (
       <DashboardItemWrapper>
          <DashboardName>{haste.id}</DashboardName>
-         <div>
+         <DashboardInfo>
+            {haste.ownerName ? (
+               <Link href={'/dashboard/users#' + haste.ownerId}>
+                  {haste.ownerName}
+               </Link>
+            ) : (
+               'Unknown'
+            )}
+         </DashboardInfo>
+         <DashboardInfo>
             {haste.language ? capitalizeFirstLetter(haste.language) : 'Unknown'}
-         </div>
+         </DashboardInfo>
 
          <DashboardButtons>
             <button

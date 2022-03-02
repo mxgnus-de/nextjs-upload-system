@@ -5,16 +5,19 @@ import next from 'next';
 import ConsoleLogger from '../utils/consolelogger';
 import { middleware } from './middleware/middleware';
 import apirouter from './routes/apiroute';
-import '../api/db/mysql';
 import { paths } from '../config/upload';
 import fs from 'fs';
 import mainroute from './routes/mainroute';
+import { init as initDB } from '../api/db/init';
 
 const app = next({
    dev: devenv,
    conf: {
       reactStrictMode: true,
       poweredByHeader: false,
+      compiler: {
+         styledComponents: true,
+      },
    },
    hostname: serverdomain,
    port,
@@ -33,12 +36,13 @@ async function main() {
    server.use(cookies.express(['keyA', 'keyB', 'keyC']));
    server.use(middleware);
    server.use('/api', apirouter);
-   server.use('/', mainroute)
+   server.use('/', mainroute);
    server.use(express.static(paths.files));
 
    server.all('*', (req: Request, res: Response) => handle(req, res));
 
    server.listen(port, (err?: any) => {
+      initDB();
       if (err) {
          new ConsoleLogger(err).error(true);
          throw err;

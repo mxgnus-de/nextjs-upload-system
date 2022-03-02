@@ -1,0 +1,59 @@
+generator client {
+   provider = "prisma-client-js"
+}
+
+datasource db {
+   provider = "mysql"
+   url      = env("DATABASE_URL")
+}
+
+model User {
+   key         String    @unique @db.VarChar(500)
+   id          String    @id @default(cuid()) @db.VarChar(50)
+   username    String    @db.VarChar(50)
+   permissions String    @default("admin") @db.VarChar(255)
+   createdAt   DateTime  @db.Timestamp()
+   updatedAt   DateTime  @updatedAt
+   files       File[]
+   hastes      Haste[]
+   shorters    Shorter[]
+}
+
+model File {
+   name             String   @unique @db.VarChar(50)
+   mimetype         String   @db.VarChar(50)
+   path             String   @db.Text
+   originalfilename String   @db.Text
+   size             Int      @default(0) @db.Int
+   ownerId          String?  @db.VarChar(50)
+   createdAt        DateTime @db.Timestamp()
+   updatedAt        DateTime @updatedAt
+   owner            User?    @relation(fields: [ownerId], references: [id])
+}
+
+model Haste {
+   id        String   @unique @db.VarChar(255)
+   haste     String   @db.Text
+   language  String?  @db.VarChar(255)
+   ownerId   String?  @db.VarChar(50)
+   createdAt DateTime @db.Timestamp()
+   updatedAt DateTime @updatedAt
+   owner     User?    @relation(fields: [ownerId], references: [id])
+}
+
+model Shorter {
+   name      String   @unique @db.VarChar(50)
+   url       String   @db.Text
+   createdAt DateTime @db.Timestamp()
+   updatedAt DateTime @updatedAt
+   views     Int      @default(0) @db.Int
+   ownerId   String?  @db.VarChar(50)
+   owner     User?    @relation(fields: [ownerId], references: [id])
+}
+
+model Setting {
+   name  String  @id @unique @db.VarChar(255)
+   value String  @db.VarChar(255)
+   info  String? @db.VarChar(10)
+   type  String  @default("boolean") @db.VarChar(255)
+}

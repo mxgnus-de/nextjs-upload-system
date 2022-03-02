@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import CheckIcon from '@mui/icons-material/Check';
 
-interface SuccessWidgitProps {
+interface SuccessWidgetProps {
    text: string;
 }
 
-function SuccessWidgit(props: SuccessWidgitProps) {
+function SuccessWidget(props: SuccessWidgetProps) {
    return (
       <Wrapper>
          <CustomCheckIcon />
@@ -33,4 +33,4 @@ const Wrapper = styled.div`
 const CustomCheckIcon = styled(CheckIcon)`
    margin-right: 4px;
 `;
-export default SuccessWidgit;
+export default SuccessWidget;

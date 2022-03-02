@@ -26,7 +26,7 @@ const PageError404: NextPage = () => {
 
 const ErrorCode = styled.h1`
    display: inline-block;
-   border-right: 1px solid rgba(0, 0, 0, 0.3);
+   border-right: 1px solid rgba(255, 255, 255, 0.74);
    margin: 0;
    margin-right: 20px;
    padding: 10px 23px 10px 0;

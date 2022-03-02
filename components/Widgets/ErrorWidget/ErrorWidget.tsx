@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-interface ErrorWidgitProps {
+interface ErrorWidgetProps {
    text: string;
 }
 
-function ErrorWidgit(props: ErrorWidgitProps) {
+function ErrorWidget(props: ErrorWidgetProps) {
    return (
       <Wrapper>
          <CustomErrorIcon />
@@ -32,4 +32,4 @@ const Wrapper = styled.div`
 const CustomErrorIcon = styled(ErrorOutlineIcon)`
    margin-right: 4px;
 `;
-export default ErrorWidgit;
+export default ErrorWidget;
