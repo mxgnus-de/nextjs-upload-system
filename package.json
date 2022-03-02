@@ -16,7 +16,7 @@
       "build:server": "tsc --project tsconfig.server.json",
       "build:next": "next build",
       "lint": "next lint",
-      "migrade": "prisma migrate dev"
+      "migrate": "prisma migrate dev"
    },
    "dependencies": {
       "@emotion/react": "^11.7.1",
