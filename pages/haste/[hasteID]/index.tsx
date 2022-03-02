@@ -1,7 +1,7 @@
 import axiosClient from 'api/axiosClient';
 import HasteContainer from 'components/Haste/Container/Container';
 import CustomContainer from 'components/Haste/CustomContainer/CustomContainer';
-import Widgit from 'components/Haste/Widgit/Widgit';
+import Widget from 'components/Haste/Widget/Widget';
 import Meta from 'components/Meta/Meta';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,6 @@ import Router from 'next/router';
 import { useHasteUpdate } from 'components/Context/HasteContext';
 import HasteLineNumbers from 'components/Haste/LineNumbers/LineNumbers';
 import HasteTextArea from 'components/Haste/TextArea/TextArea';
-import { Axios } from 'axios';
 
 const HasteView: NextPage<HasteViewProps> = ({
    hasteID,
@@ -55,7 +54,7 @@ const HasteView: NextPage<HasteViewProps> = ({
             }}
          />
 
-         <Widgit canSave={false} hasteID={hasteID} canCopy={true} />
+         <Widget canSave={false} hasteID={hasteID} canCopy={true} />
 
          <CustomContainer
             tabIndex={0}
