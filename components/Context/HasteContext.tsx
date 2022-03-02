@@ -10,7 +10,7 @@ import React, {
    RefObject,
    useEffect,
 } from 'react';
-import { useErrorWidgitUpdate } from './ErrorWidgitContext';
+import { useErrorWidgetUpdate } from './ErrorWidgetContext';
 
 export interface HasteProviderProps {
    children?: any;
@@ -52,7 +52,7 @@ export function HasteProvider(props: HasteProviderProps) {
    const [haste, setHaste] = useState('');
    const [textAreaRef, setTextAreaRef] =
       useState<RefObject<HTMLTextAreaElement> | null>(null);
-   const updateErrorWidgit = useErrorWidgitUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
    const [changeCusorPosition, setChangeCursorPosition] = useState<
       number | null
    >(null);
@@ -79,7 +79,7 @@ export function HasteProvider(props: HasteProviderProps) {
    async function uploadHaste(): Promise<string | null> {
       if (!settings.canSave) return null;
       if (!haste) {
-         updateErrorWidgit?.showErrorWidgit('No haste to upload');
+         updateErrorWidget?.showErrorWidget('No haste to upload');
          return null;
       }
       let error = false;
@@ -102,7 +102,7 @@ export function HasteProvider(props: HasteProviderProps) {
             error = true;
          });
       if (error || !response?.data || !response.data.hasteID) {
-         updateErrorWidgit?.showErrorWidgit(
+         updateErrorWidget?.showErrorWidget(
             errorMsg || 'Error uploading haste',
          );
          return null;
@@ -130,18 +130,18 @@ export function HasteProvider(props: HasteProviderProps) {
 
    function copyHaste(hasteID: string): void {
       if (!settings.canCopy)
-         return updateErrorWidgit?.showErrorWidgit(
+         return updateErrorWidget?.showErrorWidget(
             'You cannot copy this haste',
          );
       if (!hasteID)
-         return updateErrorWidgit?.showErrorWidgit('Error copying haste');
+         return updateErrorWidget?.showErrorWidget('Error copying haste');
       Router.push(`/haste?copy=${hasteID}`);
       return;
    }
 
    function showRowHaste(hasteID: string) {
       if (!hasteID)
-         return updateErrorWidgit?.showErrorWidgit('Cannot show row haste');
+         return updateErrorWidget?.showErrorWidget('Cannot show row haste');
       return Router.push(`/haste/${hasteID}/raw`);
    }
 

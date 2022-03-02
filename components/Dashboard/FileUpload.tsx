@@ -1,20 +1,22 @@
 import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
+import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import { server, serverdomain } from 'config/api';
 import Link from 'next/link';
-import { Uploads } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import { isAudio, isImage, isVideo } from 'utils/mimetypechecker';
+import { File } from '@prisma/client';
+import { FileOwner } from 'types/Dashboard';
+import DashboardInfo from './DashboardInfo';
 
 function FileUpload({
    uploadFiles,
    setUploadFiles,
 }: {
-   uploadFiles: Uploads[];
+   uploadFiles: FileOwner[];
    setUploadFiles: any;
 }) {
    return (
@@ -24,12 +26,7 @@ function FileUpload({
                return (
                   <Upload
                      key={index}
-                     name={upload.name}
-                     filename={upload.filename}
-                     originalFilename={upload.originalfilename}
-                     path={upload.path}
-                     mimetype={upload.mimetype}
-                     setUploadFiles={setUploadFiles}
+                     file={{ ...upload, setUploadFiles: setUploadFiles }}
                   />
                );
             })
@@ -50,16 +47,13 @@ function FileUpload({
    );
 }
 
-const Upload = (upload: {
-   name: string;
-   filename: string;
-   originalFilename: string;
-   path: string;
-   mimetype: string;
+interface UploadProps extends FileOwner {
    setUploadFiles: any;
-}) => {
-   const updateSuccessWidgit = useSuccessWidgitUpdate();
-   const updateErrorWidgit = useErrorWidgitUpdate();
+}
+
+const Upload = ({ file }: { file: UploadProps }) => {
+   const updateSuccessWidget = useSuccessWidgetUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
    function deleteUpload(name: string) {
       const confirm = window.confirm(
          `Are you sure you want to delete ${name}?`,
@@ -69,7 +63,7 @@ const Upload = (upload: {
          axiosClient
             .delete(`/api/dashboard/uploads?filename=${name}`)
             .then(async () => {
-               updateSuccessWidgit?.showSuccessWidgit(`${name} deleted`);
+               updateSuccessWidget?.showSuccessWidget(`${name} deleted`);
                const uploads = await axiosClient.get(
                   server + '/api/dashboard/uploads',
                   {
@@ -77,42 +71,51 @@ const Upload = (upload: {
                   },
                );
                if (uploads.data) {
-                  upload.setUploadFiles(uploads.data);
+                  file.setUploadFiles(uploads.data);
                }
             })
             .catch((error: AxiosError) => {
-               updateErrorWidgit?.showErrorWidgit(error.message);
+               updateErrorWidget?.showErrorWidget(error.message);
             });
       } else {
-         return updateSuccessWidgit?.showSuccessWidgit('Cancelled');
+         return updateSuccessWidget?.showSuccessWidget('Cancelled');
       }
    }
 
-   const downloadName = upload.path
+   const downloadName = file.path
       .replaceAll('//', '/')
       .replaceAll('\\', '/')
       .split('/')[
-      upload.path.replaceAll('//', '/').replaceAll('\\', '/').split('/')
-         .length - 1
+      file.path.replaceAll('//', '/').replaceAll('\\', '/').split('/').length -
+         1
    ];
    const downloadURL =
       server +
       '/uploads/' +
-      (isImage(upload.mimetype)
+      (isImage(file.mimetype)
          ? 'images'
-         : isAudio(upload.mimetype)
+         : isAudio(file.mimetype)
          ? 'audios'
-         : isVideo(upload.mimetype)
+         : isVideo(file.mimetype)
          ? 'videos'
          : 'data') +
       '/' +
       downloadName;
    return (
       <DashboardItemWrapper>
-         <DashboardName>{upload.name}</DashboardName>
-         <div>{upload.originalFilename}</div>
+         <DashboardName>{file.name}</DashboardName>
+         <DashboardInfo>
+            {file.ownerName ? (
+               <Link href={'/dashboard/users#' + file.ownerId}>
+                  {file.ownerName}
+               </Link>
+            ) : (
+               'Unknown'
+            )}
+         </DashboardInfo>
+         <DashboardInfo>{file.originalfilename}</DashboardInfo>
          <DashboardButtons>
-            <Link href={'/' + upload.name} passHref>
+            <Link href={'/' + file.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
             <a
@@ -126,7 +129,7 @@ const Upload = (upload: {
             <button
                className='button button-red'
                onClick={(e) => {
-                  deleteUpload(upload.name);
+                  deleteUpload(file.name);
                }}
             >
                Delete

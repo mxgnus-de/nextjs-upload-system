@@ -1,7 +1,7 @@
+import { Setting } from '@prisma/client';
 import axiosClient from 'api/axiosClient';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import { Settings } from 'types/Dashboard';
 import Notification from 'types/Notification';
 
 function DashboardNotifications() {
@@ -18,7 +18,7 @@ function DashboardNotifications() {
             const settings = settingsresponse.data;
             if (
                settings.find(
-                  (setting: Settings) => setting.name === 'notifications',
+                  (setting: Setting) => setting.name === 'notifications',
                )?.value === 'true'
             ) {
                axiosClient

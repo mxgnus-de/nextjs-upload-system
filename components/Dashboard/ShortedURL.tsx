@@ -1,19 +1,20 @@
 import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
-import { useErrorWidgitUpdate } from 'components/Context/ErrorWidgitContext';
-import { useSuccessWidgitUpdate } from 'components/Context/SuccessWidgitContext';
+import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
+import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import { server } from 'config/api';
 import Link from 'next/link';
-import { ShortURL as ShortURLs } from 'types/Dashboard';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
+import { ShorterOwner } from 'types/Dashboard';
+import DashboardInfo from './DashboardInfo';
 
 function ShortURL({
    shortedURL,
    setShortedURL,
 }: {
-   shortedURL: ShortURLs[];
+   shortedURL: ShorterOwner[];
    setShortedURL: any;
 }) {
    return (
@@ -23,9 +24,7 @@ function ShortURL({
                return (
                   <ShortedURL
                      key={index}
-                     name={upload.name}
-                     url={upload.url}
-                     setShortedURL={setShortedURL}
+                     link={{ ...upload, setShortedURL: setShortedURL }}
                   />
                );
             })
@@ -46,13 +45,13 @@ function ShortURL({
    );
 }
 
-function ShortedURL(shortURL: {
-   name: string;
-   url: string;
+interface ShortedURLProps extends ShorterOwner {
    setShortedURL: any;
-}) {
-   const updateSuccessWidgit = useSuccessWidgitUpdate();
-   const updateErrorWidgit = useErrorWidgitUpdate();
+}
+
+function ShortedURL({ link }: { link: ShortedURLProps }) {
+   const updateSuccessWidget = useSuccessWidgetUpdate();
+   const updateErrorWidget = useErrorWidgetUpdate();
    function deleteShortURL(name: string) {
       const confirm = window.confirm(
          `Are you sure you want to delete ${name}?`,
@@ -62,7 +61,7 @@ function ShortedURL(shortURL: {
          axiosClient
             .delete(`/api/dashboard/shorts?shorturl=${name}`)
             .then(async () => {
-               updateSuccessWidgit?.showSuccessWidgit(`${name} deleted`);
+               updateSuccessWidget?.showSuccessWidget(`${name} deleted`);
                const shortURLs = await axiosClient.get(
                   server + '/api/dashboard/shorts',
                   {
@@ -70,29 +69,39 @@ function ShortedURL(shortURL: {
                   },
                );
                if (shortURLs.data) {
-                  shortURL.setShortedURL(shortURLs.data);
+                  link.setShortedURL(shortURLs.data);
                }
             })
             .catch((error: AxiosError) => {
-               updateErrorWidgit?.showErrorWidgit(error.message);
+               updateErrorWidget?.showErrorWidget(error.message);
             });
       } else {
-         return updateSuccessWidgit?.showSuccessWidgit('Cancelled');
+         return updateSuccessWidget?.showSuccessWidget('Cancelled');
       }
    }
 
    return (
       <DashboardItemWrapper>
-         <DashboardName>{shortURL.name}</DashboardName>
-         <div>{shortURL.url}</div>
+         <DashboardName>{link.name}</DashboardName>
+         <DashboardInfo>
+            {link.ownerName ? (
+               <Link href={'/dashboard/users#' + link.ownerId}>
+                  {link.ownerName}
+               </Link>
+            ) : (
+               'Unknown'
+            )}
+         </DashboardInfo>
+         <DashboardInfo>{link.url}</DashboardInfo>
+         <DashboardInfo>{link.views}</DashboardInfo>
          <DashboardButtons>
-            <Link href={'/links/' + shortURL.name} passHref>
+            <Link href={'/links/' + link.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
             <button
                className='button button-red'
                onClick={(e) => {
-                  deleteShortURL(shortURL.name);
+                  deleteShortURL(link.name);
                }}
             >
                Delete

@@ -1,9 +1,10 @@
 import React from 'react';
-import { ErrorWidgitProvider } from 'components/Context/ErrorWidgitContext';
-import { SuccessWidgitProvider } from 'components/Context/SuccessWidgitContext';
+import { ErrorWidgetProvider } from 'components/Context/ErrorWidgetContext';
+import { SuccessWidgetProvider } from 'components/Context/SuccessWidgetContext';
 import { CookiesProvider } from 'react-cookie';
 import { SidebarStatusProvider } from './SidebarStatusContext';
 import { HasteProvider } from './HasteContext';
+import { BackgroundProvider } from './BackgroundContext';
 
 export interface ContextProps {
    children?: any;
@@ -12,13 +13,15 @@ export interface ContextProps {
 function UseContext(props: ContextProps) {
    return (
       <CookiesProvider>
-         <ErrorWidgitProvider>
-            <SuccessWidgitProvider>
-               <SidebarStatusProvider>
-                  <HasteProvider>{props.children}</HasteProvider>
-               </SidebarStatusProvider>
-            </SuccessWidgitProvider>
-         </ErrorWidgitProvider>
+         <BackgroundProvider>
+            <ErrorWidgetProvider>
+               <SuccessWidgetProvider>
+                  <SidebarStatusProvider>
+                     <HasteProvider>{props.children}</HasteProvider>
+                  </SidebarStatusProvider>
+               </SuccessWidgetProvider>
+            </ErrorWidgetProvider>
+         </BackgroundProvider>
       </CookiesProvider>
    );
 }
