@@ -7,12 +7,13 @@ import { useEffect, useState } from 'react';
 import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import Hastes from 'components/Dashboard/Hastes';
 import Layout from 'components/Layout/Layout';
-import { Haste } from 'types/Dashboard';
 import DashboardSearch from 'components/Dashboard/DashboardSearch';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
+import { Haste } from '@prisma/client';
+import { HasteOwner } from 'types/Dashboard';
 
 interface SiteProps {
-   initalhastes: Haste[];
+   initalhastes: HasteOwner[];
 }
 
 const Dashboard: NextPage<SiteProps> = ({ initalhastes }) => {
