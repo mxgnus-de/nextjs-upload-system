@@ -112,7 +112,7 @@ function Haste({ haste }: { haste: HasteProps }) {
             <button
                className='button button-blue'
                onClick={(e) => {
-                  Router.push(`/haste/${haste.id}/raw`);
+                  Router.push(`/api/haste/${haste.id}/raw`);
                }}
             >
                Raw
@@ -120,7 +120,7 @@ function Haste({ haste }: { haste: HasteProps }) {
             <button
                className='button button-blue'
                onClick={(e) => {
-                  Router.push(`/haste/${haste.id}/json`);
+                  Router.push(`/api/haste/${haste.id}/json`);
                }}
             >
                JSON
