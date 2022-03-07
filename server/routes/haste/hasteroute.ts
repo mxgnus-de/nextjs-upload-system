@@ -115,13 +115,14 @@ hasterouter.get('/:hasteID/raw', async (req, res) => {
          id: hasteID,
       },
    });
-   if (!haste)
+   if (!haste) {
       return res.status(404).json({
          status: 404,
          error: 'Not Found',
       });
+   }
    res.setHeader('Content-Type', 'text/plain');
-   return res.status(200).send(haste);
+   return res.status(200).send(haste.haste);
 });
 
 hasterouter.get('/:hasteID/json', async (req, res) => {
