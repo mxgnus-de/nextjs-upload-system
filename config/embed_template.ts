@@ -1,5 +1,3 @@
-import { devenv } from './api';
-
 /* If true, send a webhook */
 const sendWebhook: boolean = false;
 
@@ -23,9 +21,15 @@ interface NewUploadEmbed {
 }
 
 const newUploadEmbed: NewUploadEmbed = {
-   title: devenv ? 'New file uploaded [DEV]' : 'New file uploaded',
-   color: 0,
-   description: '',
+   title: 'New file uploaded',
+   color: 2096896,
+   description:
+      '**OriginalFilename**: ```{originalfilename}```' +
+      '\n**Shortname**: ```{shortname}```' +
+      '\n**ShortURL**: ```{shortURL}```' +
+      '\n**Path**: ```{path}```' +
+      '\n**Mimetype**: ```{mimetype}```' +
+      '\n**Username**: ```{username}```',
    id: 0,
 };
 
