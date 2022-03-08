@@ -22,21 +22,25 @@
 $ npm install
 ```
 
-### 3) Configure the files in the `config` directory
+### 3) Configure the files in the `config` directory and remove the suffix `_template` from the files
 
-### 4) Build the production version of the project
+### 4) Rename the `.env.example` file to `.env` and fill in the values
+
+### 5) Build the production version of the project
 
 ```bash
 $ npm run build
 ```
 
-### 5) Start the production version of the project
+### 6) Start the production version of the project
+
+#### INFO: You need [pm2](https://www.npmjs.com/package/pm2) installed to start the project the production version (run `npm install pm2 -g`)
 
 ```bash
 $ npm start:production
 ```
 
-### 6) Default login
+### 7) Default login
 
 The default uploadkey is `changeme`.
 
