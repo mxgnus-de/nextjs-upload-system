@@ -30,14 +30,17 @@ hasterouter.post('/new', async (req: Request, res: Response) => {
       if (!(await validateUploadKey(uploadKey as string))) {
          return invaliduploadkey(res);
       }
+   }
 
+   if (uploadKey) {
       user = await prisma.user.findUnique({
          where: {
             key: uploadKey,
          },
       });
+   }
 
-      if (!user) return badrequest(res);
+   if (user) {
       const perms = permissionsMap(user.permissions);
       if (!perms.haste) return missingpermissions(res, 'haste');
    }

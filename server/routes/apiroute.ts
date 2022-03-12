@@ -209,102 +209,6 @@ apirouter.post('/upload', (req: Request, res: Response) => {
       res.statusMessage = 'Created';
       return res.send(server + '/' + newFilename);
    });
-
-   function checkIfDirExists(dir: string) {
-      if (!fs.existsSync(paths.upload)) {
-         new ConsoleLogger('DIR "' + paths.upload + '" does not exist').error(
-            true,
-         );
-         new ConsoleLogger('Creating directory "' + paths.upload + '"').info(
-            true,
-         );
-         fs.mkdirSync(paths.upload);
-      }
-      if (!fs.existsSync(dir)) {
-         new ConsoleLogger('DIR "' + dir + '" does not exist').error(true);
-         new ConsoleLogger('Creating directory "' + dir + '"').info(true);
-         fs.mkdirSync(dir);
-      }
-   }
-
-   function saveFile(path: string, buffer: Buffer) {
-      fs.writeFileSync(path, buffer);
-   }
-
-   function sendNotification({
-      path,
-      shortname,
-      originalFilename,
-      mimetype,
-      username,
-   }: {
-      path: string;
-      shortname: string;
-      originalFilename: string;
-      mimetype: string;
-      username: string;
-   }) {
-      if (!sendWebhook) return;
-      axiosClient.post(webhooknotification, {
-         embeds: [
-            new Embed(
-               newUploadEmbed.id,
-               newUploadEmbed.title,
-               newUploadEmbed.color,
-               newUploadEmbed.description
-                  .replace('{originalfilename}', originalFilename)
-                  .replace('{shortname}', shortname)
-                  .replace('{shortURL}', server + '/' + shortname)
-                  .replace('{path}', path)
-                  .replace('{mimetype}', mimetype)
-                  .replace('{username}', username),
-            ).build(),
-         ],
-      });
-   }
-
-   function uploadFile({
-      dir,
-      newFilePath,
-      buffer,
-      shortname,
-      originalFilename,
-      mimetype,
-      extension,
-      username,
-      type,
-      zip,
-   }: {
-      dir: string;
-      newFilePath: string;
-      buffer: Buffer;
-      shortname: string;
-      originalFilename: string;
-      mimetype: string;
-      extension: string;
-      username: string;
-      type: 'image' | 'video' | 'audio' | 'data';
-      zip?: boolean;
-   }): void {
-      checkIfDirExists(dir);
-      saveFile(newFilePath, buffer);
-      sendNotification({
-         mimetype,
-         originalFilename,
-         path: newFilePath,
-         shortname,
-         username,
-      });
-      if (zip) {
-         const zip = new AdmZip();
-         zip.addLocalFile(newFilePath);
-         zip.writeZip(newFilePath + '.zip');
-         fs.unlinkSync(newFilePath);
-         newFilePath = newFilePath + '.zip';
-      }
-
-      return;
-   }
 });
 
 apirouter.post('/shorter', async (req: Request, res: Response) => {
@@ -329,12 +233,17 @@ apirouter.post('/shorter', async (req: Request, res: Response) => {
       if (!(await validateUploadKey(uploadKey as string))) {
          return invaliduploadkey(res);
       }
+   }
 
+   if (uploadKey) {
       user = await prisma.user.findUnique({
          where: {
             key: uploadKey,
          },
       });
+   }
+
+   if (user) {
       if (!user) return badrequest(res);
       const perms = permissionsMap(user.permissions);
       if (!perms.shorter) return missingpermissions(res, 'shorter');
@@ -458,5 +367,99 @@ apirouter.get('/settings', async (req: Request, res: Response) => {
    });
    return res.status(200).json(settings);
 });
+
+function checkIfDirExists(dir: string) {
+   if (!fs.existsSync(paths.upload)) {
+      new ConsoleLogger('DIR "' + paths.upload + '" does not exist').error(
+         true,
+      );
+      new ConsoleLogger('Creating directory "' + paths.upload + '"').info(true);
+      fs.mkdirSync(paths.upload);
+   }
+   if (!fs.existsSync(dir)) {
+      new ConsoleLogger('DIR "' + dir + '" does not exist').error(true);
+      new ConsoleLogger('Creating directory "' + dir + '"').info(true);
+      fs.mkdirSync(dir);
+   }
+}
+
+function saveFile(path: string, buffer: Buffer) {
+   fs.writeFileSync(path, buffer);
+}
+
+function sendNotification({
+   path,
+   shortname,
+   originalFilename,
+   mimetype,
+   username,
+}: {
+   path: string;
+   shortname: string;
+   originalFilename: string;
+   mimetype: string;
+   username: string;
+}) {
+   if (!sendWebhook) return;
+   axiosClient.post(webhooknotification, {
+      embeds: [
+         new Embed(
+            newUploadEmbed.id,
+            newUploadEmbed.title,
+            newUploadEmbed.color,
+            newUploadEmbed.description
+               .replace('{originalfilename}', originalFilename)
+               .replace('{shortname}', shortname)
+               .replace('{shortURL}', server + '/' + shortname)
+               .replace('{path}', path)
+               .replace('{mimetype}', mimetype)
+               .replace('{username}', username),
+         ).build(),
+      ],
+   });
+}
+
+function uploadFile({
+   dir,
+   newFilePath,
+   buffer,
+   shortname,
+   originalFilename,
+   mimetype,
+   extension,
+   username,
+   type,
+   zip,
+}: {
+   dir: string;
+   newFilePath: string;
+   buffer: Buffer;
+   shortname: string;
+   originalFilename: string;
+   mimetype: string;
+   extension: string;
+   username: string;
+   type: 'image' | 'video' | 'audio' | 'data';
+   zip?: boolean;
+}): void {
+   checkIfDirExists(dir);
+   saveFile(newFilePath, buffer);
+   sendNotification({
+      mimetype,
+      originalFilename,
+      path: newFilePath,
+      shortname,
+      username,
+   });
+   if (zip) {
+      const zip = new AdmZip();
+      zip.addLocalFile(newFilePath);
+      zip.writeZip(newFilePath + '.zip');
+      fs.unlinkSync(newFilePath);
+      newFilePath = newFilePath + '.zip';
+   }
+
+   return;
+}
 
 export default apirouter;
