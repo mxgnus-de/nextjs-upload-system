@@ -46,11 +46,19 @@ apirouter.post('/upload', (req: Request, res: Response) => {
             name: 'publicUpload',
          },
       });
+      const maxUploadSizeSetting = await prisma.setting.findUnique({
+         where: {
+            name: 'maxUploadSize',
+         },
+      });
 
       if (!publicUploadSetting)
          return badrequest(res, 'Public upload setting not found');
 
       const publicUpload = publicUploadSetting.value === 'true';
+      const maxUploadSize = !isNaN(parseInt(maxUploadSizeSetting?.value ?? ''))
+         ? parseInt(maxUploadSizeSetting?.value ?? '')
+         : 50;
 
       let user = null;
 
@@ -81,9 +89,15 @@ apirouter.post('/upload', (req: Request, res: Response) => {
       const fileSizeInMB = fileSize / (1024 * 1024);
 
       fs.unlinkSync(files?.file?._writeStream?.path);
+      if (fileSizeInMB > maxUploadSize) {
+         return badrequest(
+            res,
+            'File is too big, max upload size is ' + maxUploadSize + 'MB',
+         );
+      }
 
       const file = files?.file;
-      const newFilename = generateRandomString(15);
+      const newFilename = generateRandomString(8);
       const mimetype = file?.mimetype;
       const originalFilename = file?.originalFilename;
       const username = uploadKey && user?.username ? user.username : 'Unknown';
@@ -211,77 +225,24 @@ apirouter.post('/upload', (req: Request, res: Response) => {
    });
 });
 
-apirouter.post('/shorter', async (req: Request, res: Response) => {
-   const { url } = req.body;
-
-   const uploadKey: any = getuploadkey(req);
-   const shorterSetting = await prisma.setting.findUnique({
-      where: {
-         name: 'publicShorter',
-      },
-   });
-
-   if (!shorterSetting) {
-      return badrequest(res, 'Public shorter setting not found');
-   }
-
-   const publicShorter = shorterSetting.value === 'true';
-
-   let user = null;
-
-   if (!publicShorter) {
-      if (!(await validateUploadKey(uploadKey as string))) {
-         return invaliduploadkey(res);
-      }
-   }
-
-   if (uploadKey) {
-      user = await prisma.user.findUnique({
-         where: {
-            key: uploadKey,
-         },
-      });
-   }
-
-   if (user) {
-      if (!user) return badrequest(res);
-      const perms = permissionsMap(user.permissions);
-      if (!perms.shorter) return missingpermissions(res, 'shorter');
-   }
-
-   if (!validateURL(url)) {
-      res.statusCode = 400;
-      res.statusMessage = 'Bad Request | Invalid URL';
-      return res.end();
-   }
-
-   const short = generateRandomString(6);
-   await prisma.shorter.create({
-      data: {
-         name: short,
-         url,
-         createdAt: new Date(),
-         ownerId: user ? user.id : null,
-      },
-   });
-
-   const shortedURL = `${server}/links/${short}`;
-
-   res.statusCode = 200;
-   res.setHeader('Content-Type', 'text/plain');
-   return res.send(shortedURL);
-});
-
 apirouter.get('/upload/:uploadID', async (req: Request, res: Response) => {
    const { uploadID } = req.params;
 
    if (!uploadID)
       return res.status(400).json({ error: 'No uploadID provided' });
-   const file = await prisma.file.findUnique({
+   let file = await prisma.file.findUnique({
       where: {
          name: uploadID,
       },
    });
+
+   if (!file) {
+      file = await prisma.file.findUnique({
+         where: {
+            alias: uploadID,
+         },
+      });
+   }
 
    if (!file) {
       return res.status(404).json({ error: 'File not found' });
@@ -322,6 +283,67 @@ apirouter.get('/upload/:uploadID', async (req: Request, res: Response) => {
 
       return res.status(200).json(resObj);
    }
+});
+
+apirouter.post('/shorter', async (req: Request, res: Response) => {
+   const { url } = req.body;
+
+   const uploadKey: any = getuploadkey(req);
+   const shorterSetting = await prisma.setting.findUnique({
+      where: {
+         name: 'publicShorter',
+      },
+   });
+
+   if (!shorterSetting) {
+      return badrequest(res, 'Public shorter setting not found');
+   }
+
+   const publicShorter = shorterSetting.value === 'true';
+
+   let user = null;
+
+   if (!publicShorter) {
+      if (!(await validateUploadKey(uploadKey as string))) {
+         return invaliduploadkey(res);
+      }
+   }
+
+   if (uploadKey) {
+      user = await prisma.user.findUnique({
+         where: {
+            key: uploadKey,
+         },
+      });
+   }
+
+   if (user) {
+      if (!user) return badrequest(res, 'User not found');
+      const perms = permissionsMap(user.permissions);
+      if (!perms.shorter) return missingpermissions(res, 'shorter');
+   }
+
+   if (!validateURL(url)) {
+      res.statusCode = 400;
+      res.statusMessage = 'Bad Request | Invalid URL';
+      return res.end();
+   }
+
+   const short = generateRandomString(5);
+   await prisma.shorter.create({
+      data: {
+         name: short,
+         url,
+         createdAt: new Date(),
+         ownerId: user ? user.id : null,
+      },
+   });
+
+   const shortedURL = `${server}/links/${short}`;
+
+   res.statusCode = 200;
+   res.setHeader('Content-Type', 'text/plain');
+   return res.send(shortedURL);
 });
 
 apirouter.get('/links/:link', async (req: Request, res: Response) => {

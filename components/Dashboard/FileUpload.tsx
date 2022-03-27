@@ -8,16 +8,18 @@ import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import { isAudio, isImage, isVideo } from 'utils/mimetypechecker';
-import { File } from '@prisma/client';
 import { FileOwner } from 'types/Dashboard';
 import DashboardInfo from './DashboardInfo';
+import styled from 'styled-components';
+import { Dispatch, SetStateAction, useState } from 'react';
+import CheckIcon from '@mui/icons-material/Check';
 
 function FileUpload({
    uploadFiles,
    setUploadFiles,
 }: {
    uploadFiles: FileOwner[];
-   setUploadFiles: any;
+   setUploadFiles: Dispatch<SetStateAction<FileOwner[]>>;
 }) {
    return (
       <>
@@ -48,10 +50,11 @@ function FileUpload({
 }
 
 interface UploadProps extends FileOwner {
-   setUploadFiles: any;
+   setUploadFiles: Dispatch<SetStateAction<FileOwner[]>>;
 }
 
 const Upload = ({ file }: { file: UploadProps }) => {
+   const [filename, setFilename] = useState(file.alias || file.name);
    const updateSuccessWidget = useSuccessWidgetUpdate();
    const updateErrorWidget = useErrorWidgetUpdate();
    function deleteUpload(name: string) {
@@ -82,6 +85,43 @@ const Upload = ({ file }: { file: UploadProps }) => {
       }
    }
 
+   async function changeFileAlias() {
+      const confirm = window.confirm(
+         `Are you sure you want to change the alias of ${file.name} to ${filename}?`,
+      );
+
+      if (confirm) {
+         let error = false;
+         const response = await axiosClient
+            .put(
+               server + '/api/dashboard/uploads?action=setalias',
+               {
+                  alias: filename,
+                  filename: file.name,
+               },
+               {
+                  withCredentials: true,
+               },
+            )
+            .catch((err) => {
+               error = true;
+               updateErrorWidget?.showErrorWidget(
+                  err.response?.data?.message ||
+                     err.response?.statusText ||
+                     'Could not change alias',
+               );
+            });
+
+         if (error || !response) return;
+         updateSuccessWidget?.showSuccessWidget(`${filename} changed`);
+         if (response.data?.uploads) {
+            file.setUploadFiles(response.data.uploads);
+         }
+      } else {
+         return updateSuccessWidget?.showSuccessWidget('Cancelled');
+      }
+   }
+
    const downloadName = file.path
       .replaceAll('//', '/')
       .replaceAll('\\', '/')
@@ -101,9 +141,31 @@ const Upload = ({ file }: { file: UploadProps }) => {
          : 'data') +
       '/' +
       downloadName;
+
+   const showSaveAlias = (): boolean => {
+      if (file.alias) {
+         return filename !== file.alias;
+      } else {
+         return filename !== file.name;
+      }
+   };
    return (
       <DashboardItemWrapper>
-         <DashboardName>{file.name}</DashboardName>
+         <DashboardName>
+            <FileName
+               type='text'
+               value={filename}
+               onChange={(e) => {
+                  setFilename(e.target.value);
+               }}
+            />
+            {
+               <SaveFileNameIcon
+                  onClick={() => changeFileAlias()}
+                  show={showSaveAlias().toString() as 'true' | 'false'}
+               />
+            }
+         </DashboardName>
          <DashboardInfo>
             {file.ownerName ? (
                <Link href={'/dashboard/users#' + file.ownerId}>
@@ -115,13 +177,13 @@ const Upload = ({ file }: { file: UploadProps }) => {
          </DashboardInfo>
          <DashboardInfo>{file.originalfilename}</DashboardInfo>
          <DashboardButtons>
-            <Link href={'/' + file.name} passHref>
+            <Link href={'/' + filename} passHref>
                <p className='button button-green'>View</p>
             </Link>
             <a
                href={downloadURL}
                download={serverdomain + downloadName}
-               target={'_blank'}
+               target={'_blidk ank'}
                rel='noreferrer'
             >
                <p className='button button-blue'>Download</p>
@@ -138,5 +200,30 @@ const Upload = ({ file }: { file: UploadProps }) => {
       </DashboardItemWrapper>
    );
 };
+
+const FileName = styled.input`
+   background-color: transparent !important;
+   color: #fff !important;
+   font-weight: 400;
+   font-size: 1rem;
+   border: none;
+   text-align: start !important;
+`;
+
+interface SaveFileNameIconProps {
+   show: 'true' | 'false';
+}
+
+const SaveFileNameIcon = styled(CheckIcon)`
+   path {
+      color: #0cff04;
+   }
+   cursor: pointer;
+   transition: all 0.3s ease;
+   opacity: ${(props: SaveFileNameIconProps) =>
+      props.show === 'true' ? 1 : 0};
+   pointer-events: ${(props: SaveFileNameIconProps) =>
+      props.show === 'true' ? 'auto' : 'none'};
+`;
 
 export default FileUpload;
