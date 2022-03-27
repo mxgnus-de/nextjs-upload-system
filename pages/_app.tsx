@@ -2,6 +2,7 @@ import UseContext from 'components/Context/UseContext';
 import GlobalStyles from 'components/styles';
 import type { AppProps } from 'next/app';
 import NextNprogress from 'nextjs-progressbar';
+import '../styles/fonts.css';
 
 function UploadSystem({ Component, pageProps }: AppProps) {
    return (
