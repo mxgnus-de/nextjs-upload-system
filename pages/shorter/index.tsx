@@ -72,6 +72,9 @@ const Shorter: NextPage = () => {
                      name='shorturl'
                      placeholder='Shorted URL will be here'
                      readOnly
+                     style={{
+                        cursor: 'no-drop',
+                     }}
                   />
                   <label htmlFor='rawurl'>Raw url</label>
                   <input
