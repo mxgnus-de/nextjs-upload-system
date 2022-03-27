@@ -34,6 +34,9 @@ export async function init() {
    const notifications = settings.find(
       (setting) => setting.name === 'notifications',
    );
+   const maxUploadSize = settings.find(
+      (setting) => setting.name === 'maxUploadSize',
+   );
 
    if (!maxHasteLength) {
       await prisma.setting.create({
@@ -87,6 +90,17 @@ export async function init() {
          data: {
             name: 'notifications',
             value: 'true',
+         },
+      });
+   }
+
+   if (!maxUploadSize) {
+      await prisma.setting.create({
+         data: {
+            name: 'maxUploadSize',
+            value: '500',
+            info: 'in MB',
+            type: 'number',
          },
       });
    }

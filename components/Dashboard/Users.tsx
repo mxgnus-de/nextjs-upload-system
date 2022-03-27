@@ -176,7 +176,7 @@ function Users({ users, setUsers }: { users: IUser[]; setUsers: any }) {
             style={{ margin: '10px' }}
             onClick={createUser}
          >
-            Create Create user
+            Create user
          </button>
          {permsManagerState?.state ? (
             <>
@@ -282,6 +282,38 @@ function User({ user }: { user: UserProps }) {
             });
       } else {
          return updateSuccessWidget?.showSuccessWidget('Cancelled');
+      }
+   }
+
+   async function setCustomPassword() {
+      const password = window.prompt('Password:');
+      if (password) {
+         let err = false;
+         const response = await axiosClient
+            .put(
+               `${server}/api/dashboard/users?key=${user.key}&action=setpassword`,
+               {
+                  password,
+               },
+            )
+            .catch((error) => {
+               console.log(error);
+               err = true;
+               updateErrorWidget?.showErrorWidget(
+                  'Error setting password: ' + error.response?.data?.message ||
+                     error.response?.statusText,
+               );
+            });
+
+         if (err) return;
+
+         if (user.key === cookies.upload_key) {
+            setCookies('upload_key', password, { path: '/' });
+         }
+      } else {
+         return updateSuccessWidget?.showSuccessWidget(
+            'Password creation cancelled',
+         );
       }
    }
 
@@ -423,6 +455,14 @@ function User({ user }: { user: UserProps }) {
                }}
             >
                Change uploadkey
+            </button>
+            <button
+               className='button button-blue'
+               onClick={(e) => {
+                  setCustomPassword();
+               }}
+            >
+               Edit password
             </button>
             <button className='button button-blue' onClick={() => editPerms()}>
                Edit perms

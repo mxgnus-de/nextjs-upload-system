@@ -11,7 +11,7 @@ model User {
    key         String    @unique @db.VarChar(500)
    id          String    @id @default(cuid()) @db.VarChar(50)
    username    String    @db.VarChar(50)
-   permissions String    @default("admin") @db.VarChar(255)
+   permissions String    @default("upload,shorter,haste") @db.VarChar(255)
    createdAt   DateTime  @db.Timestamp()
    updatedAt   DateTime  @updatedAt
    files       File[]
@@ -21,6 +21,7 @@ model User {
 
 model File {
    name             String   @unique @db.VarChar(50)
+   alias            String   @id @default(value: "") @db.VarChar(50)
    mimetype         String   @db.VarChar(50)
    path             String   @db.Text
    originalfilename String   @db.Text

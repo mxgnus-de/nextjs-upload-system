@@ -3,7 +3,7 @@ import * as styled from 'styled-components';
 const GlobalStyles = styled.createGlobalStyle`
    * {
       box-sizing: border-box;
-      font-family: 'Open Sans', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-weight: 400;
       margin: 0;
       padding: 0;
@@ -138,7 +138,7 @@ const GlobalStyles = styled.createGlobalStyle`
       height: 30px;
       width: 100%;
       border-radius: 10px;
-      background-color: #ffffff !important;
+      background-color: #ffffff;
    }
    input[type='text'] ::placeholder,
    input[type='password'] ::placeholder {

@@ -124,7 +124,7 @@ function AudioElement({ file_path }: { file_path: string }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
    let error = false;
    const { uploadID } = context.query;
-   const res = await axiosClient
+   let res = await axiosClient
       .get(`${server}/api/upload/${uploadID}`)
       .catch((err) => {
          error = true;

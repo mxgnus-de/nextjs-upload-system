@@ -264,6 +264,89 @@ dashboardrouter.get('/uploads', async (req: Request, res: Response) => {
    return res.status(200).json(finalUploads);
 });
 
+dashboardrouter.put('/uploads', async (req: Request, res: Response) => {
+   const uploadKey = getuploadkey(req) as string;
+   const filename = req.body.filename as string;
+   const alias = req.body.alias as string;
+
+   if (!filename) return badrequest(res, 'No filename provided');
+   if (!alias) return badrequest(res, 'No alias provided');
+   const user = await prisma.user.findUnique({
+      where: {
+         key: uploadKey,
+      },
+   });
+   if (!user) return badrequest(res);
+   const perms = permissionsMap(user.permissions);
+   let file = null;
+   if (perms.manage_all_uploads) {
+      file = await prisma.file.findUnique({
+         where: {
+            name: filename || '',
+         },
+      });
+   } else {
+      file = await prisma.file.findUnique({
+         where: {
+            name: filename || '',
+         },
+      });
+      file = file && file.ownerId === user.id ? file : null;
+   }
+
+   if (!file) return notfound(res);
+
+   if (file.alias === alias) {
+      return res.status(200).json({
+         status: 200,
+         message: 'Alias already set',
+      });
+   }
+
+   if (['shorter', 'dashboard', 'haste', 'api'].includes(alias)) {
+      return badrequest(res, 'Alias is reserved');
+   }
+
+   const existingFile = await prisma.file.findUnique({
+      where: {
+         alias: alias,
+      },
+   });
+
+   if (existingFile) {
+      return badrequest(res, 'Alias already exists');
+   }
+
+   await prisma.file.update({
+      where: {
+         name: filename,
+      },
+      data: {
+         alias: alias,
+      },
+   });
+
+   let newUploads = null;
+
+   if (perms.manage_all_uploads) {
+      newUploads = await prisma.file.findMany();
+   } else {
+      newUploads = await prisma.file.findMany({
+         where: {
+            owner: {
+               id: user.id,
+            },
+         },
+      });
+   }
+
+   return res.status(200).json({
+      status: 200,
+      message: 'Alias set',
+      uploads: newUploads,
+   });
+});
+
 dashboardrouter.delete('/uploads', async (req: Request, res: Response) => {
    const { filename } = req.query;
    if (!filename) {
@@ -387,18 +470,18 @@ dashboardrouter.put('/users', async (req: Request, res: Response) => {
          key: uploadKey,
       },
    });
-   if (!user) return badrequest(res);
+   if (!user) return badrequest(res, 'User not found');
    const perms = permissionsMap(user.permissions);
    if (!perms.manage_users) {
       return missingpermissions(res, 'manage_users');
    }
 
    if (!action) {
-      return badrequest(res);
+      return badrequest(res, 'Action not specified');
    }
 
    if (action === 'changekey') {
-      const newuploadkey = generateRandomString(100);
+      const newuploadkey = generateRandomString(35);
       const { key } = req.query;
       const user = await prisma.user.findUnique({
          where: {
@@ -430,7 +513,7 @@ dashboardrouter.put('/users', async (req: Request, res: Response) => {
       const { newusername } = req.body;
 
       if (!newusername) {
-         return badrequest(res);
+         return badrequest(res, 'New username not specified');
       }
 
       const user = await prisma.user.findUnique({
@@ -464,7 +547,7 @@ dashboardrouter.put('/users', async (req: Request, res: Response) => {
       const { key } = req.query;
 
       if (!permissions || !key) {
-         return badrequest(res);
+         return badrequest(res, 'Permissions or key not specified');
       }
       if (typeof permissions !== 'string') {
          return badrequest(res, 'permissions must be a string');
@@ -498,8 +581,41 @@ dashboardrouter.put('/users', async (req: Request, res: Response) => {
          permissions,
          users,
       });
+   } else if (action === 'setpassword') {
+      const { key } = req.query;
+      const { password } = req.body;
+
+      if (!password || !key) {
+         return badrequest(res, 'password and key are required');
+      }
+      const user = await prisma.user.findUnique({
+         where: {
+            key: (key as string) || '',
+         },
+      });
+
+      if (!user) {
+         return notfound(res);
+      }
+
+      await prisma.user.update({
+         where: {
+            key: key as string,
+         },
+         data: {
+            key: password as string,
+         },
+      });
+
+      res.statusCode = 200;
+      res.statusMessage = 'User updated';
+      return res.json({
+         status: 200,
+         message: 'User updated',
+         password,
+      });
    } else {
-      return badrequest(res);
+      return badrequest(res, 'Invalid action');
    }
 });
 
@@ -511,12 +627,12 @@ dashboardrouter.post('/users', async (req: Request, res: Response) => {
          key: uploadKey,
       },
    });
-   if (!user) return badrequest(res);
+   if (!user) return badrequest(res, 'User not found');
    const perms = permissionsMap(user.permissions);
    if (!perms.manage_users) {
       return missingpermissions(res, 'manage_users');
    }
-   const newuploadkey = generateRandomString(100);
+   const newuploadkey = generateRandomString(35);
    if (!username) {
       return badrequest(res);
    }
@@ -546,7 +662,7 @@ dashboardrouter.get('/haste', async (req: Request, res: Response) => {
       },
    });
    let hastes: Haste[] = [];
-   if (!user) return badrequest(res);
+   if (!user) return badrequest(res, 'User not found');
    const perms = permissionsMap(user.permissions);
    if (perms.manage_all_uploads) {
       hastes = await prisma.haste.findMany();
@@ -591,7 +707,7 @@ dashboardrouter.delete('/haste', async (req: Request, res: Response) => {
    const { id } = req.query;
    const uploadKey = getuploadkey(req) as string;
    if (!id) {
-      return badrequest(res);
+      return badrequest(res, 'id not specified');
    }
    const user = await prisma.user.findUnique({
       where: {
@@ -599,7 +715,7 @@ dashboardrouter.delete('/haste', async (req: Request, res: Response) => {
       },
    });
    let haste = null;
-   if (!user) return badrequest(res);
+   if (!user) return badrequest(res, 'User not found');
    const perms = permissionsMap(user.permissions);
    if (perms.manage_all_uploads) {
       haste = await prisma.haste.findUnique({

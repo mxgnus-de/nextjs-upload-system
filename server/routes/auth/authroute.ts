@@ -23,7 +23,7 @@ authrouter.post('/login', async (req: Request, res: Response) => {
    if (!user) return badrequest(res, 'User not found');
 
    if (user.key === 'changeme' && user.username === 'default') {
-      const newuploadkey = generateRandomString(100);
+      const newuploadkey = generateRandomString(35);
       await prisma.user.update({
          where: {
             key: uploadKey as string,

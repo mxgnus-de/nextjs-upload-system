@@ -63,7 +63,7 @@ hasterouter.post('/new', async (req: Request, res: Response) => {
          message: 'Haste is too long',
       });
    }
-   const newhasteID = generateRandomString(15);
+   const newhasteID = generateRandomString(6);
    let language: null | string = flourite(haste).language.toLowerCase();
    if (language === 'unknown') language = null;
    await prisma.haste
