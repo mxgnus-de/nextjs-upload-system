@@ -9,6 +9,7 @@ import DashboardName from './DashboardName';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import { ShorterOwner } from 'types/Dashboard';
 import DashboardInfo from './DashboardInfo';
+import shortString from 'utils/shortstring';
 
 function ShortURL({
    shortedURL,
@@ -92,7 +93,7 @@ function ShortedURL({ link }: { link: ShortedURLProps }) {
                'Unknown'
             )}
          </DashboardInfo>
-         <DashboardInfo>{link.url}</DashboardInfo>
+         <DashboardInfo>{shortString(link.url, 100)}</DashboardInfo>
          <DashboardInfo>{link.views}</DashboardInfo>
          <DashboardButtons>
             <Link href={'/links/' + link.name} passHref>
