@@ -5,6 +5,7 @@ const DashboardButtons = styled.div`
 
    * {
       margin: 0 0.2rem;
+      font-size: 15px;
    }
 
    @media (max-width: 768px) {
