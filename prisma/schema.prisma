@@ -21,7 +21,7 @@ model User {
 
 model File {
    name             String   @unique @db.VarChar(50)
-   alias            String   @id @default(value: "") @db.VarChar(50)
+   alias            String?  @db.VarChar(50)
    mimetype         String   @db.VarChar(50)
    path             String   @db.Text
    originalfilename String   @db.Text

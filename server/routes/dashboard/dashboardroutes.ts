@@ -307,9 +307,9 @@ dashboardrouter.put('/uploads', async (req: Request, res: Response) => {
       return badrequest(res, 'Alias is reserved');
    }
 
-   const existingFile = await prisma.file.findUnique({
+   const existingFile = await prisma.file.findFirst({
       where: {
-         alias: alias,
+         alias,
       },
    });
 
