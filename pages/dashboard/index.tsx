@@ -40,8 +40,8 @@ const Dashboard: NextPage<SiteProps> = ({ uploads }) => {
                   upload.name.toLowerCase().includes(searchID) ||
                   upload.originalfilename.toLowerCase().startsWith(searchID) ||
                   upload.originalfilename.toLowerCase().includes(searchID) ||
-                  upload.alias.toLowerCase().startsWith(searchID) ||
-                  upload.alias.toLowerCase().includes(searchID),
+                  upload.alias?.toLowerCase().startsWith(searchID) ||
+                  upload.alias?.toLowerCase().includes(searchID),
             ),
          );
       }
