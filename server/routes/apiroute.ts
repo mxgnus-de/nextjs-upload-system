@@ -237,7 +237,7 @@ apirouter.get('/upload/:uploadID', async (req: Request, res: Response) => {
    });
 
    if (!file) {
-      file = await prisma.file.findUnique({
+      file = await prisma.file.findFirst({
          where: {
             alias: uploadID,
          },
