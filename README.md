@@ -1,5 +1,3 @@
-[![wakatime](https://wakatime.com/badge/github/mxgnus-de/nextjs-upload-system.svg)](https://wakatime.com/badge/github/mxgnus-de/nextjs-upload-system)
-
 # Author
 
 ### mxgnus-de
