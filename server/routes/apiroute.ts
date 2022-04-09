@@ -25,12 +25,11 @@ import getuploadkey from '../../server/modules/getuploadkey';
 import hasterouter from './haste/hasteroute';
 import { validateUploadKey } from '../../api/uploadKey';
 import badrequest from '../../api/utils/response/badrequest';
-import { PrismaClient, Setting } from '@prisma/client';
-import internalservererror from '../../api/utils/response/internalservererror';
+import { Setting } from '@prisma/client';
 import { permissionsMap } from '../../utils/permissions';
 import missingpermissions from '../../api/utils/response/missingpermissions';
+import prisma from '../../prisma/client';
 
-const prisma = new PrismaClient();
 const apirouter = Router();
 
 apirouter.use('/auth', authrouter);

@@ -8,7 +8,6 @@ import DashboardWrapper from 'components/Dashboard/DashboardWrapper';
 import FileUpload from 'components/Dashboard/FileUpload';
 import Layout from 'components/Layout/Layout';
 import DashboardTitle from 'components/Dashboard/DashboardTitle';
-import { File } from '@prisma/client';
 import { FileOwner } from 'types/Dashboard';
 import DashboardSearch from 'components/Dashboard/DashboardSearch';
 

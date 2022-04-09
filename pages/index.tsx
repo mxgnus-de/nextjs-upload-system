@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -16,12 +17,17 @@ import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import LinearProgress from '@mui/material/LinearProgress';
 
-type Files = FileList | null;
+type Files = File | null;
 
 const Home: NextPage = () => {
-   const [uploading, setUploading] = useState(false);
+   const [uploading, setUploading] = useState<{
+      state: 'idle' | 'uploading' | 'done' | 'error';
+      progress: number | null;
+   }>({
+      state: 'idle',
+      progress: null,
+   });
    const [currentFiles, setCurrentFiles] = useState<Files>();
-   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
    const fileuploadRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
    const updateSuccessWidget = useSuccessWidgetUpdate();
@@ -32,27 +38,36 @@ const Home: NextPage = () => {
    }, []);
 
    async function uploadFile() {
-      const file = currentFiles?.item(0);
+      const file = currentFiles;
       if (!file) {
          fileuploadRef.current?.click();
          fileuploadRef.current?.focus();
          return;
       }
-      setUploading(true);
+      setUploading((prevState) => ({
+         ...prevState,
+         state: 'uploading',
+      }));
       const formData = new FormData();
       formData.append('file', file);
 
       const config: AxiosRequestConfig<FormData> = {
          headers: { 'content-type': 'multipart/form-data' },
          onUploadProgress: (e) => {
-            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+            setUploading((prevState) => ({
+               ...prevState,
+               progress: Math.round((e.loaded * 100) / e.total),
+            }));
          },
       };
 
       await axiosClient
          .post('/api/upload', formData, config)
          .then(async (res: AxiosResponse) => {
-            setUploading(false);
+            setUploading((prevState) => ({
+               ...prevState,
+               state: 'done',
+            }));
             const clipboard = navigator?.clipboard;
             if (clipboard) {
                await clipboard.writeText(res.data).catch((err) => {});
@@ -63,39 +78,65 @@ const Home: NextPage = () => {
             router.push(res.data);
          })
          .catch((err: AxiosError) => {
-            setUploading(false);
+            setUploading((prevState) => ({
+               ...prevState,
+               state: 'error',
+            }));
             updateErrorWidget?.showErrorWidget(
                'Upload failed.\n' +
                   (err.response?.data?.message || err.response?.statusText),
             );
          })
          .finally(() => {
-            setUploading(false);
-            setUploadProgress(null);
+            setUploading((prevState) => ({
+               ...prevState,
+               progress: null,
+            }));
          });
    }
 
    return (
       <>
-         {uploadProgress && (
-            <LinearProgress value={uploadProgress} variant='determinate' />
+         {uploading.progress && (
+            <LinearProgress value={uploading.progress} variant='determinate' />
          )}
          <Meta
             meta={{
-               title: 'Upload • Home',
+               title:
+                  uploading.state === 'uploading'
+                     ? 'Upload • In progress'
+                     : uploading.state === 'done'
+                     ? 'Upload • Done'
+                     : uploading.state === 'error'
+                     ? 'Upload • Error'
+                     : 'Upload • Home',
             }}
          />
          <Navbar />
          <Container>
             <Wrapper>
-               <h1>{uploading ? <UploadAnimation /> : 'Upload'}</h1>
+               <h1>
+                  {uploading.state === 'uploading' ? (
+                     <UploadAnimation />
+                  ) : (
+                     'Upload'
+                  )}
+               </h1>
                <Hyphen className='text-muted' />
                <Form>
                   <label htmlFor='inputfile'>File</label>
                   <Input
                      type='file'
                      ref={fileuploadRef}
-                     onChange={(e) => setCurrentFiles(e.target.files)}
+                     onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                           const item = e.target.files.item(0);
+                           if (!item) setCurrentFiles(null);
+                           else setCurrentFiles(item);
+                           return;
+                        }
+                        setCurrentFiles(null);
+                     }}
                      name='inputfile'
                   />
                   <SubmitButton
@@ -108,11 +149,54 @@ const Home: NextPage = () => {
                      Upload
                   </SubmitButton>
                </Form>
+               <FilePreview>
+                  <PreviewFileRenderer file={currentFiles} />
+               </FilePreview>
             </Wrapper>
          </Container>
       </>
    );
 };
+
+function PreviewFileRenderer({ file }: { file: File | null | undefined }) {
+   console.log(file, Math.random());
+   if (!file) {
+      return <h5 className='text-muted'>No files selected</h5>;
+   }
+
+   if (file.type.startsWith('image')) {
+      return (
+         <>
+            <h5>{file.name}</h5>
+            <img src={URL.createObjectURL(file)} alt='preview' />
+            <h5 className='text-muted'>{file.type}</h5>
+         </>
+      );
+   } else if (file.type.startsWith('video')) {
+      return (
+         <>
+            <h5>{file.name}</h5>
+            <video src={URL.createObjectURL(file)} controls />
+            <h5 className='text-muted'>{file.type}</h5>
+         </>
+      );
+   } else if (file.type.startsWith('audio')) {
+      return (
+         <>
+            <h5>{file.name}</h5>
+            <audio src={URL.createObjectURL(file)} controls />
+            <h5 className='text-muted'>{file.type}</h5>
+         </>
+      );
+   } else {
+      return (
+         <>
+            <h5>{file.name}</h5>
+            <h5 className='text-muted'>{file.type}</h5>
+         </>
+      );
+   }
+}
 
 function UploadAnimation() {
    const [animation, setAnimation] = useState('...');
@@ -134,5 +218,9 @@ function UploadAnimation() {
    });
    return <span>Uploading{animation}</span>;
 }
+
+const FilePreview = styled.div`
+   margin-top: 2em;
+`;
 
 export default Home;
