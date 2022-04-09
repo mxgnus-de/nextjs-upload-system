@@ -3,10 +3,9 @@ import express from 'express';
 import { Request, Response } from 'express';
 import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
 import { generateRandomString } from '../../../utils/generateRandomString';
-import { PrismaClient } from '@prisma/client';
 import badrequest from '../../../api/utils/response/badrequest';
+import prisma from '../../../prisma/client';
 
-const prisma = new PrismaClient();
 const authrouter = express.Router();
 
 authrouter.post('/login', async (req: Request, res: Response) => {

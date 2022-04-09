@@ -7,11 +7,10 @@ import getuploadkey from '../../../server/modules/getuploadkey';
 import { validateUploadKey } from '../../../api/uploadKey';
 import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
 import flourite from 'flourite';
-import { PrismaClient } from '@prisma/client';
 import { permissionsMap } from '../../../utils/permissions';
 import missingpermissions from '../../../api/utils/response/missingpermissions';
+import prisma from '../../../prisma/client';
 
-const prisma = new PrismaClient();
 const hasterouter = Router();
 
 hasterouter.post('/new', async (req: Request, res: Response) => {

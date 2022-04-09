@@ -20,9 +20,14 @@ import LinearProgress from '@mui/material/LinearProgress';
 type Files = File | null;
 
 const Home: NextPage = () => {
-   const [uploading, setUploading] = useState(false);
+   const [uploading, setUploading] = useState<{
+      state: 'idle' | 'uploading' | 'done' | 'error';
+      progress: number | null;
+   }>({
+      state: 'idle',
+      progress: null,
+   });
    const [currentFiles, setCurrentFiles] = useState<Files>();
-   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
    const fileuploadRef = useRef<HTMLInputElement>(null);
    const router = useRouter();
    const updateSuccessWidget = useSuccessWidgetUpdate();
@@ -39,21 +44,30 @@ const Home: NextPage = () => {
          fileuploadRef.current?.focus();
          return;
       }
-      setUploading(true);
+      setUploading((prevState) => ({
+         ...prevState,
+         state: 'uploading',
+      }));
       const formData = new FormData();
       formData.append('file', file);
 
       const config: AxiosRequestConfig<FormData> = {
          headers: { 'content-type': 'multipart/form-data' },
          onUploadProgress: (e) => {
-            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+            setUploading((prevState) => ({
+               ...prevState,
+               progress: Math.round((e.loaded * 100) / e.total),
+            }));
          },
       };
 
       await axiosClient
          .post('/api/upload', formData, config)
          .then(async (res: AxiosResponse) => {
-            setUploading(false);
+            setUploading((prevState) => ({
+               ...prevState,
+               state: 'done',
+            }));
             const clipboard = navigator?.clipboard;
             if (clipboard) {
                await clipboard.writeText(res.data).catch((err) => {});
@@ -64,32 +78,50 @@ const Home: NextPage = () => {
             router.push(res.data);
          })
          .catch((err: AxiosError) => {
-            setUploading(false);
+            setUploading((prevState) => ({
+               ...prevState,
+               state: 'error',
+            }));
             updateErrorWidget?.showErrorWidget(
                'Upload failed.\n' +
                   (err.response?.data?.message || err.response?.statusText),
             );
          })
          .finally(() => {
-            setUploading(false);
-            setUploadProgress(null);
+            setUploading((prevState) => ({
+               ...prevState,
+               progress: null,
+            }));
          });
    }
 
    return (
       <>
-         {uploadProgress && (
-            <LinearProgress value={uploadProgress} variant='determinate' />
+         {uploading.progress && (
+            <LinearProgress value={uploading.progress} variant='determinate' />
          )}
          <Meta
             meta={{
-               title: 'Upload • Home',
+               title:
+                  uploading.state === 'uploading'
+                     ? 'Upload • In progress'
+                     : uploading.state === 'done'
+                     ? 'Upload • Done'
+                     : uploading.state === 'error'
+                     ? 'Upload • Error'
+                     : 'Upload • Home',
             }}
          />
          <Navbar />
          <Container>
             <Wrapper>
-               <h1>{uploading ? <UploadAnimation /> : 'Upload'}</h1>
+               <h1>
+                  {uploading.state === 'uploading' ? (
+                     <UploadAnimation />
+                  ) : (
+                     'Upload'
+                  )}
+               </h1>
                <Hyphen className='text-muted' />
                <Form>
                   <label htmlFor='inputfile'>File</label>
