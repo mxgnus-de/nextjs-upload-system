@@ -2,7 +2,6 @@ import axiosClient from 'api/axiosClient';
 import { validateUploadKey } from 'api/uploadKey';
 import Container from 'components/Container/Container';
 import Meta from 'components/Meta/Meta';
-import { server, serverdomain } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { isAudio, isImage, isVideo } from 'utils/mimetypechecker';
@@ -44,7 +43,7 @@ const Upload: NextPage<SiteProps> = ({
                   ' • ' +
                   uploadID,
                image: file_path,
-               url: `${server}/${uploadID}`,
+               url: `${process.env.NEXT_PUBLIC_URL}/${uploadID}`,
                uploadmeta: {
                   imageRawPath: isImage(mimetype) ? file_path : undefined,
                   videoRawPath: isVideo(mimetype) ? file_path : undefined,
@@ -68,7 +67,7 @@ const Upload: NextPage<SiteProps> = ({
             </>
          )}
          {isLoggedIn && (
-            <Link href={`${server}/dashboard?id=${uploadID}`} passHref>
+            <Link href={`${process.env.NEXT_PUBLIC_URL}/dashboard?id=${uploadID}`} passHref>
                <button
                   className='button button-blue'
                   style={{ marginTop: '20px' }}
@@ -79,7 +78,7 @@ const Upload: NextPage<SiteProps> = ({
          )}
          <a
             href={file_path}
-            download={serverdomain + '_' + file_path_name}
+            download={process.env.NEXT_PUBLIC_DOMAIN + '_' + file_path_name}
             style={{ margin: '20px' }}
             className='pointer'
             target='_blank'
@@ -125,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
    let error = false;
    const { uploadID } = context.query;
    let res = await axiosClient
-      .get(`${server}/api/upload/${uploadID}`)
+      .get(`${process.env.NEXT_PUBLIC_URL}/api/upload/${uploadID}`)
       .catch((err) => {
          error = true;
       });

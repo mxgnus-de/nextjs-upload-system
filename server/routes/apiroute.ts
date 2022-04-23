@@ -3,13 +3,7 @@ import fs from 'fs';
 import { Request, Response, Router } from 'express';
 import ConsoleLogger from '../../utils/consolelogger';
 import { paths } from '../../config/upload';
-import {
-   newUploadEmbed,
-   sendWebhook,
-   webhooknotification,
-} from '../../config/embed';
 import axiosClient from '../../api/axiosClient';
-import { server } from '../../config/api';
 import Embed from '../../utils/createEmbed';
 import AdmZip from 'adm-zip';
 import formidable from 'formidable';
@@ -220,7 +214,7 @@ apirouter.post('/upload', (req: Request, res: Response) => {
 
       res.statusCode = 201;
       res.statusMessage = 'Created';
-      return res.send(server + '/' + newFilename);
+      return res.send(process.env.NEXT_PUBLIC_URL + '/' + newFilename);
    });
 });
 
@@ -264,7 +258,7 @@ apirouter.get('/upload/:uploadID', async (req: Request, res: Response) => {
       }
 
       const file_url =
-         server +
+         process.env.NEXT_PUBLIC_URL +
          '/uploads' +
          filePath
             .replace(paths.upload, '')
@@ -338,7 +332,7 @@ apirouter.post('/shorter', async (req: Request, res: Response) => {
       },
    });
 
-   const shortedURL = `${server}/links/${short}`;
+   const shortedURL = `${process.env.NEXT_PUBLIC_URL}/links/${short}`;
 
    res.statusCode = 200;
    res.setHeader('Content-Type', 'text/plain');
@@ -421,22 +415,36 @@ function sendNotification({
    mimetype: string;
    username: string;
 }) {
-   if (!sendWebhook) return;
-   axiosClient.post(webhooknotification, {
+   if (
+      !process.env.DISCORD_EMBED_WEBHOOK_ENABLED ||
+      !process.env.DISCORD_EMBED_WEBHOOK_URL ||
+      !process.env.DISCORD_EMBED_WEBHOOK_TITLE ||
+      !process.env.DISCORD_EMBED_WEBHOOK_DESCRIPTION ||
+      !process.env.DISCORD_EMBED_WEBHOOK_COLOR
+   )
+      return;
+   axiosClient.post(process.env.DISCORD_EMBED_WEBHOOK_URL, {
       embeds: [
          new Embed(
-            newUploadEmbed.id,
-            newUploadEmbed.title,
-            newUploadEmbed.color,
-            newUploadEmbed.description
-               .replace('{originalfilename}', originalFilename)
+            0,
+            process.env.DISCORD_EMBED_WEBHOOK_TITLE,
+            parseInt(process.env.DISCORD_EMBED_WEBHOOK_COLOR),
+            process.env.DISCORD_EMBED_WEBHOOK_DESCRIPTION.replace(
+               '{originalfilename}',
+               originalFilename,
+            )
                .replace('{shortname}', shortname)
-               .replace('{shortURL}', server + '/' + shortname)
+               .replace(
+                  '{shortURL}',
+                  process.env.NEXT_PUBLIC_URL + '/' + shortname,
+               )
                .replace('{path}', path)
                .replace('{mimetype}', mimetype)
                .replace('{username}', username),
          ).build(),
       ],
+   }).catch((err) => {
+      new ConsoleLogger('Upload notify failed with status code ' + err.statusCode).error()
    });
 }
 

@@ -159,7 +159,6 @@ const Home: NextPage = () => {
 };
 
 function PreviewFileRenderer({ file }: { file: File | null | undefined }) {
-   console.log(file, Math.random());
    if (!file) {
       return <h5 className='text-muted'>No files selected</h5>;
    }
@@ -168,7 +167,13 @@ function PreviewFileRenderer({ file }: { file: File | null | undefined }) {
       return (
          <>
             <h5>{file.name}</h5>
-            <img src={URL.createObjectURL(file)} alt='preview' />
+            <img
+               src={URL.createObjectURL(file)}
+               alt='preview'
+               style={{
+                  maxWidth: '100%',
+               }}
+            />
             <h5 className='text-muted'>{file.type}</h5>
          </>
       );
@@ -176,7 +181,13 @@ function PreviewFileRenderer({ file }: { file: File | null | undefined }) {
       return (
          <>
             <h5>{file.name}</h5>
-            <video src={URL.createObjectURL(file)} controls />
+            <video
+               src={URL.createObjectURL(file)}
+               controls
+               style={{
+                  maxWidth: '100%',
+               }}
+            />
             <h5 className='text-muted'>{file.type}</h5>
          </>
       );

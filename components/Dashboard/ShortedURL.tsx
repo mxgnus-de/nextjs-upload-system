@@ -2,7 +2,6 @@ import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
 import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
-import { server } from 'config/api';
 import Link from 'next/link';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
@@ -64,7 +63,7 @@ function ShortedURL({ link }: { link: ShortedURLProps }) {
             .then(async () => {
                updateSuccessWidget?.showSuccessWidget(`${name} deleted`);
                const shortURLs = await axiosClient.get(
-                  server + '/api/dashboard/shorts',
+                  process.env.NEXT_PUBLIC_URL + '/api/dashboard/shorts',
                   {
                      withCredentials: true,
                   },

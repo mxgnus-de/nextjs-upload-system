@@ -1,4 +1,3 @@
-import defaultMeta from 'config/meta';
 import Head from 'next/head';
 import React from 'react';
 import { Meta as IMeta } from 'types/Meta';
@@ -6,27 +5,27 @@ import { Meta as IMeta } from 'types/Meta';
 function Meta({ meta }: { meta: IMeta }) {
    return (
       <Head>
-         <title>{meta.title ? meta.title : defaultMeta.title}</title>
+         <title>{meta.title ? meta.title : process.env.META_DATA_TITLE}</title>
          <meta
             name='description'
             content={
-               meta.description ? meta.description : defaultMeta.description
+               meta.description ? meta.description : process.env.META_DATA_DESCRIPTION
             }
          />
          <meta
             property='og:title'
-            content={meta.title ? meta.title : defaultMeta.title}
+            content={meta.title ? meta.title : process.env.META_DATA_TITLE}
          />
          <meta
             property='og:description'
-            content={meta.description ? meta.title : defaultMeta.description}
+            content={meta.description ? meta.title : process.env.META_DATA_DESCRIPTION}
          />
          <>
             <meta name='twitter:card' content='summary_large_image'></meta>
             <meta
                name='theme-color'
                content={
-                  meta.themecolor ? meta.themecolor : defaultMeta.themecolor
+                  meta.themecolor ? meta.themecolor : process.env.META_DATA_THEMECOLOR
                }
             />
          </>

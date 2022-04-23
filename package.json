@@ -28,6 +28,7 @@
       "axios": "^0.24.0",
       "babel-plugin-styled-components": "^2.0.2",
       "cookies": "^0.8.0",
+      "dotenv": "^16.0.0",
       "express": "^4.17.2",
       "flourite": "^1.2.2",
       "formidable": "^2.0.1",

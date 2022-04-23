@@ -3,7 +3,6 @@ import axiosClient from 'api/axiosClient';
 import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
 import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
-import { server } from 'config/api';
 import DashboardButtons from './DashboardButtons';
 import DashboardItemWrapper from './DashboardItemWrapper';
 import DashboardName from './DashboardName';
@@ -49,7 +48,7 @@ function Setting(settings: SettingProps) {
       if (confirm) {
          axiosClient
             .put(
-               server +
+               process.env.NEXT_PUBLIC_URL +
                   '/api/dashboard/settings?action=toggle&name=' +
                   settings.name,
             )
@@ -94,7 +93,9 @@ function Setting(settings: SettingProps) {
 
       axiosClient
          .put(
-            server + '/api/dashboard/settings?action=set&name=' + settings.name,
+            process.env.NEXT_PUBLIC_URL +
+               '/api/dashboard/settings?action=set&name=' +
+               settings.name,
             {
                value: newValue,
             },

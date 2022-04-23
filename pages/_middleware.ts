@@ -1,4 +1,3 @@
-import { server } from 'config/api';
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
@@ -16,15 +15,15 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       if (req.nextUrl.pathname === page) blockedPage = true;
    });
 
-   const rdm =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
-   const response = await fetch(`${server}/api/auth/validateuploadkey`, {
-      method: 'GET',
-      headers: {
-         Authorization: uploadKey,
+   const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL}/api/auth/validateuploadkey`,
+      {
+         method: 'GET',
+         headers: {
+            Authorization: uploadKey,
+         },
       },
-   });
+   );
 
    const json = await response?.json().catch(() => {});
    const isValideUploadKey = json?.valide || false;
@@ -36,9 +35,12 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       !isValideUploadKey &&
       ['/', '/shorter', '/haste'].includes(req.nextUrl.pathname)
    ) {
-      const settings = await fetch(`${server}/api/settings`, {
-         method: 'GET',
-      });
+      const settings = await fetch(
+         `${process.env.NEXT_PUBLIC_URL}/api/settings`,
+         {
+            method: 'GET',
+         },
+      );
       const settingsJson: {
          name: string;
          value: 'true' | 'false';

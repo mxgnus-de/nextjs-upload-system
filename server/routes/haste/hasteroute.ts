@@ -2,7 +2,6 @@ import badrequest from '../../../api/utils/response/badrequest';
 import { Request, Response, Router } from 'express';
 import { generateRandomString } from '../../../utils/generateRandomString';
 import internalservererror from '../../../api/utils/response/internalservererror';
-import { server } from '../../../config/api';
 import getuploadkey from '../../../server/modules/getuploadkey';
 import { validateUploadKey } from '../../../api/uploadKey';
 import invaliduploadkey from '../../../api/utils/response/invaliduploadkey';
@@ -83,7 +82,7 @@ hasterouter.post('/new', async (req: Request, res: Response) => {
    return res.status(200).json({
       status: 200,
       hasteID: newhasteID,
-      url: server + '/haste/' + newhasteID,
+      url: process.env.NEXT_PUBLIC_URL + '/haste/' + newhasteID,
    });
 });
 
