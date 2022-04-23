@@ -1,6 +1,5 @@
 import axiosClient from 'api/axiosClient';
 import Hyphen from 'components/Hyphen/Hyphen';
-import { server } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -69,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<SiteProps> = async (
    context,
 ) => {
    const settings = await axiosClient
-      .get(server + '/api/dashboard/settings', {
+      .get(process.env.NEXT_PUBLIC_URL + '/api/dashboard/settings', {
          headers: {
             authorization: context.req.cookies['upload_key'] || '',
          },

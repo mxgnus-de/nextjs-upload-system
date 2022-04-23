@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { server } from '../config/api';
 
 const axiosClient = axios.create({
-   baseURL: server,
+   baseURL: process.env.NEXT_PUBLIC_URL,
 });
 
 export default axiosClient;

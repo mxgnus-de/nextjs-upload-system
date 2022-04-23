@@ -2,7 +2,6 @@ import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
 import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
-import { server, serverdomain } from 'config/api';
 import Link from 'next/link';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
@@ -68,7 +67,7 @@ const Upload = ({ file }: { file: UploadProps }) => {
             .then(async () => {
                updateSuccessWidget?.showSuccessWidget(`${name} deleted`);
                const uploads = await axiosClient.get(
-                  server + '/api/dashboard/uploads',
+                  process.env.NEXT_PUBLIC_URL + '/api/dashboard/uploads',
                   {
                      withCredentials: true,
                   },
@@ -94,7 +93,8 @@ const Upload = ({ file }: { file: UploadProps }) => {
          let error = false;
          const response = await axiosClient
             .put(
-               server + '/api/dashboard/uploads?action=setalias',
+               process.env.NEXT_PUBLIC_URL +
+                  '/api/dashboard/uploads?action=setalias',
                {
                   alias: filename,
                   filename: file.name,
@@ -130,7 +130,7 @@ const Upload = ({ file }: { file: UploadProps }) => {
          1
    ];
    const downloadURL =
-      server +
+      process.env.NEXT_PUBLIC_URL +
       '/uploads/' +
       (isImage(file.mimetype)
          ? 'images'
@@ -182,7 +182,7 @@ const Upload = ({ file }: { file: UploadProps }) => {
             </Link>
             <a
                href={downloadURL}
-               download={serverdomain + downloadName}
+               download={process.env.NEXT_PUBLIC_DOMAIN + downloadName}
                target={'_blidk ank'}
                rel='noreferrer'
             >

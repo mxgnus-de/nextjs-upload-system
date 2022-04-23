@@ -1,6 +1,5 @@
 import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
-import { server } from 'config/api';
 import Router from 'next/router';
 import React, {
    useState,
@@ -110,7 +109,7 @@ export function HasteProvider(props: HasteProviderProps) {
       const hasteID = response.data.hasteID;
       if ('clipboard' in navigator) {
          navigator.clipboard
-            .writeText(`${server}/haste/${hasteID}`)
+            .writeText(`${process.env.NEXT_PUBLIC_URL}/haste/${hasteID}`)
             .catch((err) => {});
       }
       Router.push(`/haste/${hasteID}`);

@@ -3,7 +3,6 @@ import { AxiosError } from 'axios';
 import { User as IUser, User } from '@prisma/client';
 import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
-import { server } from 'config/api';
 import { useCookies } from 'react-cookie';
 import DashboardButtons from './DashboardButtons';
 import DashboardName from './DashboardName';
@@ -65,7 +64,7 @@ function Users({ users, setUsers }: { users: IUser[]; setUsers: any }) {
       let username = window.prompt('Username:');
       if (username) {
          axiosClient
-            .post(`${server}/api/dashboard/users`, {
+            .post(`${process.env.NEXT_PUBLIC_URL}/api/dashboard/users`, {
                username,
             })
             .then(({ data }) => {
@@ -120,7 +119,7 @@ function Users({ users, setUsers }: { users: IUser[]; setUsers: any }) {
 
       await axiosClient
          .put(
-            `${server}/api/dashboard/users?key=${user.key}&action=changepermissions`,
+            `${process.env.NEXT_PUBLIC_URL}/api/dashboard/users?key=${user.key}&action=changepermissions`,
             {
                username,
                permissions: newPermissionsString,
@@ -266,7 +265,7 @@ function User({ user }: { user: UserProps }) {
                   `${user.username} deleted`,
                );
                const shortURLs = await axiosClient.get(
-                  server + '/api/dashboard/users',
+                  process.env.NEXT_PUBLIC_URL + '/api/dashboard/users',
                   {
                      withCredentials: true,
                   },
@@ -291,7 +290,7 @@ function User({ user }: { user: UserProps }) {
          let err = false;
          const response = await axiosClient
             .put(
-               `${server}/api/dashboard/users?key=${user.key}&action=setpassword`,
+               `${process.env.NEXT_PUBLIC_URL}/api/dashboard/users?key=${user.key}&action=setpassword`,
                {
                   password,
                },
@@ -347,7 +346,7 @@ function User({ user }: { user: UserProps }) {
                   });
                }
                axiosClient
-                  .get(server + '/api/dashboard/users', {
+                  .get(process.env.NEXT_PUBLIC_URL + '/api/dashboard/users', {
                      withCredentials: true,
                   })
                   .catch(() => {})
@@ -372,7 +371,7 @@ function User({ user }: { user: UserProps }) {
       if (newUsername) {
          axiosClient
             .put(
-               server +
+               process.env.NEXT_PUBLIC_URL +
                   '/api/dashboard/users?action=changeusername&key=' +
                   user.key,
                {

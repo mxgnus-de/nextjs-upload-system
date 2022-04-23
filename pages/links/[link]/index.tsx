@@ -1,7 +1,6 @@
 import { validateUploadKey } from 'api/uploadKey';
 import Container from 'components/Container/Container';
 import Meta from 'components/Meta/Meta';
-import { server } from 'config/api';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -26,7 +25,7 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
          <Meta
             meta={{
                title: 'Upload • ' + shortedLink,
-               url: `${server}/links/${shortedLink}`,
+               url: `${process.env.NEXT_PUBLIC_URL}/links/${shortedLink}`,
             }}
          />
          <h4>Redirect</h4>
@@ -35,7 +34,10 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
             <Link href={url}>{url}</Link>
          </p>
          {isLoggedIn && (
-            <Link href={`${server}/dashboard/links?id=${shortedLink}`} passHref>
+            <Link
+               href={`${process.env.NEXT_PUBLIC_URL}/dashboard/links?id=${shortedLink}`}
+               passHref
+            >
                <button
                   className='button button-blue'
                   style={{ marginTop: '20px' }}
@@ -50,7 +52,7 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
    const { link } = context.query;
-   const res = await fetch(`${server}/api/links/${link}`);
+   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/links/${link}`);
    const data = await res.json();
    const isLoggedIn = await validateUploadKey(
       context.req.cookies['upload_key'] || '',

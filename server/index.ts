@@ -1,4 +1,3 @@
-import { devenv, port, serverdomain } from '../config/api';
 import cookies from 'cookies';
 import express, { Request, Response } from 'express';
 import next from 'next';
@@ -11,7 +10,7 @@ import mainroute from './routes/mainroute';
 import { init as initDB } from '../api/db/init';
 
 const app = next({
-   dev: devenv,
+   dev: process.env.NODE_ENV !== 'production',
    conf: {
       reactStrictMode: true,
       poweredByHeader: false,
@@ -19,9 +18,35 @@ const app = next({
          styledComponents: true,
       },
    },
-   hostname: serverdomain,
-   port,
+   hostname: process.env.NEXT_PUBLIC_DOMAIN,
+   port: process.env.PORT,
 });
+
+if (!process.env.PORT) {
+   new ConsoleLogger('PORT is not defined, check out the .env file').error();
+   process.exit(1);
+} else if (!process.env.NEXT_PUBLIC_URL) {
+   new ConsoleLogger(
+      'NEXT_PUBLIC_URL is not defined, check out the .env file',
+   ).error();
+   process.exit(1);
+} else if (!process.env.NEXT_PUBLIC_DOMAIN) {
+   new ConsoleLogger(
+      'NEXT_PUBLIC_DOMAIN is not defined, check out the .env file',
+   ).error();
+   process.exit(1);
+} else if (!process.env.NEXT_PUBLIC_PROTOCOL) {
+   new ConsoleLogger(
+      'NEXT_PUBLIC_PROTOCOL is not defined, check out the .env file',
+   ).error();
+   process.exit(1);
+} else if (!process.env.DATABASE_URL) {
+   new ConsoleLogger(
+      'DATABASE_URL is not defined, check out the .env file',
+   ).error();
+   process.exit(1);
+}
+
 const handle = app.getRequestHandler();
 
 async function main() {
@@ -32,7 +57,7 @@ async function main() {
    server.use(express.json());
 
    server.disable('x-powered-by');
-   server.set('port', port);
+   server.set('port', process.env.PORT);
    server.use(cookies.express(['keyA', 'keyB', 'keyC']));
    server.use(middleware);
    server.use('/api', apirouter);
@@ -41,13 +66,13 @@ async function main() {
 
    server.all('*', (req: Request, res: Response) => handle(req, res));
 
-   server.listen(port, (err?: any) => {
+   server.listen(process.env.PORT, (err?: any) => {
       initDB();
       if (err) {
          new ConsoleLogger(err).error(true);
          throw err;
       }
-      new ConsoleLogger(`Ready on http://localhost:${port}`).info();
+      new ConsoleLogger(`Ready on http://localhost:${process.env.PORT}`).info();
    });
 }
 

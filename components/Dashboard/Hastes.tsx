@@ -10,7 +10,6 @@ import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
 import { HasteOwner } from 'types/Dashboard';
 import DashboardInfo from './DashboardInfo';
 import Link from 'next/link';
-import { server } from 'config/api';
 
 function Users({
    hastes,
