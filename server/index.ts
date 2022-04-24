@@ -9,6 +9,11 @@ import fs from 'fs';
 import mainroute from './routes/mainroute';
 import { init as initDB } from '../api/db/init';
 
+const port =
+   typeof process.env.PORT === 'string'
+      ? parseInt(process.env.PORT)
+      : process.env.PORT;
+
 const app = next({
    dev: process.env.NODE_ENV !== 'production',
    conf: {
@@ -19,7 +24,7 @@ const app = next({
       },
    },
    hostname: process.env.NEXT_PUBLIC_DOMAIN,
-   port: process.env.PORT,
+   port,
 });
 
 if (!process.env.PORT) {
