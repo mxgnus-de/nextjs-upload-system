@@ -43,7 +43,7 @@
       "react-dom": "17.0.2",
       "react-syntax-highlighter": "^15.4.5",
       "react-textarea-autosize": "^8.3.3",
-      "sass": "^1.44.0",
+      "sass": "^1.49.11",
       "sqlstring": "^2.3.2",
       "winston": "^3.7.2"
    },
