@@ -19,7 +19,7 @@
       "migrate": "prisma migrate dev"
    },
    "dependencies": {
-      "@emotion/react": "^11.7.1",
+      "@emotion/react": "^11.9.0",
       "@emotion/styled": "^11.6.0",
       "@mui/icons-material": "^5.2.4",
       "@mui/material": "^5.5.3",
