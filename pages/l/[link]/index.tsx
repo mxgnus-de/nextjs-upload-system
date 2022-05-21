@@ -25,7 +25,7 @@ const Upload: NextPage<SiteProps> = ({ shortedLink, url, isLoggedIn }) => {
          <Meta
             meta={{
                title: 'Upload • ' + shortedLink,
-               url: `${process.env.NEXT_PUBLIC_URL}/links/${shortedLink}`,
+               url: `${process.env.NEXT_PUBLIC_URL}/l/${shortedLink}`,
             }}
          />
          <h4>Redirect</h4>

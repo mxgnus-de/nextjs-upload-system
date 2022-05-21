@@ -332,7 +332,7 @@ apirouter.post('/shorter', async (req: Request, res: Response) => {
       },
    });
 
-   const shortedURL = `${process.env.NEXT_PUBLIC_URL}/links/${short}`;
+   const shortedURL = `${process.env.NEXT_PUBLIC_URL}/l/${short}`;
 
    res.statusCode = 200;
    res.setHeader('Content-Type', 'text/plain');
@@ -423,29 +423,33 @@ function sendNotification({
       !process.env.DISCORD_EMBED_WEBHOOK_COLOR
    )
       return;
-   axiosClient.post(process.env.DISCORD_EMBED_WEBHOOK_URL, {
-      embeds: [
-         new Embed(
-            0,
-            process.env.DISCORD_EMBED_WEBHOOK_TITLE,
-            parseInt(process.env.DISCORD_EMBED_WEBHOOK_COLOR),
-            process.env.DISCORD_EMBED_WEBHOOK_DESCRIPTION.replace(
-               '{originalfilename}',
-               originalFilename,
-            )
-               .replace('{shortname}', shortname)
-               .replace(
-                  '{shortURL}',
-                  process.env.NEXT_PUBLIC_URL + '/' + shortname,
+   axiosClient
+      .post(process.env.DISCORD_EMBED_WEBHOOK_URL, {
+         embeds: [
+            new Embed(
+               0,
+               process.env.DISCORD_EMBED_WEBHOOK_TITLE,
+               parseInt(process.env.DISCORD_EMBED_WEBHOOK_COLOR),
+               process.env.DISCORD_EMBED_WEBHOOK_DESCRIPTION.replace(
+                  '{originalfilename}',
+                  originalFilename,
                )
-               .replace('{path}', path)
-               .replace('{mimetype}', mimetype)
-               .replace('{username}', username),
-         ).build(),
-      ],
-   }).catch((err) => {
-      new ConsoleLogger('Upload notify failed with status code ' + err.statusCode).error()
-   });
+                  .replace('{shortname}', shortname)
+                  .replace(
+                     '{shortURL}',
+                     process.env.NEXT_PUBLIC_URL + '/' + shortname,
+                  )
+                  .replace('{path}', path)
+                  .replace('{mimetype}', mimetype)
+                  .replace('{username}', username),
+            ).build(),
+         ],
+      })
+      .catch((err) => {
+         new ConsoleLogger(
+            'Upload notify failed with status code ' + err.statusCode,
+         ).error();
+      });
 }
 
 function uploadFile({
