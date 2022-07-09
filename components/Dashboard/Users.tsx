@@ -1,6 +1,6 @@
 import axiosClient from 'api/axiosClient';
 import { AxiosError } from 'axios';
-import { User as IUser, User } from '@prisma/client';
+import { User as IUser } from '@prisma/client';
 import { useErrorWidgetUpdate } from 'components/Context/ErrorWidgetContext';
 import { useSuccessWidgetUpdate } from 'components/Context/SuccessWidgetContext';
 import { useCookies } from 'react-cookie';
@@ -234,7 +234,7 @@ function Users({ users, setUsers }: { users: IUser[]; setUsers: any }) {
    );
 }
 
-interface UserProps extends User {
+interface UserProps extends IUser {
    setUsers: any;
    setPermsManagerState: Dispatch<
       SetStateAction<{
