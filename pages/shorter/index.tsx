@@ -12,6 +12,7 @@ import SubmitButton from 'components/SubmitButton/SubmitButton';
 import Wrapper from 'components/Wrapper/Wrapper';
 import { NextPage } from 'next';
 import { useRef, useState } from 'react';
+import { validateURL } from 'utils/validator';
 
 const Shorter: NextPage = () => {
    const [rawURL, setRawURL] = useState('');
@@ -23,16 +24,25 @@ const Shorter: NextPage = () => {
 
    async function shortUrl() {
       if (!rawURL) return urlInputRef.current?.focus();
+      let url = rawURL;
+      if (!url.startsWith('https')) {
+         url = `https://${url}`;
+         setRawURL(url);
+      }
 
-      const config = {
-         headers: { 'content-type': 'application/json' },
-      };
-      const data = {
-         url: rawURL,
-      };
+      if (!validateURL(url))
+         return updateErrorWidget?.showErrorWidget('Invalid URL');
 
       await axiosClient
-         .post('/api/shorter', data, config)
+         .post(
+            '/api/shorter',
+            {
+               url,
+            },
+            {
+               headers: { 'content-type': 'application/json' },
+            },
+         )
          .then((res: AxiosResponse) => {
             const clipboard = navigator?.clipboard;
             if (clipboard) {

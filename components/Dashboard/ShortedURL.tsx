@@ -95,7 +95,7 @@ function ShortedURL({ link }: { link: ShortedURLProps }) {
          <DashboardInfo>{shortString(link.url, 100)}</DashboardInfo>
          <DashboardInfo>{link.views}</DashboardInfo>
          <DashboardButtons>
-            <Link href={'/links/' + link.name} passHref>
+            <Link href={'/l/' + link.name} passHref>
                <p className='button button-green'>View</p>
             </Link>
             <button
