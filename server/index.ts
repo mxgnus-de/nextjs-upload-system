@@ -8,6 +8,9 @@ import { paths } from '../config/upload';
 import fs from 'fs';
 import mainroute from './routes/mainroute';
 import { init as initDB } from '../api/db/init';
+import { loadEnvConfig } from '@next/env'
+
+loadEnvConfig(process.cwd())
 
 const port =
    typeof process.env.PORT === 'string'
