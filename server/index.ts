@@ -1,21 +1,24 @@
-import cookies from 'cookies';
-import express, { Request, Response } from 'express';
-import next from 'next';
-import ConsoleLogger from '../utils/consolelogger';
-import { middleware } from './middleware/middleware';
-import apirouter from './routes/apiroute';
-import { paths } from '../config/upload';
-import fs from 'fs';
-import mainroute from './routes/mainroute';
-import { init as initDB } from '../api/db/init';
+import * as dotenv from "dotenv";
+import cookies from "cookies";
+import express, { Request, Response } from "express";
+import next from "next";
+import ConsoleLogger from "../utils/consolelogger";
+import { middleware } from "./middleware/middleware";
+import apirouter from "./routes/apiroute";
+import { paths } from "../config/upload";
+import fs from "fs";
+import mainroute from "./routes/mainroute";
+import { init as initDB } from "../api/db/init";
+
+dotenv.config();
 
 const port =
-   typeof process.env.PORT === 'string'
+   typeof process.env.PORT === "string"
       ? parseInt(process.env.PORT)
       : process.env.PORT;
 
 const app = next({
-   dev: process.env.NODE_ENV !== 'production',
+   dev: process.env.NODE_ENV !== "production",
    conf: {
       reactStrictMode: true,
       poweredByHeader: false,
@@ -28,26 +31,26 @@ const app = next({
 });
 
 if (!process.env.PORT) {
-   new ConsoleLogger('PORT is not defined, check out the .env file').error();
+   new ConsoleLogger("PORT is not defined, check out the .env file").error();
    process.exit(1);
 } else if (!process.env.NEXT_PUBLIC_URL) {
    new ConsoleLogger(
-      'NEXT_PUBLIC_URL is not defined, check out the .env file',
+      "NEXT_PUBLIC_URL is not defined, check out the .env file",
    ).error();
    process.exit(1);
 } else if (!process.env.NEXT_PUBLIC_DOMAIN) {
    new ConsoleLogger(
-      'NEXT_PUBLIC_DOMAIN is not defined, check out the .env file',
+      "NEXT_PUBLIC_DOMAIN is not defined, check out the .env file",
    ).error();
    process.exit(1);
 } else if (!process.env.NEXT_PUBLIC_PROTOCOL) {
    new ConsoleLogger(
-      'NEXT_PUBLIC_PROTOCOL is not defined, check out the .env file',
+      "NEXT_PUBLIC_PROTOCOL is not defined, check out the .env file",
    ).error();
    process.exit(1);
 } else if (!process.env.DATABASE_URL) {
    new ConsoleLogger(
-      'DATABASE_URL is not defined, check out the .env file',
+      "DATABASE_URL is not defined, check out the .env file",
    ).error();
    process.exit(1);
 }
@@ -61,15 +64,15 @@ async function main() {
    const server = express();
    server.use(express.json());
 
-   server.disable('x-powered-by');
-   server.set('port', process.env.PORT);
-   server.use(cookies.express(['keyA', 'keyB', 'keyC']));
+   server.disable("x-powered-by");
+   server.set("port", process.env.PORT);
+   server.use(cookies.express(["keyA", "keyB", "keyC"]));
    server.use(middleware);
-   server.use('/api', apirouter);
-   server.use('/', mainroute);
+   server.use("/api", apirouter);
+   server.use("/", mainroute);
    server.use(express.static(paths.files));
 
-   server.all('*', (req: Request, res: Response) => handle(req, res));
+   server.all("*", (req: Request, res: Response) => handle(req, res));
 
    server.listen(process.env.PORT, (err?: any) => {
       initDB();
